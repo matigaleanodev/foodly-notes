@@ -10,4 +10,14 @@
       <ion-title size="large">home</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      @for (recipe of recipes(); track $index) {
+      <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="3">
+        <app-recipe-card [recipe]="recipe" />
+      </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
 </ion-content>
