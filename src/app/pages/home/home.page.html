@@ -14,8 +14,12 @@
   <ion-grid>
     <ion-row>
       @for (recipe of recipes(); track $index) {
-      <ion-col size="12" sizeMd="6" sizeLg="4" sizeXl="3">
-        <app-recipe-card [recipe]="recipe" />
+      <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
+        <app-recipe-card
+          [recipe]="recipe"
+          (favorito)="estadoFavoritos($event)"
+          (similares)="recetasSimilares($event)"
+        />
       </ion-col>
       }
     </ion-row>

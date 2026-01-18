@@ -1,6 +1,36 @@
-<ion-card>
-  <ion-img [src]="recipeImageUrl()" alt="{{ recipe().title }}"></ion-img>
-  <ion-card-title>
-    {{ recipe().title }}
-  </ion-card-title>
+<ion-card class="recipe-card" [button]="true">
+  <ion-card-header class="recipe-card-header">
+    <ion-toolbar color="transparent">
+      <ion-buttons slot="end">
+        <ion-button
+          fill="solid"
+          shape="round"
+          color="danger"
+          class="recipe-card-action"
+        >
+          <ion-icon slot="icon-only" name="heart"></ion-icon>
+        </ion-button>
+        <ion-button
+          fill="solid"
+          shape="round"
+          color="primary"
+          class="recipe-card-action"
+        >
+          <ion-icon slot="icon-only" name="repeat"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card-header>
+
+  <ion-img
+    class="recipe-card-image"
+    [src]="recipeImageUrl()"
+    alt="{{ recipe().title }}"
+  ></ion-img>
+
+  <div class="recipe-card-title-container">
+    <ion-card-title class="recipe-card-title">
+      {{ recipe().title }}
+    </ion-card-title>
+  </div>
 </ion-card>

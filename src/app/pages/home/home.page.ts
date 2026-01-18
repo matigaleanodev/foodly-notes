@@ -11,6 +11,7 @@ import {
   IonGrid,
 } from '@ionic/angular/standalone';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
+import { RecipeInfo } from '@shared/models/recipe.model';
 import { RecipeService } from '@shared/services/recipe/recipe.service';
 
 @Component({
@@ -38,4 +39,8 @@ export class HomePage implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  estadoFavoritos(receta: RecipeInfo) {}
+
+  recetasSimilares(receta: RecipeInfo) {}
 }

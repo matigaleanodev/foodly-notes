@@ -1,15 +1,38 @@
-import { Component, computed, input, OnInit } from '@angular/core';
-import { IonCard, IonImg, IonCardTitle } from '@ionic/angular/standalone';
+import { Component, computed, input, OnInit, output } from '@angular/core';
+import {
+  IonCard,
+  IonImg,
+  IonCardTitle,
+  IonCardHeader,
+  IonIcon,
+  IonButton,
+  IonButtons,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { RecipeInfo } from '@shared/models/recipe.model';
+import { addIcons } from 'ionicons';
+import { heart, repeat } from 'ionicons/icons';
 
 @Component({
   selector: 'app-recipe-card',
-  imports: [IonCardTitle, IonImg, IonCard],
+  imports: [
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonCardHeader,
+    IonCardTitle,
+    IonImg,
+    IonCard,
+  ],
   templateUrl: './recipe-card.component.html',
   styleUrls: ['./recipe-card.component.scss'],
 })
 export class RecipeCardComponent {
   readonly recipe = input.required<RecipeInfo>();
+
+  readonly favorito = output<RecipeInfo>();
+  readonly similares = output<RecipeInfo>();
 
   readonly recipeImageUrl = computed(() => {
     const recipe = this.recipe();
@@ -18,10 +41,25 @@ export class RecipeCardComponent {
     return (
       'https://spoonacular.com/recipeImages/' +
       recipe.id +
-      '-312x231.' +
+      '-556x370.' +
       (recipe.imageType || 'jpg')
     );
   });
 
-  constructor() {}
+  constructor() {
+    addIcons({
+      heart,
+      repeat,
+    });
+  }
+
+  recetasSimilares(ev: Event) {
+    ev.stopPropagation();
+    this.similares.emit(this.recipe());
+  }
+
+  estadoFavoritos(ev: Event) {
+    ev.stopPropagation();
+    this.favorito.emit(this.recipe());
+  }
 }
