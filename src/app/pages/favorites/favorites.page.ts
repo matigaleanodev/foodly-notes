@@ -34,6 +34,10 @@ export class FavoritesPage {
 
   readonly favoritos = computed(() => this._service.favoritos());
 
+  ionViewWillEnter() {
+    this._service.cargarFavoritos();
+  }
+
   toggleFavorito(receta: RecipeInfo) {
     const esFavorito = this._service.esFavorito(receta);
     if (esFavorito) {
@@ -44,4 +48,6 @@ export class FavoritesPage {
   }
 
   recetasSimilares(receta: RecipeInfo) {}
+
+  detalleReceta(receta: RecipeInfo) {}
 }

@@ -1,11 +1,17 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { RecipeInfo } from '@shared/models/recipe.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipeService {
-  recipes = signal<RecipeInfo[]>(MOCK_RECIPES);
+  readonly selectedRecipe = signal<RecipeInfo | null>(null);
+
+  readonly recipes = signal<RecipeInfo[]>(MOCK_RECIPES);
+
+  seleccionarReceta(recipe: RecipeInfo) {
+    this.selectedRecipe.set(recipe);
+  }
 }
 
 export const MOCK_RECIPES: RecipeInfo[] = [
