@@ -1,0 +1,13 @@
+@if (sourceName() || sourceUrl()) {
+  <section class="recipe-attribution">
+    <span class="label">Fuente</span>
+
+    @if (sourceUrl()) {
+      <a [href]="sourceUrl()" target="_blank" rel="noopener">
+        {{ sourceName() || sourceUrl() }}
+      </a>
+    } @else {
+      <span>{{ sourceName() }}</span>
+    }
+  </section>
+}

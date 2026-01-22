@@ -1,3 +1,11 @@
-<p>
-  recipe-ingredients works!
-</p>
+<section class="ingredients">
+  <h2 class="ingredients-title">Ingredientes</h2>
+
+  <ul class="ingredients-list">
+    @for (ingredient of ingredients(); track $index) {
+      <li class="ingredient-item">
+        {{ ingredient.original }}
+      </li>
+    }
+  </ul>
+</section>

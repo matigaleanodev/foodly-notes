@@ -1,3 +1,17 @@
-<p>
-  recipe-instructions works!
-</p>
+<section class="instructions">
+  <h2 class="instructions-title">Preparación</h2>
+
+  @for (block of instructions(); track $index) {
+    @for (step of block.steps; track step.number) {
+      <div class="instruction-step">
+        <div class="step-number">
+          {{ step.number }}
+        </div>
+
+        <p class="step-text">
+          {{ step.step }}
+        </p>
+      </div>
+    }
+  }
+</section>

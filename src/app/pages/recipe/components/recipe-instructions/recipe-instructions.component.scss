@@ -1,0 +1,46 @@
+.instructions {
+  margin: 1.5rem 0;
+}
+
+.instructions-title {
+  margin-bottom: 1rem;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  color: var(--ion-text-color);
+}
+
+.instruction-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  margin-bottom: 1.25rem;
+}
+
+.step-number {
+  min-width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+.step-text {
+  margin: 0;
+
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  color: var(--ion-text-color);
+}

@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
+import { AnalyzedInstruction } from '@shared/models/recipe.model';
 
 @Component({
   selector: 'app-recipe-instructions',
+  imports: [],
   templateUrl: './recipe-instructions.component.html',
   styleUrls: ['./recipe-instructions.component.scss'],
 })
-export class RecipeInstructionsComponent  implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {}
-
+export class RecipeInstructionsComponent {
+  readonly instructions = input.required<AnalyzedInstruction[]>();
 }

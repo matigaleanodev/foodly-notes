@@ -1,3 +1,29 @@
-<p>
-  recipe-meta-extended works!
-</p>
+<section class="recipe-meta-extended">
+  @if (preparationMinutes()) {
+    <div class="meta-item">
+      <ion-icon name="time-outline"></ion-icon>
+      <span>Preparación: {{ preparationMinutes() }} min</span>
+    </div>
+  }
+
+  @if (cookingMinutes()) {
+    <div class="meta-item">
+      <ion-icon name="flame-outline"></ion-icon>
+      <span>Cocción: {{ cookingMinutes() }} min</span>
+    </div>
+  }
+
+  @if (healthScore()) {
+    <div class="meta-item">
+      <ion-icon name="fitness-outline"></ion-icon>
+      <span>Health score: {{ healthScore() }}</span>
+    </div>
+  }
+
+  @if (aggregateLikes()) {
+    <div class="meta-item">
+      <ion-icon name="heart-outline"></ion-icon>
+      <span>{{ aggregateLikes() }} likes</span>
+    </div>
+  }
+</section>

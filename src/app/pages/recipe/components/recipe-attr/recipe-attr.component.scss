@@ -1,0 +1,25 @@
+.recipe-attribution {
+  margin: 2rem 0 1rem;
+  padding-top: 0.75rem;
+
+  font-size: 0.8rem;
+  text-align: center;
+
+  color: var(--ion-color-medium);
+
+  border-top: 1px solid var(--ion-color-step-150);
+
+  .label {
+    display: block;
+    margin-bottom: 0.25rem;
+
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+  }
+}

@@ -1,6 +1,18 @@
 <ion-content [fullscreen]="true">
   <div class="recipe-container">
     <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
+    <app-recipe-ingredients [ingredients]="recipe().extendedIngredients" />
+    <app-recipe-meta-extended
+      [cookingMinutes]="recipe().cookingMinutes"
+      [preparationMinutes]="recipe().preparationMinutes"
+      [healthScore]="recipe().healthScore"
+      [aggregateLikes]="recipe().aggregateLikes"
+    />
+    <app-recipe-instructions [instructions]="recipe().analyzedInstructions" />
+    <app-recipe-attr
+      [sourceName]="recipe().sourceName"
+      [sourceUrl]="recipe().sourceUrl"
+    />
   </div>
 </ion-content>
 <ion-footer fixed slot="bottom">

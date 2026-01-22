@@ -9,4 +9,8 @@ import { Ingredient } from '@shared/models/recipe.model';
 })
 export class RecipeIngredientsComponent {
   readonly ingredients = input.required<Ingredient[]>();
+
+  ngOnInit() {
+    console.log(this.ingredients());
+  }
 }

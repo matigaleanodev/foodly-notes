@@ -1,0 +1,34 @@
+.ingredients {
+  margin: 1rem 0;
+  padding: 1rem;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.ion-color-light),
+:host-context(.ion-theme-light) {
+  .ingredients {
+    background: #f6f1e7;
+    color: #3a2f23;
+  }
+
+  .ingredient-item {
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+:host-context(.ion-color-dark),
+:host-context(.ion-theme-dark) {
+  .ingredients {
+    background: #2b2620;
+    color: #f1e9dc;
+  }
+
+  .ingredient-item {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}

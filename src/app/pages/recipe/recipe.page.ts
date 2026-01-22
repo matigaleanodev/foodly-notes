@@ -5,6 +5,10 @@ import { IonContent, IonFooter } from '@ionic/angular/standalone';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
+import { RecipeIngredientsComponent } from './components/recipe-ingredients/recipe-ingredients.component';
+import { RecipeInstructionsComponent } from './components/recipe-instructions/recipe-instructions.component';
+import { RecipeAttrComponent } from './components/recipe-attr/recipe-attr.component';
+import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/recipe-meta-extended.component';
 
 @Component({
   selector: 'app-recipe',
@@ -17,6 +21,10 @@ import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.compon
     FormsModule,
     RecipeMetaComponent,
     RecipeHeroComponent,
+    RecipeIngredientsComponent,
+    RecipeInstructionsComponent,
+    RecipeAttrComponent,
+    RecipeMetaExtendedComponent,
   ],
 })
 export class RecipePage implements OnInit {
