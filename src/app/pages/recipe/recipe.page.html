@@ -1,20 +1,32 @@
-<ion-content [fullscreen]="true">
+<ion-content>
   <div class="recipe-container">
     <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
   </div>
   <ion-grid class="recipe-container">
-    <app-recipe-ingredients [ingredients]="recipe().extendedIngredients" />
-    <app-recipe-meta-extended
-      [cookingMinutes]="recipe().cookingMinutes"
-      [preparationMinutes]="recipe().preparationMinutes"
-      [healthScore]="recipe().healthScore"
-      [aggregateLikes]="recipe().aggregateLikes"
-    />
-    <app-recipe-instructions [instructions]="recipe().analyzedInstructions" />
-    <app-recipe-attr
-      [sourceName]="recipe().sourceName"
-      [sourceUrl]="recipe().sourceUrl"
-    />
+    <ion-row>
+      <ion-col size="12" sizeMd="5" sizeLg="4">
+        <app-recipe-ingredients [ingredients]="recipe().extendedIngredients" />
+      </ion-col>
+      <ion-col size="12" sizeMd="7" sizeLg="8">
+        <app-recipe-meta-extended
+          [cookingMinutes]="recipe().cookingMinutes"
+          [preparationMinutes]="recipe().preparationMinutes"
+          [healthScore]="recipe().healthScore"
+          [aggregateLikes]="recipe().aggregateLikes"
+        />
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12">
+        <app-recipe-instructions
+          [instructions]="recipe().analyzedInstructions"
+        />
+        <app-recipe-attr
+          [sourceName]="recipe().sourceName"
+          [sourceUrl]="recipe().sourceUrl"
+        />
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 <ion-footer fixed slot="bottom">

@@ -1,7 +1,13 @@
 import { Component, computed, input, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonFooter, IonGrid } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonCol,
+  IonRow,
+} from '@ionic/angular/standalone';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
@@ -16,6 +22,8 @@ import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/r
   styleUrls: ['./recipe.page.scss'],
   standalone: true,
   imports: [
+    IonRow,
+    IonCol,
     IonGrid,
     IonFooter,
     IonContent,

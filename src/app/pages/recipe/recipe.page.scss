@@ -2,3 +2,12 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+ion-footer {
+  background: var(--ion-background-color);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.ion-color-dark) ion-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
