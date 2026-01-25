@@ -10,10 +10,16 @@
       <ion-title size="large">shopping-list</ion-title>
     </ion-toolbar>
   </ion-header>
-  @for (item of favoritos(); track $index) {
-  <app-shopping-recipe-card
-    [recipe]="item"
-    [shoppingState]="getShoppingState(item.id)"
-  ></app-shopping-recipe-card>
-  }
+  <ion-grid>
+    <ion-row>
+      @for (item of favoritos(); track $index) {
+      <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
+        <app-shopping-recipe-card
+          [recipe]="item"
+          [shoppingState]="getShoppingState(item.id)"
+        ></app-shopping-recipe-card>
+      </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
 </ion-content>

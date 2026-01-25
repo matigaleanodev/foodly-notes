@@ -1,3 +1,30 @@
-<p>
-  shopping-recipe-card works!
-</p>
+<section class="ingredients-paper">
+  <div class="paper-spacer"></div>
+  <div class="paper-margin"></div>
+
+  <div class="paper-content">
+    <div class="paper-title">
+      {{ recipe().title }}
+    </div>
+
+    <div class="paper-spacer"></div>
+
+    @for (ingredient of ingredients(); track $index) {
+      <ion-item class="paper-line" lines="none">
+        <ion-checkbox
+          slot="start"
+          [checked]="isIngredientChecked(ingredient.id)"
+          (ionChange)="toggleIngredient(ingredient.id)"
+        ></ion-checkbox>
+
+        <ion-label>
+          {{ ingredient.name }}
+        </ion-label>
+      </ion-item>
+    }
+
+    <div class="paper-spacer"></div>
+  </div>
+
+  <div class="paper-spacer"></div>
+</section>

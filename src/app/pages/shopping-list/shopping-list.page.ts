@@ -4,6 +4,9 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonRow,
+  IonGrid,
+  IonCol,
 } from '@ionic/angular/standalone';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
@@ -15,6 +18,9 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
   imports: [
+    IonCol,
+    IonGrid,
+    IonRow,
     IonContent,
     IonHeader,
     IonTitle,
