@@ -9,12 +9,14 @@ import {
   IonCol,
   IonRow,
   IonGrid,
+  IonMenu,
 } from '@ionic/angular/standalone';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { RecipeService } from '@shared/services/recipe/recipe.service';
+import { HomeHeroComponent } from './components/home-hero/home-hero.component';
 
 @Component({
   selector: 'app-home',
@@ -25,12 +27,14 @@ import { RecipeService } from '@shared/services/recipe/recipe.service';
     IonGrid,
     IonRow,
     IonCol,
-    IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonMenu,
+    IonContent,
     FormsModule,
     RecipeCardComponent,
+    HomeHeroComponent,
   ],
 })
 export class HomePage {
