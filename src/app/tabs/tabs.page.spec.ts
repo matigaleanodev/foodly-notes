@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { TabsPage } from './tabs.page';
+import { TABS, TabsPage } from './tabs.page';
 
 describe('TabsPage', () => {
   let component: TabsPage;
@@ -10,7 +10,7 @@ describe('TabsPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TabsPage],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -20,7 +20,12 @@ describe('TabsPage', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear la página de tabs', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debería exponer los tabs definidos', () => {
+    expect(component.tabs().length).toBe(3);
+    expect(component.tabs()).toEqual(TABS);
   });
 });
