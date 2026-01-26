@@ -44,7 +44,7 @@ export class RecipePage implements OnInit {
     if (!recipe) return '';
 
     return (
-      'https://spoonacular.com/recipeImages/' +
+      'https://img.spoonacular.com/recipes/' +
       recipe.id +
       '-636x393.' +
       (recipe.imageType || 'jpg')

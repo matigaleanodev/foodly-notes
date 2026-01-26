@@ -1,25 +1,23 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Favoritos</ion-title>
+    <ion-title>shopping-list</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Favoritos</ion-title>
+      <ion-title size="large">shopping-list</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <ion-grid>
     <ion-row>
-      @for (recipe of favoritos(); track $index) {
+      @for (item of favoritos(); track $index) {
       <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
-        <app-recipe-card
-          [recipe]="recipe"
-          (favorito)="toggleFavorito($event)"
-          (similares)="recetasSimilares($event)"
-        />
+        <app-shopping-recipe-card
+          [recipe]="item"
+          [shoppingState]="getShoppingState(item.id)"
+        ></app-shopping-recipe-card>
       </ion-col>
       }
     </ion-row>

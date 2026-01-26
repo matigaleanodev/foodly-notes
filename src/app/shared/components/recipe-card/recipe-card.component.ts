@@ -54,7 +54,7 @@ export class RecipeCardComponent {
     if (!recipe) return '';
 
     return (
-      'https://spoonacular.com/recipeImages/' +
+      'https://img.spoonacular.com/recipes/' +
       recipe.id +
       '-556x370.' +
       (recipe.imageType || 'jpg')

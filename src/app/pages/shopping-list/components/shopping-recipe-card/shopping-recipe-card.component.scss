@@ -1,0 +1,65 @@
+.ingredients-paper {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+
+  background: #f6e6c8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.paper-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+
+  border-right: 3px solid #d44147;
+}
+
+.paper-content {
+  position: relative;
+
+  background: linear-gradient(transparent, transparent 19px, #91d1d3 19px);
+  background-size: 20px 20px;
+}
+
+.paper-spacer {
+  height: 20px;
+}
+
+.paper-title {
+  height: 20px;
+  line-height: 20px;
+  padding: 0 12px;
+  margin-inline-start: 60px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f3a5f;
+}
+
+.paper-line {
+  --min-height: 20px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+
+  height: 20px;
+  line-height: 20px;
+
+  font-size: 0.9rem;
+  color: #1f3a5f;
+
+  --background: transparent;
+}
+
+.paper-line ion-label {
+  margin: 0;
+  margin-inline-start: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paper-line ion-checkbox {
+  --size: 14px;
+  margin-inline: 8px;
+}
