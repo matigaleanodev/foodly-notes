@@ -35,8 +35,6 @@ export class ShoppingListPage {
   readonly shoppingState = computed(() => this._service.shoppingState());
   readonly favoritos = computed(() => this._favorites.favoritos());
 
-  constructor() {}
-
   async ionViewWillEnter() {
     await this._favorites.cargarFavoritos();
     await this._service.init();

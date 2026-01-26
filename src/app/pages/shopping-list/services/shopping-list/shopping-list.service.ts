@@ -1,10 +1,4 @@
-import {
-  computed,
-  inject,
-  Injectable,
-  linkedSignal,
-  signal,
-} from '@angular/core';
+import { computed, inject, Injectable, linkedSignal } from '@angular/core';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { StorageService } from '@shared/services/storage/storage.service';

@@ -1,24 +1,27 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeMetaExtendedComponent } from './recipe-meta-extended.component';
 
 describe('RecipeMetaExtendedComponent', () => {
   let component: RecipeMetaExtendedComponent;
   let fixture: ComponentFixture<RecipeMetaExtendedComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RecipeMetaExtendedComponent ],
-      imports: [IonicModule.forRoot()]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RecipeMetaExtendedComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeMetaExtendedComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
 
-  it('should create', () => {
+    fixture.componentRef.setInput('preparationMinutes', 10);
+    fixture.componentRef.setInput('cookingMinutes', 20);
+    fixture.componentRef.setInput('healthScore', 80);
+    fixture.componentRef.setInput('aggregateLikes', 120);
+
+    fixture.detectChanges();
+  });
+
+  it('debería crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 });

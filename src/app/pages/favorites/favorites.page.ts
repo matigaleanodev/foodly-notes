@@ -12,6 +12,8 @@ import {
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
+import { NavService } from '@shared/services/nav/nav.service';
+import { RecipeService } from '@shared/services/recipe/recipe.service';
 
 @Component({
   selector: 'app-favorites',
@@ -31,6 +33,8 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 })
 export class FavoritesPage {
   private readonly _service = inject(FavoritesService);
+  private readonly _nav = inject(NavService);
+  private readonly _recipes = inject(RecipeService);
 
   readonly favoritos = computed(() => this._service.favoritos());
 
@@ -47,7 +51,15 @@ export class FavoritesPage {
     }
   }
 
-  recetasSimilares(receta: RecipeInfo) {}
+  recetasSimilares(receta: RecipeInfo) {
+    this._recipes.seleccionarReceta(receta);
 
-  detalleReceta(receta: RecipeInfo) {}
+    this._nav.forward(`similares/${receta.id}`);
+  }
+
+  detalleReceta(receta: RecipeInfo) {
+    this._recipes.seleccionarReceta(receta);
+
+    this._nav.forward(`recipe/${receta.id}`);
+  }
 }

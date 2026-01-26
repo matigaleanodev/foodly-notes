@@ -1,5 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecipeMetaComponent } from './recipe-meta.component';
 
@@ -7,18 +6,42 @@ describe('RecipeMetaComponent', () => {
   let component: RecipeMetaComponent;
   let fixture: ComponentFixture<RecipeMetaComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RecipeMetaComponent ],
-      imports: [IonicModule.forRoot()]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RecipeMetaComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeMetaComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
 
-  it('should create', () => {
+    fixture.componentRef.setInput('readyInMinutes', 30);
+    fixture.componentRef.setInput('servings', 2);
+    fixture.componentRef.setInput('isFavorite', false);
+    fixture.componentRef.setInput('vegan', true);
+    fixture.componentRef.setInput('vegetarian', false);
+    fixture.componentRef.setInput('glutenFree', false);
+    fixture.componentRef.setInput('dairyFree', true);
+
+    fixture.detectChanges();
+  });
+
+  it('debería crearse correctamente', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debería emitir el evento toggleFavorite', () => {
+    spyOn(component.toggleFavorite, 'emit');
+
+    component.toggleFavorite.emit();
+
+    expect(component.toggleFavorite.emit).toHaveBeenCalled();
+  });
+
+  it('debería emitir el evento viewSimilar', () => {
+    spyOn(component.viewSimilar, 'emit');
+
+    component.viewSimilar.emit();
+
+    expect(component.viewSimilar.emit).toHaveBeenCalled();
   });
 });
