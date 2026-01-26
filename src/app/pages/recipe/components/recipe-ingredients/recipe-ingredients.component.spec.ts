@@ -1,24 +1,35 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecipeIngredientsComponent } from './recipe-ingredients.component';
+import { Ingredient } from '@shared/models/recipe.model';
 
 describe('RecipeIngredientsComponent', () => {
   let component: RecipeIngredientsComponent;
   let fixture: ComponentFixture<RecipeIngredientsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RecipeIngredientsComponent ],
-      imports: [IonicModule.forRoot()]
+  const ingredientsMock: Ingredient[] = [
+    {
+      id: 1,
+      name: 'Ingrediente 1',
+      amount: 100,
+      unit: 'g',
+    } as Ingredient,
+  ];
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RecipeIngredientsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeIngredientsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
 
-  it('should create', () => {
+    fixture.componentRef.setInput('ingredients', ingredientsMock);
+
+    fixture.detectChanges();
+  });
+
+  it('debería crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 });

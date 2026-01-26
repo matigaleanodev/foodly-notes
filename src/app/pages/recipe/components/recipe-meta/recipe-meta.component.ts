@@ -1,4 +1,4 @@
-import { Component, input, OnInit, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -18,7 +18,7 @@ import {
   templateUrl: './recipe-meta.component.html',
   styleUrls: ['./recipe-meta.component.scss'],
 })
-export class RecipeMetaComponent implements OnInit {
+export class RecipeMetaComponent {
   readonly readyInMinutes = input.required<number>();
   readonly servings = input.required<number>();
   readonly isFavorite = input.required<boolean>();
@@ -42,6 +42,4 @@ export class RecipeMetaComponent implements OnInit {
       timeOutline,
     });
   }
-
-  ngOnInit() {}
 }

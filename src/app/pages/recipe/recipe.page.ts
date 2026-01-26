@@ -1,4 +1,4 @@
-import { Component, computed, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -15,6 +15,8 @@ import { RecipeIngredientsComponent } from './components/recipe-ingredients/reci
 import { RecipeInstructionsComponent } from './components/recipe-instructions/recipe-instructions.component';
 import { RecipeAttrComponent } from './components/recipe-attr/recipe-attr.component';
 import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/recipe-meta-extended.component';
+import { FavoritesService } from '@shared/services/favorites/favorites.service';
+import { NavService } from '@shared/services/nav/nav.service';
 
 @Component({
   selector: 'app-recipe',
@@ -36,8 +38,11 @@ import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/r
     RecipeMetaExtendedComponent,
   ],
 })
-export class RecipePage implements OnInit {
+export class RecipePage {
   readonly recipe = input.required<RecipeInfo>();
+
+  private readonly _favoritos = inject(FavoritesService);
+  private readonly _nav = inject(NavService);
 
   readonly imageUrl = computed(() => {
     const recipe = this.recipe();
@@ -51,13 +56,21 @@ export class RecipePage implements OnInit {
     );
   });
 
-  constructor() {}
+  isFavorite = computed(() => this._favoritos.esFavorito(this.recipe()));
 
-  ngOnInit() {}
+  toggleFavorito() {
+    const receta = this.recipe();
+    const esFavorito = this._favoritos.esFavorito(receta);
+    if (esFavorito) {
+      this._favoritos.removerFavorito(receta);
+    } else {
+      this._favoritos.agregarFavorito(receta);
+    }
+  }
 
-  isFavorite = computed(() => true);
+  verSimilares() {
+    const receta = this.recipe();
 
-  toggleFavorito() {}
-
-  verSimilares() {}
+    this._nav.forward(`similares/${receta.id}`);
+  }
 }
