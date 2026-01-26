@@ -56,6 +56,9 @@ describe('RecipePage', () => {
   it('debería indicar si la receta es favorita', () => {
     favoritesServiceMock.esFavorito.and.returnValue(true);
 
+    fixture.componentRef.setInput('recipe', { ...recipeMock });
+    fixture.detectChanges();
+
     expect(component.isFavorite()).toBeTrue();
   });
 

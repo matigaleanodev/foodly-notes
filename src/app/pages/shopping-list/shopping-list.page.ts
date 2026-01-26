@@ -17,16 +17,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
-  imports: [
-    IonCol,
-    IonGrid,
-    IonRow,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    ShoppingRecipeCardComponent,
-  ],
+  imports: [IonCol, IonGrid, IonRow, IonContent, ShoppingRecipeCardComponent],
 })
 export class ShoppingListPage {
   private readonly _service = inject(ShoppingListService);

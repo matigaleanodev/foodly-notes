@@ -1,16 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Favoritos</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Favoritos</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
+  <div class="favorites-header gradient-header">
+    <h1>Favoritos</h1>
+    <p>Recetas que guardaste porque valen la pena</p>
+  </div>
   <ion-grid>
     <ion-row>
       @for (recipe of favoritos(); track $index) {

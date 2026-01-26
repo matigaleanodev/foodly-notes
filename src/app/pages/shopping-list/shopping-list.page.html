@@ -1,15 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>shopping-list</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">shopping-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="shopping-header gradient-header">
+    <h1>Lista de compras</h1>
+    <p class="subtitle">Lo que necesitás para cocinar hoy</p>
+  </div>
   <ion-grid>
     <ion-row>
       @for (item of favoritos(); track $index) {

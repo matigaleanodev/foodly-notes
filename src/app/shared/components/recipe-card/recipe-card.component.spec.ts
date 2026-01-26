@@ -39,9 +39,10 @@ describe('RecipeCardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería calcular correctamente si la receta es favorita', () => {
+  it('debería indicar si la receta es favorita', () => {
     favoritesServiceMock.esFavorito.and.returnValue(true);
 
+    fixture.componentRef.setInput('recipe', { ...recipeMock });
     expect(component.esFavorito()).toBeTrue();
   });
 

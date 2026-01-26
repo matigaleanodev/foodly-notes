@@ -1,14 +1,6 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonRow,
-  IonGrid,
-  IonCol,
-} from '@ionic/angular/standalone';
+import { IonContent, IonRow, IonGrid, IonCol } from '@ionic/angular/standalone';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -20,16 +12,7 @@ import { RecipeService } from '@shared/services/recipe/recipe.service';
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [
-    IonCol,
-    IonGrid,
-    IonRow,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    RecipeCardComponent,
-  ],
+  imports: [IonCol, IonGrid, IonRow, IonContent, RecipeCardComponent],
 })
 export class FavoritesPage {
   private readonly _service = inject(FavoritesService);

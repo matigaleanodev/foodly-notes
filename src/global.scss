@@ -34,4 +34,32 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+.gradient-header {
+  padding: 2.5rem 1.25rem 2rem;
+
+  background: linear-gradient(
+    135deg,
+    var(--ion-color-primary),
+    var(--ion-color-secondary)
+  );
+
+  color: #fff;
+
+  h1 {
+    margin: 0;
+
+    font-size: 1.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin-top: 0.4rem;
+
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+}

@@ -1,3 +1,23 @@
+.shopping-header {
+  padding: 2rem 1.25rem 1.5rem;
+
+  h1 {
+    margin: 0;
+
+    font-size: 1.8rem;
+    font-weight: 600;
+
+    color: var(--ion-text-color);
+  }
+
+  .subtitle {
+    margin-top: 0.25rem;
+
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+  }
+}
+
 ion-grid {
   max-width: 1200px;
   margin: 0 auto;
