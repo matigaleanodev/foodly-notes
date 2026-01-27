@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <div class="info-hero gradient-header">
     <div class="info-hero-inner">
-      <h1>Recetario</h1>
+      <h1>Foodly Notes</h1>
       <p>Versión 0.1.0 · Desarrollo</p>
     </div>
   </div>
@@ -12,17 +12,17 @@
         <ion-label>Información</ion-label>
       </ion-list-header>
 
-      <ion-item button detail>
+      <ion-item button detail [href]="termsUrl" target="_blank">
         <ion-icon name="document-text-outline" slot="start"></ion-icon>
         <ion-label>Términos y condiciones</ion-label>
       </ion-item>
 
-      <ion-item button detail>
+      <ion-item button detail [href]="privacyUrl" target="_blank">
         <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
         <ion-label>Política de privacidad</ion-label>
       </ion-item>
 
-      <ion-item button detail>
+      <ion-item button detail [href]="helpUrl" target="_blank">
         <ion-icon name="help-circle-outline" slot="start"></ion-icon>
         <ion-label>Ayuda</ion-label>
       </ion-item>
@@ -33,7 +33,13 @@
         <ion-label>Atribuciones</ion-label>
       </ion-list-header>
 
-      <ion-item lines="none">
+      <ion-item
+        button
+        detail
+        lines="none"
+        [href]="spoonacularUrl"
+        target="_blank"
+      >
         <ion-icon name="nutrition-outline" slot="start"></ion-icon>
         <ion-label>
           <h3>Spoonacular API</h3>
@@ -47,15 +53,15 @@
         <ion-label>Contacto</ion-label>
       </ion-list-header>
 
-      <ion-item>
+      <ion-item button detail [href]="'mailto:' + contactEmail">
         <ion-icon name="mail-outline" slot="start"></ion-icon>
         <ion-label>
           <p>Email</p>
-          <h3>matiasgaleano.dev@gmail.com</h3>
+          <h3>contacto@matiasgaleano.com.ar</h3>
         </ion-label>
       </ion-item>
 
-      <ion-item button detail>
+      <ion-item button detail [href]="githubUrl" target="_blank">
         <ion-icon name="logo-github" slot="start"></ion-icon>
         <ion-label>GitHub</ion-label>
       </ion-item>
