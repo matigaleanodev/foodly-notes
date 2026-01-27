@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.menu-header {
+  background: linear-gradient(
+    135deg,
+    var(--ion-color-primary),
+    var(--ion-color-secondary)
+  );
+  color: #fff;
+  padding: 1.25rem;
+}
+
+.menu-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menu-logo {
+  font-size: 2.1rem;
+  flex-shrink: 0;
+}
+
+.menu-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.menu-header p {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+ion-content {
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+}
+
+ion-list {
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+ion-list-header {
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+ion-list-header ion-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ion-color-medium);
+}
+
+/* ===== ITEMS ===== */
+ion-item {
+  --min-height: 44px;
+}
+
+ion-item ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+}
+
+ion-item ion-label {
+  font-size: 0.95rem;
+}
+
+ion-item ion-note {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+}
+
+ion-toggle {
+  pointer-events: none;
+}

@@ -1,16 +1,7 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCol,
-  IonRow,
-  IonGrid,
-  IonMenu,
-} from '@ionic/angular/standalone';
+import { IonContent, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -27,10 +18,6 @@ import { HomeHeroComponent } from './components/home-hero/home-hero.component';
     IonGrid,
     IonRow,
     IonCol,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonMenu,
     IonContent,
     FormsModule,
     RecipeCardComponent,
