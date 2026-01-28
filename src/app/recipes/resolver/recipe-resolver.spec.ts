@@ -3,7 +3,7 @@ import { ResolveFn } from '@angular/router';
 
 import { recipeResolver } from './recipe-resolver';
 import { RecipeInfo } from '@shared/models/recipe.model';
-import { RecipeService } from '@shared/services/recipe/recipe.service';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 describe('recipeResolver', () => {
   const executeResolver: ResolveFn<RecipeInfo | null> = (

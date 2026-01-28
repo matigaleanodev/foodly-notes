@@ -1,0 +1,17 @@
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
+import { RecipeApiService } from '@recipes/services/recipe-api/recipe-api.service';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { firstValueFrom } from 'rxjs';
+
+export const similarRecipesResolver: ResolveFn<SimilarRecipe[] | null> = async (
+  route,
+) => {
+  const recipes = inject(RecipeService);
+
+  const id = Number(route.paramMap.get('id'));
+  if (!id) return null;
+
+  return firstValueFrom(await recipes.buscarRecetasSimilares(id));
+};

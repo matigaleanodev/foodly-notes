@@ -13,5 +13,12 @@ export interface RecipeDetail {
   vegetarian: boolean;
   vegan: boolean;
   glutenFree: boolean;
+  dairyFree: boolean;
+  sourceName: string;
+  sourceUrl: string;
+  cookingMinutes: number;
+  preparationMinutes: number;
+  healthScore: number;
+  aggregateLikes: number;
   lang: 'en' | 'es';
 }

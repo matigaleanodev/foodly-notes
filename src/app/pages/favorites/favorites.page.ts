@@ -5,7 +5,7 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { NavService } from '@shared/services/nav/nav.service';
-import { RecipeService } from '@shared/services/recipe/recipe.service';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 @Component({
   selector: 'app-favorites',
@@ -34,15 +34,11 @@ export class FavoritesPage {
     }
   }
 
-  recetasSimilares(receta: DailyRecipe) {
-    this._recipes.seleccionarReceta(receta);
-
-    this._nav.forward(`similares/${receta.sourceId}`);
+  recetasSimilares({ sourceId }: DailyRecipe) {
+    this._recipes.recetasSimilares(sourceId);
   }
 
-  detalleReceta(receta: DailyRecipe) {
-    this._recipes.seleccionarReceta(receta);
-
-    this._nav.forward(`recipe/${receta.sourceId}`);
+  detalleReceta({ sourceId }: DailyRecipe) {
+    this._recipes.detalleReceta(sourceId);
   }
 }

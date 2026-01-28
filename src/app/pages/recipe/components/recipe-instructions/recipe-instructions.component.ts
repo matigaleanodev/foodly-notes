@@ -1,5 +1,5 @@
 import { Component, input, OnInit } from '@angular/core';
-import { AnalyzedInstruction } from '@shared/models/recipe.model';
+import { RecipeInstruction } from '@recipes/models/recipe-instruction.model';
 
 @Component({
   selector: 'app-recipe-instructions',
@@ -8,5 +8,5 @@ import { AnalyzedInstruction } from '@shared/models/recipe.model';
   styleUrls: ['./recipe-instructions.component.scss'],
 })
 export class RecipeInstructionsComponent {
-  readonly instructions = input.required<AnalyzedInstruction[]>();
+  readonly instructions = input.required<RecipeInstruction[]>();
 }

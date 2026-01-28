@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
-import { RecipeService } from '@shared/services/recipe/recipe.service';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 export const recipeResolver: ResolveFn<DailyRecipe | null> = (route, state) => {
   const _recipes = inject(RecipeService);

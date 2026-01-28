@@ -1,54 +1,52 @@
-import { httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
-import {
-  Lang,
-  TranslateService,
-} from '@shared/services/translate/translate.service';
-import { environment } from 'src/environments/environment.development';
-import { DailyRecipe } from '../../models/daily-recipe.model';
-import { RecipeDetail } from '../../models/recipe-detail.model';
-import { SimilarRecipe } from '../../models/similar-recipe.model';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { TranslateService } from '@shared/services/translate/translate.service';
+
+import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { RecipeDetail } from '@recipes/models/recipe-detail.model';
+import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
+import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipeApiService {
+  private readonly http = inject(HttpClient);
+  private readonly translate = inject(TranslateService);
   private readonly baseUrl = environment.API_URL;
-  private readonly _translate = inject(TranslateService);
 
-  readonly lang = computed<Lang>(() => this._translate.lang());
-
-  readonly dailyRecipes = httpResource<DailyRecipe[]>(() => ({
-    url: `${this.baseUrl}/recipes/daily`,
-    params: {
-      lang: this.lang(),
-    },
-  }));
-
-  private readonly recipeId = signal<number | null>(null);
-
-  readonly recipeDetail = httpResource<RecipeDetail | null>(() => {
-    const id = this.recipeId();
-    if (!id) return undefined;
-
-    return {
-      url: `${this.baseUrl}/recipes/${id}`,
+  getDailyRecipes(): Observable<DailyRecipe[]> {
+    return this.http.get<DailyRecipe[]>(`${this.baseUrl}/recipes/daily`, {
       params: {
-        lang: this.lang(),
+        lang: this.translate.lang(),
       },
-    };
-  });
-
-  setRecipeId(id: number): void {
-    this.recipeId.set(id);
+    });
   }
 
-  readonly similarRecipes = httpResource<SimilarRecipe[]>(() => {
-    const id = this.recipeId();
-    if (!id) return undefined;
+  getRecipeDetail(sourceId: number): Observable<RecipeDetail> {
+    return this.http.get<RecipeDetail>(`${this.baseUrl}/recipes/${sourceId}`, {
+      params: {
+        lang: this.translate.lang(),
+      },
+    });
+  }
 
-    return {
-      url: `${this.baseUrl}/recipes/${id}/similar`,
-    };
-  });
+  getSimilarRecipes(sourceId: number): Observable<SimilarRecipe[]> {
+    return this.http.get<SimilarRecipe[]>(
+      `${this.baseUrl}/recipes/${sourceId}/similar`,
+    );
+  }
+
+  getIngredientsForRecipes(sourceIds: number[]): Observable<ShoppingRecipe[]> {
+    return this.http.post<ShoppingRecipe[]>(
+      `${this.baseUrl}/recipes/ingredients`,
+      {
+        sourceIds,
+        lang: this.translate.lang(),
+      },
+    );
+  }
 }

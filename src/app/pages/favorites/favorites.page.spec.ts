@@ -3,7 +3,7 @@ import { FavoritesPage } from './favorites.page';
 import { RecipeInfo } from '@shared/models/recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { NavService } from '@shared/services/nav/nav.service';
-import { RecipeService } from '@shared/services/recipe/recipe.service';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 describe('FavoritesPage', () => {
   let component: FavoritesPage;

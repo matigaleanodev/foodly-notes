@@ -8,23 +8,21 @@
         <app-recipe-ingredients [ingredients]="recipe().ingredients" />
       </ion-col>
       <ion-col size="12" sizeMd="7" sizeLg="8">
-        <!-- <app-recipe-meta-extended
+        <app-recipe-meta-extended
           [cookingMinutes]="recipe().cookingMinutes"
           [preparationMinutes]="recipe().preparationMinutes"
           [healthScore]="recipe().healthScore"
           [aggregateLikes]="recipe().aggregateLikes"
-        /> -->
+        />
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col size="12">
-        <!-- <app-recipe-instructions
-          [instructions]="recipe().analyzedInstructions"
-        /> -->
-        <!-- <app-recipe-attr
+        <app-recipe-instructions [instructions]="recipe().instructions" />
+        <app-recipe-attr
           [sourceName]="recipe().sourceName"
           [sourceUrl]="recipe().sourceUrl"
-        /> -->
+        />
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -37,8 +35,8 @@
     [vegetarian]="recipe().vegetarian"
     [vegan]="recipe().vegan"
     [glutenFree]="recipe().glutenFree"
+    [dairyFree]="recipe().dairyFree"
     (toggleFavorite)="toggleFavorito()"
     (viewSimilar)="verSimilares()"
   />
 </ion-footer>
-<!-- [dairyFree]="recipe().dairyFree" -->
