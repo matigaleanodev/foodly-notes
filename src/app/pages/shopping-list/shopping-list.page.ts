@@ -12,6 +12,8 @@ import { ShoppingListService } from './services/shopping-list/shopping-list.serv
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
+import { ShoppingRecipesService } from './services/shopping-recipe/shopping-recipe.service';
+import { LoadingService } from '@shared/services/loading/loading.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -21,17 +23,33 @@ import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
   imports: [IonCol, IonGrid, IonRow, IonContent, ShoppingRecipeCardComponent],
 })
 export class ShoppingListPage {
-  private readonly _service = inject(ShoppingListService);
+  private readonly _state = inject(ShoppingListService);
   private readonly _favorites = inject(FavoritesService);
+  private readonly _recipes = inject(ShoppingRecipesService);
+  private readonly _loading = inject(LoadingService);
 
-  readonly shoppingState = computed(() => this._service.shoppingState());
+  readonly shoppingState = computed(() => this._state.shoppingState());
   readonly favoritos = computed(() => this._favorites.favoritos());
 
-  readonly shoppingList = signal<ShoppingRecipe[]>([]);
+  readonly shoppingRecipes = computed(() => this._recipes.recipes());
+
+  readonly shoppingList = computed(() =>
+    this.shoppingRecipes().map((recipe) => ({
+      recipe,
+      state: this.getShoppingState(recipe.sourceId),
+    })),
+  );
 
   async ionViewWillEnter() {
-    await this._favorites.cargarFavoritos();
-    await this._service.init();
+    const loading = await this._loading.show();
+
+    try {
+      await this._favorites.cargarFavoritos();
+      await this._state.init();
+      await this._recipes.sync();
+    } finally {
+      loading.dismiss();
+    }
   }
 
   getShoppingState(recipeId: number) {
