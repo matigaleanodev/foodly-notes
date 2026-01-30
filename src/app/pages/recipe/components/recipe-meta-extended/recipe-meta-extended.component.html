@@ -2,21 +2,23 @@
   @if (preparationMinutes()) {
     <div class="meta-item">
       <ion-icon name="time-outline"></ion-icon>
-      <span>Preparación: {{ preparationMinutes() }} min</span>
+      <span
+        >{{ "xPreparacion" | translate }}: {{ preparationMinutes() }} min</span
+      >
     </div>
   }
 
   @if (cookingMinutes()) {
     <div class="meta-item">
       <ion-icon name="flame-outline"></ion-icon>
-      <span>Cocción: {{ cookingMinutes() }} min</span>
+      <span>{{ "xCoccion" | translate }}: {{ cookingMinutes() }} min</span>
     </div>
   }
 
   @if (healthScore()) {
     <div class="meta-item">
       <ion-icon name="fitness-outline"></ion-icon>
-      <span>Health score: {{ healthScore() }}</span>
+      <span>{{ "xHealthScore" | translate }}: {{ healthScore() }}</span>
     </div>
   }
 

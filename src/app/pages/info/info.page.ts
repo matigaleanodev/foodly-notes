@@ -7,6 +7,7 @@ import {
   IonIcon,
   IonItem,
 } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
   constructOutline,
@@ -24,7 +25,15 @@ import {
   templateUrl: './info.page.html',
   styleUrls: ['./info.page.scss'],
   standalone: true,
-  imports: [IonItem, IonIcon, IonList, IonLabel, IonListHeader, IonContent],
+  imports: [
+    IonItem,
+    IonIcon,
+    IonList,
+    IonLabel,
+    IonListHeader,
+    IonContent,
+    TranslatePipe,
+  ],
 })
 export class InfoPage {
   readonly helpUrl = 'https://github.com/matigaleanodev/foodly-notes/issues';

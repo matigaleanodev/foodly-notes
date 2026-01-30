@@ -14,6 +14,8 @@ import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
+import { TranslateService } from '@shared/translate/translate.service';
 
 @Component({
   selector: 'app-similar',
@@ -27,18 +29,22 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
     IonContent,
     FormsModule,
     RecipeCardComponent,
+    TranslatePipe,
   ],
 })
 export class SimilarPage {
   readonly recipes = input.required<SimilarRecipe[]>();
 
+  readonly _translator = inject(TranslateService);
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
 
   readonly subtitle = computed(() => {
     const recipe = this._recipes.recipeSelected();
 
-    return recipe ? `Basadas en: ${recipe.title}` : 'Recetas recomendadas';
+    return recipe
+      ? `${this._translator.translate('xBasadaEn')}: ${recipe.title}`
+      : this._translator.translate('xRecetasRecomendadas');
   });
 
   ionViewWillEnter() {

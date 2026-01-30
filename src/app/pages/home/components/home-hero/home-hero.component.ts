@@ -6,10 +6,18 @@ import {
   IonButtons,
   IonSearchbar,
 } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-home-hero',
-  imports: [IonSearchbar, IonButtons, IonToolbar, IonHeader, IonMenuButton],
+  imports: [
+    IonSearchbar,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
+    IonMenuButton,
+    TranslatePipe,
+  ],
   templateUrl: './home-hero.component.html',
   styleUrls: ['./home-hero.component.scss'],
 })

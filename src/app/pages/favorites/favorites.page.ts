@@ -5,19 +5,27 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [IonCol, IonGrid, IonRow, IonContent, RecipeCardComponent],
+  imports: [
+    IonCol,
+    IonGrid,
+    IonRow,
+    IonContent,
+    RecipeCardComponent,
+    TranslatePipe,
+  ],
 })
 export class FavoritesPage {
   private readonly _service = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
 
-  readonly favoritos = computed(() => this._service.favorites());
+  readonly favorites = computed(() => this._service.favorites());
 
   ionViewWillEnter() {
     this._service.loadFavorites();

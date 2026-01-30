@@ -1,9 +1,10 @@
 import { Component, input, OnInit } from '@angular/core';
 import { RecipeInstruction } from '@recipes/models/recipe-instruction.model';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-recipe-instructions',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './recipe-instructions.component.html',
   styleUrls: ['./recipe-instructions.component.scss'],
 })

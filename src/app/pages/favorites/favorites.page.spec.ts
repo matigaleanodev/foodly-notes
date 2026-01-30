@@ -60,7 +60,7 @@ describe('FavoritesPage', () => {
   });
 
   it('debería exponer los favoritos del service', () => {
-    expect(component.favoritos()).toEqual([recipeMock]);
+    expect(component.favorites()).toEqual([recipeMock]);
   });
 
   it('debería remover un favorito si ya lo es', () => {

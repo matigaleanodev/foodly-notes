@@ -13,6 +13,7 @@ import {
   IonNote,
   IonList,
 } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
   cartOutline,
@@ -40,6 +41,7 @@ import {
     IonContent,
     IonHeader,
     IonMenu,
+    TranslatePipe,
   ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],

@@ -1,13 +1,13 @@
 <ion-content>
   <div class="favorites-header gradient-header">
     <div class="favorites-header-inner">
-      <h1>Favoritos</h1>
-      <p>Recetas que guardaste porque valen la pena</p>
+      <h1>{{'xFavoritos' | translate }}</h1>
+      <p>{{'xFavoritosSubitulo' | translate }}</p>
     </div>
   </div>
   <ion-grid>
     <ion-row>
-      @for (recipe of favoritos(); track $index) {
+      @for (recipe of favorites(); track $index) {
       <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
         <app-recipe-card
           [recipe]="recipe"

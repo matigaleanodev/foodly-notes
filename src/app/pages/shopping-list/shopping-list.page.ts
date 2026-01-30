@@ -5,13 +5,14 @@ import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/s
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { ShoppingRecipesService } from './services/shopping-recipe/shopping-recipe.service';
 import { LoadingService } from '@shared/services/loading/loading.service';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
-  imports: [IonContent, ShoppingRecipeCardComponent],
+  imports: [IonContent, ShoppingRecipeCardComponent, TranslatePipe],
 })
 export class ShoppingListPage {
   private readonly _state = inject(ShoppingListService);
