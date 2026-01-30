@@ -4,8 +4,12 @@
       <ion-icon name="foodly-notes" class="menu-logo" />
 
       <div class="menu-header-text">
-        <h1>Foodly Notes</h1>
-        <p>Recetario personal</p>
+        <h1>
+          {{ "xFloodyNotes" | translate }}
+        </h1>
+        <p>
+          {{ "xMenuSubtitulo" | translate }}
+        </p>
       </div>
     </div>
   </ion-header>
@@ -15,47 +19,65 @@
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="home">
           <ion-icon name="home-outline" slot="start" />
-          <ion-label>Inicio</ion-label>
+          <ion-label>
+            {{ "xInicio" | translate }}
+          </ion-label>
         </ion-item>
       </ion-menu-toggle>
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="favorites">
           <ion-icon name="heart-outline" slot="start" />
-          <ion-label>Favoritos</ion-label>
+          <ion-label>
+            {{ "xFavoritos" | translate }}
+          </ion-label>
         </ion-item>
       </ion-menu-toggle>
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="shopping-list">
           <ion-icon name="cart-outline" slot="start" />
-          <ion-label>Lista de compras</ion-label>
+          <ion-label>
+            {{ "xListaCompras" | translate }}
+          </ion-label>
         </ion-item>
       </ion-menu-toggle>
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="info">
           <ion-icon name="information-circle-outline" slot="start" />
-          <ion-label>Información</ion-label>
+          <ion-label>
+            {{ "xInformacion" | translate }}
+          </ion-label>
         </ion-item>
       </ion-menu-toggle>
     </ion-list>
 
     <ion-list>
       <ion-list-header>
-        <ion-label>Ajustes</ion-label>
+        <ion-label>
+          {{ "xAjustes" | translate }}
+        </ion-label>
       </ion-list-header>
 
-      <ion-item button>
+      <ion-item button (click)="openThemeSelector()">
         <ion-icon name="phone-portrait-outline" slot="start" />
-        <ion-label>Tema</ion-label>
-        <ion-note slot="end">Sistema</ion-note>
+        <ion-label>
+          {{ "xTema" | translate }}
+        </ion-label>
+        <ion-note slot="end">
+          {{ currentTheme() }}
+        </ion-note>
       </ion-item>
 
-      <ion-item button>
+      <ion-item button (click)="openLanguageSelector()">
         <ion-icon name="language-outline" slot="start" />
-        <ion-label>Idioma</ion-label>
-        <ion-note slot="end">ES</ion-note>
+        <ion-label>
+          {{ "xIdioma" | translate }}
+        </ion-label>
+        <ion-note slot="end">
+          {{ currentLang() }}
+        </ion-note>
       </ion-item>
     </ion-list>
   </ion-content>

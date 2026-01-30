@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "i18n:check": "npx tsc scripts/check-missing-keys.ts && node scripts/check-missing-keys.js"
   },
   "private": true,
   "dependencies": {

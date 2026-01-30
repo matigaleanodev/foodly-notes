@@ -1,6 +1,8 @@
 @if (sourceName() || sourceUrl()) {
   <section class="recipe-attribution">
-    <span class="label">Fuente</span>
+    <span class="label">
+      {{ "xFuenteAttr" | translate }}
+    </span>
 
     @if (sourceUrl()) {
       <a [href]="sourceUrl()" target="_blank" rel="noopener">

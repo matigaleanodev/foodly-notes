@@ -1,6 +1,17 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
 :root {
+  --ion-font-family:
+    "IBM Plex Sans", "Montserrat", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --ion-font-family-secondary:
+    "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+
   --ion-color-primary: #4caf50;
   --ion-color-primary-rgb: 76, 175, 80;
   --ion-color-primary-contrast: #ffffff;
@@ -63,6 +74,10 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d9d7;
   --ion-color-light-tint: #f5f7f5;
+}
+
+:root.ion-palette-dark {
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
 }
 
 // @media (prefers-color-scheme: dark) {

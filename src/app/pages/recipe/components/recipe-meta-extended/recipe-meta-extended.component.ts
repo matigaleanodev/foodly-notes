@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
   fitnessOutline,
@@ -10,7 +11,7 @@ import {
 
 @Component({
   selector: 'app-recipe-meta-extended',
-  imports: [IonIcon],
+  imports: [IonIcon, TranslatePipe],
   templateUrl: './recipe-meta-extended.component.html',
   styleUrls: ['./recipe-meta-extended.component.scss'],
 })

@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  OnInit,
-  output,
-} from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import {
   IonCard,
   IonImg,

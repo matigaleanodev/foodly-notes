@@ -8,6 +8,7 @@ import {
   IonLabel,
   IonRouterLink,
 } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import { homeOutline, heartOutline, cartOutline } from 'ionicons/icons';
 
@@ -23,6 +24,7 @@ import { homeOutline, heartOutline, cartOutline } from 'ionicons/icons';
     IonLabel,
     IonRouterLink,
     RouterLink,
+    TranslatePipe,
   ],
 })
 export class TabsPage {
@@ -34,17 +36,17 @@ export class TabsPage {
 }
 export const TABS = [
   {
-    label: 'Favoritos',
+    label: 'xFavoritos',
     path: 'favorites',
     icon: 'heart-outline',
   },
   {
-    label: 'Home',
+    label: 'xInicio',
     path: 'home',
     icon: 'home-outline',
   },
   {
-    label: 'Lista de compras',
+    label: 'xListaCompras',
     path: 'shopping-list',
     icon: 'cart-outline',
   },

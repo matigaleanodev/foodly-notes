@@ -1,8 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-
-import { TranslateService } from '@shared/services/translate/translate.service';
 
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
@@ -10,6 +8,8 @@ import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { environment } from '@env/environment';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
+import { TranslateService } from '@shared/translate/translate.service';
+import { Language } from '@shared/translate/language.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,10 +19,17 @@ export class RecipeApiService {
   private readonly translate = inject(TranslateService);
   private readonly baseUrl = environment.API_URL;
 
+  readonly lang = computed<'en' | 'es'>(() => {
+    const currentLang = this.translate.currentLang();
+    if (!currentLang) return 'en';
+
+    return currentLang === Language.ES ? 'es' : 'en';
+  });
+
   getDailyRecipes(): Observable<DailyRecipe[]> {
     return this.http.get<DailyRecipe[]>(`${this.baseUrl}/recipes/daily`, {
       params: {
-        lang: this.translate.lang(),
+        lang: this.lang(),
       },
     });
   }
@@ -30,7 +37,7 @@ export class RecipeApiService {
   getRecipeDetail(sourceId: number): Observable<RecipeDetail> {
     return this.http.get<RecipeDetail>(`${this.baseUrl}/recipes/${sourceId}`, {
       params: {
-        lang: this.translate.lang(),
+        lang: this.lang(),
       },
     });
   }
@@ -46,7 +53,7 @@ export class RecipeApiService {
       `${this.baseUrl}/recipes/ingredients`,
       {
         sourceIds,
-        lang: this.translate.lang(),
+        lang: this.lang(),
       },
     );
   }
