@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { recipeDetailResolver } from '@recipes/resolver/recipe-detail-resolver';
+import { searchResolver } from '@recipes/resolver/search-resolver';
 import { similarRecipesResolver } from '@recipes/resolver/similar-recipes-resolver';
 
 export const routes: Routes = [
@@ -20,7 +21,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@pages/similar/similar.page').then((m) => m.SimilarPage),
     resolve: {
-      recipe: similarRecipesResolver,
+      recipes: similarRecipesResolver,
     },
   },
   {
@@ -34,6 +35,14 @@ export const routes: Routes = [
     path: 'info',
     loadComponent: () =>
       import('./pages/info/info.page').then((m) => m.InfoPage),
+  },
+  {
+    path: 'search',
+    loadComponent: () =>
+      import('./pages/search/search.page').then((m) => m.SearchPage),
+    resolve: {
+      initialList: searchResolver,
+    },
   },
   {
     path: '**',

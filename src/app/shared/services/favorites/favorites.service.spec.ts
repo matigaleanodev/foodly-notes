@@ -36,52 +36,52 @@ describe('FavoritesService', () => {
   it('debería cargar los favoritos desde storage', async () => {
     storageMock.getItem.and.resolveTo([recipeMock]);
 
-    await service.cargarFavoritos();
+    await service.loadFavorites();
 
     expect(storageMock.getItem).toHaveBeenCalled();
-    expect(service.favoritos()).toEqual([recipeMock]);
+    expect(service.favorites()).toEqual([recipeMock]);
   });
 
   it('debería inicializar favoritos vacíos si no hay datos en storage', async () => {
     storageMock.getItem.and.resolveTo(null);
 
-    await service.cargarFavoritos();
+    await service.loadFavorites();
 
-    expect(service.favoritos()).toEqual([]);
+    expect(service.favorites()).toEqual([]);
   });
 
   it('debería agregar un favorito', () => {
-    service.agregarFavorito(recipeMock);
+    service.addFavorite(recipeMock);
 
-    expect(service.favoritos()).toEqual([recipeMock]);
+    expect(service.favorites()).toEqual([recipeMock]);
     expect(storageMock.setItem).toHaveBeenCalledWith('FAVORITOS', [recipeMock]);
   });
 
   it('no debería agregar un favorito duplicado', () => {
-    service.agregarFavorito(recipeMock);
-    service.agregarFavorito(recipeMock);
+    service.addFavorite(recipeMock);
+    service.addFavorite(recipeMock);
 
-    expect(service.favoritos().length).toBe(1);
+    expect(service.favorites().length).toBe(1);
   });
 
   it('debería remover un favorito', () => {
-    service.agregarFavorito(recipeMock);
-    service.removerFavorito(recipeMock.sourceId);
+    service.addFavorite(recipeMock);
+    service.removeFavorite(recipeMock.sourceId);
 
-    expect(service.favoritos()).toEqual([]);
+    expect(service.favorites()).toEqual([]);
     expect(storageMock.setItem).toHaveBeenCalledWith('FAVORITOS', []);
   });
 
   it('debería indicar si una receta es favorita', () => {
-    service.agregarFavorito(recipeMock);
+    service.addFavorite(recipeMock);
 
-    const result = service.esFavorito(recipeMock.sourceId);
+    const result = service.isFavorite(recipeMock.sourceId);
 
     expect(result).toBeTrue();
   });
 
   it('debería indicar false si la receta no es favorita', () => {
-    const result = service.esFavorito(recipeMock.sourceId);
+    const result = service.isFavorite(recipeMock.sourceId);
 
     expect(result).toBeFalse();
   });

@@ -9,16 +9,18 @@ import { finalize } from 'rxjs';
   providedIn: 'root',
 })
 export class RecipeService {
-  private readonly apiService = inject(RecipeApiService);
+  private readonly _api = inject(RecipeApiService);
   private readonly _nav = inject(NavService);
   private readonly _loading = inject(LoadingService);
 
   readonly recipes = signal<DailyRecipe[]>([]);
 
-  async buscarRecetasDiarias() {
+  readonly recipeSelected = signal<DailyRecipe | null>(null);
+
+  async loadDailyRecipes() {
     const loading = await this._loading.show();
 
-    this.apiService
+    this._api
       .getDailyRecipes()
       .pipe(finalize(() => loading.dismiss()))
       .subscribe({
@@ -26,25 +28,43 @@ export class RecipeService {
       });
   }
 
-  async buscarDetalleReceta(sourceId: number) {
+  async loadRecipeDeatil(sourceId: number) {
     const loading = await this._loading.show();
 
-    return this.apiService
+    return this._api
       .getRecipeDetail(sourceId)
       .pipe(finalize(() => loading.dismiss()));
   }
-  async buscarRecetasSimilares(sourceId: number) {
+
+  async loadSimilaRecipes(sourceId: number) {
     const loading = await this._loading.show();
 
-    return this.apiService
+    return this._api
       .getSimilarRecipes(sourceId)
       .pipe(finalize(() => loading.dismiss()));
   }
-  recetasSimilares(sourceId: number) {
-    this._nav.forward(`similares/${sourceId}`);
+
+  async queryReacipeSearch(query: string) {
+    const loading = await this._loading.show();
+
+    return this._api
+      .getRecipesByQuery(query)
+      .pipe(finalize(() => loading.dismiss()));
   }
 
-  detalleReceta(sourceId: number) {
+  searchRecipes(query: string) {
+    this._nav.search(query);
+  }
+
+  selectRecipe(recipe: DailyRecipe) {
+    this.recipeSelected.set(recipe);
+  }
+
+  toSimilarRecipes(sourceId: number) {
+    this._nav.forward(`similar/${sourceId}`);
+  }
+
+  toRecipeDetail(sourceId: number) {
     this._nav.forward(`recipe/${sourceId}`);
   }
 }

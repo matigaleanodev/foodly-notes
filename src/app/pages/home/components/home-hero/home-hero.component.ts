@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import {
   IonMenuButton,
   IonHeader,
@@ -14,5 +14,20 @@ import {
   styleUrls: ['./home-hero.component.scss'],
 })
 export class HomeHeroComponent {
-  constructor() {}
+  readonly onSearch = output<string>();
+
+  readonly query = signal('');
+
+  handleInput(event: Event) {
+    const target = event.target as HTMLIonSearchbarElement;
+    this.query.set(target.value?.toLowerCase() ?? '');
+  }
+
+  onEnter() {
+    const q = this.query().trim();
+
+    if (q.length < 3) return;
+
+    this.onSearch.emit(q);
+  }
 }

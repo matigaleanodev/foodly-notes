@@ -1,13 +1,22 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>similar</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">similar</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="similares-header gradient-header">
+    <div class="similares-header-inner">
+      <h1>Recetas Similares</h1>
+      <p>{{ subtitle() }}</p>
+    </div>
+  </div>
+  <ion-grid>
+    <ion-row>
+      @for (recipe of recipes(); track $index) {
+      <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
+        <app-recipe-card
+          [recipe]="recipe"
+          (toggleFavorite)="toggleFavorite($event)"
+          (similarRecipes)="toSimilarRecipes($event)"
+          (recipeDetail)="detalleReceta($event)"
+        />
+      </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
 </ion-content>

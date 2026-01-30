@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 
 import { TranslateService } from '@shared/services/translate/translate.service';
 
@@ -9,6 +9,7 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { environment } from '@env/environment';
+import { SearchRecipe } from '@recipes/models/search-recipe.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,18 @@ export class RecipeApiService {
         lang: this.translate.lang(),
       },
     );
+  }
+
+  getRecipesByQuery(query: string): Observable<SearchRecipe[]> {
+    const q = query.trim();
+    if (!q) {
+      return of([]);
+    }
+
+    const params = new HttpParams().set('q', q);
+
+    return this.http.get<SearchRecipe[]>(`${this.baseUrl}/recipes/search`, {
+      params,
+    });
   }
 }

@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 
-const KEY_FAVORITOS = 'FAVORITOS';
+const KEY_favorites = 'FAVORITOS';
 
 @Injectable({
   providedIn: 'root',
@@ -10,42 +10,42 @@ const KEY_FAVORITOS = 'FAVORITOS';
 export class FavoritesService {
   private readonly _storage = inject(StorageService);
 
-  readonly favoritos = signal<DailyRecipe[]>([]);
+  readonly favorites = signal<DailyRecipe[]>([]);
 
-  async cargarFavoritos() {
-    const favoritos = await this._storage.getItem<DailyRecipe[]>(KEY_FAVORITOS);
+  async loadFavorites() {
+    const favorites = await this._storage.getItem<DailyRecipe[]>(KEY_favorites);
 
-    this.favoritos.set(favoritos ?? []);
+    this.favorites.set(favorites ?? []);
   }
 
-  agregarFavorito(recipe: DailyRecipe) {
-    const favoritos = this.favoritos();
+  addFavorite(recipe: DailyRecipe) {
+    const favs = this.favorites();
 
-    if (favoritos.some(({ sourceId }) => sourceId === recipe.sourceId)) {
+    if (favs.some(({ sourceId }) => sourceId === recipe.sourceId)) {
       return;
     }
 
-    const nuevaLista = [...favoritos, recipe];
-    this.actualizarFavoritos(nuevaLista);
+    const nuevaLista = [...favs, recipe];
+    this.uploadFavorites(nuevaLista);
   }
 
-  removerFavorito(id: number) {
-    const favoritos = this.favoritos().filter(
+  removeFavorite(id: number) {
+    const favoritos = this.favorites().filter(
       ({ sourceId }) => sourceId !== id,
     );
 
-    this.actualizarFavoritos(favoritos);
+    this.uploadFavorites(favoritos);
   }
 
-  esFavorito(id: number) {
-    const favoritos = this.favoritos();
+  isFavorite(id: number) {
+    const favs = this.favorites();
 
-    return favoritos.some(({ sourceId }) => sourceId === id);
+    return favs.some(({ sourceId }) => sourceId === id);
   }
 
-  private async actualizarFavoritos(nuevaLista: DailyRecipe[]) {
-    this.favoritos.set(nuevaLista);
+  private async uploadFavorites(nuevaLista: DailyRecipe[]) {
+    this.favorites.set(nuevaLista);
 
-    await this._storage.setItem<DailyRecipe[]>(KEY_FAVORITOS, nuevaLista);
+    await this._storage.setItem<DailyRecipe[]>(KEY_favorites, nuevaLista);
   }
 }

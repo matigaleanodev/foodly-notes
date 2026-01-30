@@ -17,26 +17,28 @@ export class FavoritesPage {
   private readonly _service = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
 
-  readonly favoritos = computed(() => this._service.favoritos());
+  readonly favoritos = computed(() => this._service.favorites());
 
   ionViewWillEnter() {
-    this._service.cargarFavoritos();
+    this._service.loadFavorites();
   }
 
-  toggleFavorito(receta: DailyRecipe) {
-    const esFavorito = this._service.esFavorito(receta.sourceId);
-    if (esFavorito) {
-      this._service.removerFavorito(receta.sourceId);
+  toggleFav(receta: DailyRecipe) {
+    const isFavorite = this._service.isFavorite(receta.sourceId);
+    if (isFavorite) {
+      this._service.removeFavorite(receta.sourceId);
     } else {
-      this._service.agregarFavorito(receta);
+      this._service.addFavorite(receta);
     }
   }
 
-  recetasSimilares({ sourceId }: DailyRecipe) {
-    this._recipes.recetasSimilares(sourceId);
+  toSimilarRecipes(recipe: DailyRecipe) {
+    this._recipes.selectRecipe(recipe);
+
+    this._recipes.toSimilarRecipes(recipe.sourceId);
   }
 
   detalleReceta({ sourceId }: DailyRecipe) {
-    this._recipes.detalleReceta(sourceId);
+    this._recipes.toRecipeDetail(sourceId);
   }
 }

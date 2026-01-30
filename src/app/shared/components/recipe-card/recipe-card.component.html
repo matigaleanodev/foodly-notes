@@ -1,17 +1,13 @@
-<ion-card
-  class="recipe-card"
-  [button]="true"
-  (click)="seleccionarReceta($event)"
->
+<ion-card class="recipe-card" [button]="true" (click)="toRecipeDetail($event)">
   <ion-card-header class="recipe-card-header">
     <ion-toolbar color="transparent">
       <ion-buttons slot="end">
         <ion-button
           fill="solid"
           shape="round"
-          [color]="esFavorito() ? 'danger' : 'medium'"
+          [color]="isFavorite() ? 'danger' : 'medium'"
           class="recipe-card-action"
-          (click)="estadoFavoritos($event)"
+          (click)="toggleFavoriteState($event)"
         >
           <ion-icon slot="icon-only" name="heart"></ion-icon>
         </ion-button>
@@ -20,7 +16,7 @@
           shape="round"
           color="primary"
           class="recipe-card-action"
-          (click)="recetasSimilares($event)"
+          (click)="toSimilarRecipes($event)"
         >
           <ion-icon slot="icon-only" name="repeat"></ion-icon>
         </ion-button>

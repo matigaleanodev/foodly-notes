@@ -10,7 +10,7 @@ describe('similarRecipesResolver', () => {
 
   beforeEach(() => {
     recipeService = jasmine.createSpyObj('RecipeService', [
-      'buscarRecetasSimilares',
+      'buscartoSimilarRecipes',
     ]);
 
     TestBed.configureTestingModule({
@@ -35,9 +35,7 @@ describe('similarRecipesResolver', () => {
       { id: 1, title: 'Receta similar', image: 'img.jpg' },
     ];
 
-    recipeService.buscarRecetasSimilares.and.returnValue(
-      Promise.resolve(of(data)),
-    );
+    recipeService.loadSimilaRecipes.and.returnValue(Promise.resolve(of(data)));
 
     const route = {
       paramMap: new Map([['id', '1']]),
@@ -47,7 +45,7 @@ describe('similarRecipesResolver', () => {
       similarRecipesResolver(route, {} as RouterStateSnapshot),
     );
 
-    expect(recipeService.buscarRecetasSimilares).toHaveBeenCalledWith(1);
+    expect(recipeService.loadSimilaRecipes).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
   });
 });

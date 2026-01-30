@@ -1,20 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonGrid,
+  IonCol,
+  IonRow,
+} from '@ionic/angular/standalone';
+import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
+import { FavoritesService } from '@shared/services/favorites/favorites.service';
 
 @Component({
   selector: 'app-similar',
   templateUrl: './similar.page.html',
   styleUrls: ['./similar.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, FormsModule]
+  imports: [
+    IonRow,
+    IonCol,
+    IonGrid,
+    IonContent,
+    FormsModule,
+    RecipeCardComponent,
+  ],
 })
-export class SimilarPage implements OnInit {
+export class SimilarPage {
+  readonly recipes = input.required<SimilarRecipe[]>();
 
-  constructor() { }
+  readonly _recipes = inject(RecipeService);
+  readonly _favorites = inject(FavoritesService);
 
-  ngOnInit() {
+  readonly subtitle = computed(() => {
+    const recipe = this._recipes.recipeSelected();
+
+    return recipe ? `Basadas en: ${recipe.title}` : 'Recetas recomendadas';
+  });
+
+  ionViewWillEnter() {
+    this._favorites.loadFavorites();
   }
 
+  toggleFavorite(receta: SimilarRecipe) {
+    const isFav = this._favorites.isFavorite(receta.sourceId);
+    if (isFav) {
+      this._favorites.removeFavorite(receta.sourceId);
+    } else {
+      this._favorites.addFavorite(receta);
+    }
+  }
+
+  toSimilarRecipes(recipe: SimilarRecipe) {
+    this._recipes.selectRecipe(recipe);
+
+    this._recipes.toSimilarRecipes(recipe.sourceId);
+  }
+
+  detalleReceta({ sourceId }: SimilarRecipe) {
+    this._recipes.toRecipeDetail(sourceId);
+  }
 }

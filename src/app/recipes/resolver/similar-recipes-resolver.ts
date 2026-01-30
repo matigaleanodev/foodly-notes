@@ -9,9 +9,8 @@ export const similarRecipesResolver: ResolveFn<SimilarRecipe[] | null> = async (
   state,
 ) => {
   const recipes = inject(RecipeService);
-
   const id = Number(route.paramMap.get('id'));
   if (!id) return null;
 
-  return firstValueFrom(await recipes.buscarRecetasSimilares(id));
+  return firstValueFrom(await recipes.loadSimilaRecipes(id));
 };

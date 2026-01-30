@@ -7,8 +7,10 @@ import { NavController } from '@ionic/angular/standalone';
 export class NavService {
   private readonly _navController = inject(NavController);
 
-  forward(path: string) {
-    this._navController.navigateForward(path);
+  forward(path: string, queryParams?: Record<string, any>) {
+    this._navController.navigateForward(path, {
+      queryParams,
+    });
   }
 
   back() {
@@ -17,6 +19,15 @@ export class NavService {
 
   root(path: string) {
     this._navController.navigateRoot(path, { replaceUrl: true });
+  }
+
+  search(query: string) {
+    const q = query.trim();
+    if (!q) return;
+
+    this.forward('/search', {
+      q,
+    });
   }
 
   volverHome() {

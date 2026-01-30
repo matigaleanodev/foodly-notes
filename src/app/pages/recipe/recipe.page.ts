@@ -17,6 +17,7 @@ import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/r
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 @Component({
   selector: 'app-recipe',
@@ -41,7 +42,8 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 export class RecipePage {
   readonly recipe = input.required<RecipeDetail>();
 
-  private readonly _favoritos = inject(FavoritesService);
+  private readonly _favorites = inject(FavoritesService);
+  private readonly _recipes = inject(RecipeService);
   private readonly _nav = inject(NavService);
 
   readonly imageUrl = computed(() => {
@@ -52,23 +54,26 @@ export class RecipePage {
   });
 
   isFavorite = computed(() =>
-    this._favoritos.esFavorito(this.recipe().sourceId),
+    this._favorites.isFavorite(this.recipe().sourceId),
   );
 
-  toggleFavorito() {
-    const receta = this.recipe();
-    const { sourceId, title, image } = receta;
-    const esFavorito = this._favoritos.esFavorito(sourceId);
-    if (esFavorito) {
-      this._favoritos.removerFavorito(sourceId);
+  toggleFavorite() {
+    const recipe = this.recipe();
+    const { sourceId, title, image } = recipe;
+
+    const isFavorite = this._favorites.isFavorite(sourceId);
+
+    if (isFavorite) {
+      this._favorites.removeFavorite(sourceId);
     } else {
-      this._favoritos.agregarFavorito({ sourceId, title, image });
+      this._favorites.addFavorite({ sourceId, title, image });
     }
   }
 
-  verSimilares() {
-    const receta = this.recipe();
+  toSimilaRecipes() {
+    const { sourceId, title, image } = this.recipe();
+    this._recipes.selectRecipe({ sourceId, title, image });
 
-    this._nav.forward(`similares/${receta.sourceId}`);
+    this._nav.forward(`similares/${sourceId}`);
   }
 }

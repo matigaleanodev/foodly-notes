@@ -18,7 +18,7 @@ describe('FavoritesPage', () => {
   const favoritesServiceMock = {
     favoritos: jasmine.createSpy(),
     cargarFavoritos: jasmine.createSpy(),
-    esFavorito: jasmine.createSpy(),
+    isFavorite: jasmine.createSpy(),
     agregarFavorito: jasmine.createSpy(),
     removerFavorito: jasmine.createSpy(),
   };
@@ -33,7 +33,7 @@ describe('FavoritesPage', () => {
 
   beforeEach(async () => {
     favoritesServiceMock.favoritos.and.returnValue([recipeMock]);
-    favoritesServiceMock.esFavorito.and.returnValue(true);
+    favoritesServiceMock.isFavorite.and.returnValue(true);
 
     await TestBed.configureTestingModule({
       imports: [FavoritesPage],
@@ -64,9 +64,9 @@ describe('FavoritesPage', () => {
   });
 
   it('debería remover un favorito si ya lo es', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(true);
+    favoritesServiceMock.isFavorite.and.returnValue(true);
 
-    component.toggleFavorito(recipeMock);
+    component.toggleFav(recipeMock);
 
     expect(favoritesServiceMock.removerFavorito).toHaveBeenCalledWith(
       recipeMock.sourceId,
@@ -74,9 +74,9 @@ describe('FavoritesPage', () => {
   });
 
   it('debería agregar un favorito si no lo es', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(false);
+    favoritesServiceMock.isFavorite.and.returnValue(false);
 
-    component.toggleFavorito(recipeMock);
+    component.toggleFav(recipeMock);
 
     expect(favoritesServiceMock.agregarFavorito).toHaveBeenCalledWith(
       recipeMock,

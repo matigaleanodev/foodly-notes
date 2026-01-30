@@ -20,7 +20,7 @@ export class ShoppingListPage {
   private readonly _loading = inject(LoadingService);
 
   readonly shoppingState = computed(() => this._state.shoppingState());
-  readonly favoritos = computed(() => this._favorites.favoritos());
+  readonly favoritos = computed(() => this._favorites.favorites());
 
   readonly shoppingRecipes = computed(() => this._recipes.recipes());
 
@@ -35,7 +35,7 @@ export class ShoppingListPage {
     const loading = await this._loading.show();
 
     try {
-      await this._favorites.cargarFavoritos();
+      await this._favorites.loadFavorites();
       await this._state.init();
       await this._recipes.sync();
     } finally {

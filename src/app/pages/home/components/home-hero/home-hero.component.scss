@@ -81,7 +81,10 @@
 
   .hero-text {
     max-width: 320px;
-    text-align: center;
+    h1,
+    p {
+      text-align: center;
+    }
   }
 
   .hero-illustration {

@@ -14,7 +14,7 @@ describe('RecipePage', () => {
     image: 'jpg',
   } as RecipeDetail;
   const favoritesServiceMock = {
-    esFavorito: jasmine.createSpy(),
+    isFavorite: jasmine.createSpy(),
     agregarFavorito: jasmine.createSpy(),
     removerFavorito: jasmine.createSpy(),
   };
@@ -24,7 +24,7 @@ describe('RecipePage', () => {
   };
 
   beforeEach(async () => {
-    favoritesServiceMock.esFavorito.and.returnValue(false);
+    favoritesServiceMock.isFavorite.and.returnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [RecipePage],
@@ -53,7 +53,7 @@ describe('RecipePage', () => {
   });
 
   it('debería indicar si la receta es favorita', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(true);
+    favoritesServiceMock.isFavorite.and.returnValue(true);
 
     fixture.componentRef.setInput('recipe', { ...recipeMock });
     fixture.detectChanges();
@@ -62,9 +62,9 @@ describe('RecipePage', () => {
   });
 
   it('debería agregar la receta a favoritos si no lo es', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(false);
+    favoritesServiceMock.isFavorite.and.returnValue(false);
 
-    component.toggleFavorito();
+    component.toggleFav();
 
     expect(favoritesServiceMock.agregarFavorito).toHaveBeenCalledWith(
       recipeMock,
@@ -72,9 +72,9 @@ describe('RecipePage', () => {
   });
 
   it('debería remover la receta de favoritos si ya lo es', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(true);
+    favoritesServiceMock.isFavorite.and.returnValue(true);
 
-    component.toggleFavorito();
+    component.toggleFav();
 
     expect(favoritesServiceMock.removerFavorito).toHaveBeenCalledWith(
       recipeMock,
@@ -82,7 +82,7 @@ describe('RecipePage', () => {
   });
 
   it('debería navegar a recetas similares', () => {
-    component.verSimilares();
+    component.toSimilaRecipes();
 
     expect(navServiceMock.forward).toHaveBeenCalledWith('similares/1');
   });

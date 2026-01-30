@@ -53,9 +53,7 @@ describe('recipeDetailResolver', () => {
       lang: 'en',
     };
 
-    recipeService.buscarDetalleReceta.and.returnValue(
-      Promise.resolve(of(data)),
-    );
+    recipeService.loadRecipeDeatil.and.returnValue(Promise.resolve(of(data)));
 
     const route = {
       paramMap: new Map([['id', '1']]),
@@ -65,7 +63,7 @@ describe('recipeDetailResolver', () => {
       recipeDetailResolver(route, {} as RouterStateSnapshot),
     );
 
-    expect(recipeService.buscarDetalleReceta).toHaveBeenCalledWith(1);
+    expect(recipeService.loadRecipeDeatil).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
   });
 });

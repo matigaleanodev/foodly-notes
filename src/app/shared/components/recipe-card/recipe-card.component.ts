@@ -39,14 +39,14 @@ import { heart, repeat } from 'ionicons/icons';
 export class RecipeCardComponent {
   readonly recipe = input.required<DailyRecipe>();
 
-  readonly favorito = output<DailyRecipe>();
-  readonly similares = output<DailyRecipe>();
-  readonly seleccionar = output<DailyRecipe>();
+  readonly toggleFavorite = output<DailyRecipe>();
+  readonly similarRecipes = output<DailyRecipe>();
+  readonly recipeDetail = output<DailyRecipe>();
 
-  private readonly _favoritos = inject(FavoritesService);
+  private readonly _favorites = inject(FavoritesService);
 
-  readonly esFavorito = computed(() => {
-    return this._favoritos.esFavorito(this.recipe().sourceId);
+  readonly isFavorite = computed(() => {
+    return this._favorites.isFavorite(this.recipe().sourceId);
   });
 
   readonly recipeImageUrl = computed(() => {
@@ -63,18 +63,18 @@ export class RecipeCardComponent {
     });
   }
 
-  seleccionarReceta(ev: Event) {
+  toRecipeDetail(ev: Event) {
     ev.stopPropagation();
-    this.seleccionar.emit(this.recipe());
+    this.recipeDetail.emit(this.recipe());
   }
 
-  recetasSimilares(ev: Event) {
+  toSimilarRecipes(ev: Event) {
     ev.stopPropagation();
-    this.similares.emit(this.recipe());
+    this.similarRecipes.emit(this.recipe());
   }
 
-  estadoFavoritos(ev: Event) {
+  toggleFavoriteState(ev: Event) {
     ev.stopPropagation();
-    this.favorito.emit(this.recipe());
+    this.toggleFavorite.emit(this.recipe());
   }
 }

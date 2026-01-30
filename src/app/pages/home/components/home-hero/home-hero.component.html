@@ -15,6 +15,10 @@
       <ion-searchbar
         placeholder="Buscar recetas"
         animated="true"
+        inputmode="search"
+        enterkeyhint="search"
+        (ionInput)="handleInput($event)"
+        (keyup.enter)="onEnter()"
       ></ion-searchbar>
     </div>
     <div class="hero-illustration">

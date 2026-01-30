@@ -15,7 +15,7 @@ describe('RecipeCardComponent', () => {
   };
 
   const favoritesServiceMock = {
-    esFavorito: jasmine.createSpy(),
+    isFavorite: jasmine.createSpy(),
   };
 
   beforeEach(async () => {
@@ -30,7 +30,7 @@ describe('RecipeCardComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('recipe', recipeMock);
-    favoritesServiceMock.esFavorito.and.returnValue(false);
+    favoritesServiceMock.isFavorite.and.returnValue(false);
 
     fixture.detectChanges();
   });
@@ -40,10 +40,10 @@ describe('RecipeCardComponent', () => {
   });
 
   it('debería indicar si la receta es favorita', () => {
-    favoritesServiceMock.esFavorito.and.returnValue(true);
+    favoritesServiceMock.isFavorite.and.returnValue(true);
 
     fixture.componentRef.setInput('recipe', { ...recipeMock });
-    expect(component.esFavorito()).toBeTrue();
+    expect(component.isFavorite()).toBeTrue();
   });
 
   it('debería construir correctamente la url de la imagen', () => {
@@ -70,21 +70,21 @@ describe('RecipeCardComponent', () => {
     const event = new Event('click');
     spyOn(event, 'stopPropagation');
 
-    component.recetasSimilares(event);
+    component.toSimilarRecipes(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
     expect(component.similares.emit).toHaveBeenCalledWith(recipeMock);
   });
 
   it('debería emitir el evento favorito', () => {
-    spyOn(component.favorito, 'emit');
+    spyOn(component.favorite, 'emit');
 
     const event = new Event('click');
     spyOn(event, 'stopPropagation');
 
-    component.estadoFavoritos(event);
+    component.toggleFavoriteState(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.favorito.emit).toHaveBeenCalledWith(recipeMock);
+    expect(component.favorite.emit).toHaveBeenCalledWith(recipeMock);
   });
 });

@@ -25,29 +25,34 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 })
 export class HomePage {
   readonly _recipes = inject(RecipeService);
-  readonly _favoritos = inject(FavoritesService);
+  readonly _favorites = inject(FavoritesService);
 
   readonly recipes = computed(() => this._recipes.recipes());
 
   ionViewWillEnter() {
-    this._favoritos.cargarFavoritos();
-    this._recipes.buscarRecetasDiarias();
+    this._favorites.loadFavorites();
+    this._recipes.loadDailyRecipes();
   }
 
-  toggleFavorito(receta: DailyRecipe) {
-    const esFavorito = this._favoritos.esFavorito(receta.sourceId);
-    if (esFavorito) {
-      this._favoritos.removerFavorito(receta.sourceId);
+  toggleFavorite(recipe: DailyRecipe) {
+    const isFav = this._favorites.isFavorite(recipe.sourceId);
+    if (isFav) {
+      this._favorites.removeFavorite(recipe.sourceId);
     } else {
-      this._favoritos.agregarFavorito(receta);
+      this._favorites.addFavorite(recipe);
     }
   }
 
-  recetasSimilares({ sourceId }: DailyRecipe) {
-    this._recipes.recetasSimilares(sourceId);
+  toSimilarRecipes(recipe: DailyRecipe) {
+    this._recipes.selectRecipe(recipe);
+    this._recipes.toSimilarRecipes(recipe.sourceId);
   }
 
-  detalleReceta({ sourceId }: DailyRecipe) {
-    this._recipes.detalleReceta(sourceId);
+  toRecipeDetail({ sourceId }: DailyRecipe) {
+    this._recipes.toRecipeDetail(sourceId);
+  }
+
+  toSearchRecipe(query: string) {
+    this._recipes.searchRecipes(query);
   }
 }

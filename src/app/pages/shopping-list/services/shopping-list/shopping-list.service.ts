@@ -15,7 +15,7 @@ export interface ShoppingRecipeState {
 })
 export class ShoppingListService {
   private readonly _storage = inject(StorageService);
-  private readonly _favoritos = inject(FavoritesService);
+  private readonly _favorites = inject(FavoritesService);
 
   readonly shoppingState = linkedSignal<DailyRecipe[], ShoppingRecipeState[]>({
     source: () => this.favoritos(),
@@ -40,7 +40,7 @@ export class ShoppingListService {
       return [...filtrados, ...nuevos];
     },
   });
-  readonly favoritos = computed(() => this._favoritos.favoritos());
+  readonly favoritos = computed(() => this._favorites.favorites());
 
   async init() {
     await this.load();

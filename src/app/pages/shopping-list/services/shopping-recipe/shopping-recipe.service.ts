@@ -14,7 +14,7 @@ export class ShoppingRecipesService {
   readonly recipes = signal<ShoppingRecipe[]>([]);
 
   async sync() {
-    const favoritos = this.favorites.favoritos();
+    const favoritos = this.favorites.favorites();
     const ids = favoritos.map((f) => f.sourceId);
 
     const current = this.recipes();

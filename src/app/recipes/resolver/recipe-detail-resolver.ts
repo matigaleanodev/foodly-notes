@@ -13,5 +13,5 @@ export const recipeDetailResolver: ResolveFn<RecipeDetail | null> = async (
   const id = Number(route.paramMap.get('id'));
   if (!id) return null;
 
-  return firstValueFrom(await recipe.buscarDetalleReceta(id));
+  return firstValueFrom(await recipe.loadRecipeDeatil(id));
 };
