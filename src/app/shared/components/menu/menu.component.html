@@ -62,13 +62,15 @@
 
       <ion-item button>
         <ion-icon name="phone-portrait-outline" slot="start" />
-        <ion-label>Tema</ion-label>
+        <ion-label>
+          {{ "xTema" | translate }}
+        </ion-label>
         <ion-note slot="end">
           {{ "xSistema" | translate }}
         </ion-note>
       </ion-item>
 
-      <ion-item button>
+      <ion-item button (click)="openLanguageSelector()">
         <ion-icon name="language-outline" slot="start" />
         <ion-label>
           {{ "xIdioma" | translate }}

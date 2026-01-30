@@ -31,5 +31,6 @@ export const esAR: Record<string, string> = {
   xClaro: 'Claro',
   xOscuro: 'Oscuro',
   xIdioma: 'Idioma',
+  xTema: 'Tema',
   xCargando: 'Cargando',
 };

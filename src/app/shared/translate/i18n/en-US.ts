@@ -31,5 +31,6 @@ export const enUS: Record<string, string> = {
   xClaro: 'Light',
   xOscuro: 'Dark',
   xIdioma: 'Language',
+  xTema: 'Theme',
   xCargando: 'Loading',
 };

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonHeader,
@@ -12,8 +12,11 @@ import {
   IonListHeader,
   IonNote,
   IonList,
+  ActionSheetController,
 } from '@ionic/angular/standalone';
+import { Language } from '@shared/translate/language.model';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
+import { TranslateService } from '@shared/translate/translate.service';
 import { addIcons } from 'ionicons';
 import {
   cartOutline,
@@ -47,6 +50,13 @@ import {
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
+  private readonly translate = inject(TranslateService);
+  private readonly actionSheetCtrl = inject(ActionSheetController);
+
+  readonly currentLang = computed(() =>
+    this.translate.currentLang() === Language.ES ? 'ES' : 'EN',
+  );
+
   constructor() {
     addIcons({
       'foodly-notes': 'assets/icons/foodly_notes_icon.svg',
@@ -59,5 +69,27 @@ export class MenuComponent {
       phonePortraitOutline,
       languageOutline,
     });
+  }
+
+  async openLanguageSelector() {
+    const sheet = await this.actionSheetCtrl.create({
+      header: this.translate.translate('xIdioma'),
+      buttons: [
+        {
+          text: 'Español',
+          handler: () => this.translate.setLanguage(Language.ES),
+        },
+        {
+          text: 'English',
+          handler: () => this.translate.setLanguage(Language.EN),
+        },
+        {
+          text: this.translate.translate('xCancelar'),
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await sheet.present();
   }
 }
