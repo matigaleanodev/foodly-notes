@@ -1,5 +1,15 @@
+<ion-header class="overlay-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="medium" />
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button color="medium" class="ion-margin-end" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <div class="recipe-container">
+  <div>
     <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
   </div>
   <ion-grid class="recipe-container">

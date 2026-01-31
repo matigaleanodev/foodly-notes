@@ -34,4 +34,7 @@ export const esAR: Record<string, string> = {
   xTema: 'Tema',
   xCargando: 'Cargando',
   xCancelar: 'Cancelar',
+  xErrorTimeout: 'La solicitud tardó demasiado tiempo',
+  xErrorConexion: 'No se pudo conectar con el servidor',
+  xErrorDesconocido: 'Ocurrió un error inesperado',
 };

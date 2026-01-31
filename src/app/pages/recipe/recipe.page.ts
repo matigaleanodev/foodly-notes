@@ -7,6 +7,11 @@ import {
   IonGrid,
   IonCol,
   IonRow,
+  IonToolbar,
+  IonHeader,
+  IonBackButton,
+  IonButtons,
+  IonMenuButton,
 } from '@ionic/angular/standalone';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
@@ -25,6 +30,11 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
   styleUrls: ['./recipe.page.scss'],
   standalone: true,
   imports: [
+    IonButtons,
+    IonMenuButton,
+    IonBackButton,
+    IonHeader,
+    IonToolbar,
     IonRow,
     IonCol,
     IonGrid,

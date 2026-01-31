@@ -1,6 +1,16 @@
 import { Component, computed, inject } from '@angular/core';
 
-import { IonContent, IonRow, IonGrid, IonCol } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonRow,
+  IonGrid,
+  IonCol,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonMenuButton,
+} from '@ionic/angular/standalone';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -13,6 +23,11 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
   imports: [
+    IonBackButton,
+    IonMenuButton,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
     IonCol,
     IonGrid,
     IonRow,

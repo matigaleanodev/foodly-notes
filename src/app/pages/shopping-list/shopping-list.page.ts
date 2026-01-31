@@ -1,5 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { IonContent } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonButtons,
+  IonBackButton,
+  IonToolbar,
+  IonHeader,
+  IonMenuButton,
+} from '@ionic/angular/standalone';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -12,7 +19,16 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
-  imports: [IonContent, ShoppingRecipeCardComponent, TranslatePipe],
+  imports: [
+    IonMenuButton,
+    IonHeader,
+    IonToolbar,
+    IonBackButton,
+    IonButtons,
+    IonContent,
+    ShoppingRecipeCardComponent,
+    TranslatePipe,
+  ],
 })
 export class ShoppingListPage {
   private readonly _state = inject(ShoppingListService);

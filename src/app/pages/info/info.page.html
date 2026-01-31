@@ -1,8 +1,18 @@
+<ion-header class="overlay-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" color="light" />
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content [fullscreen]="true">
   <div class="info-hero gradient-header">
     <div class="info-hero-inner">
       <h1>{{'xFloodyNotes' | translate}}</h1>
-      <p>{{'xVersion'}} 0.1.0 · {{'xDesarrollo'}}</p>
+      <p>{{'xVersion' |translate}} 0.1.0 · {{'xDesarrollo' |translate}}</p>
     </div>
   </div>
 

@@ -1,5 +1,10 @@
 <ion-header class="hero-header">
   <ion-toolbar>
+    @if (searchPage()) {
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home" color="light" />
+      </ion-buttons>
+    }
     <ion-buttons slot="end">
       <ion-menu-button color="light" />
     </ion-buttons>

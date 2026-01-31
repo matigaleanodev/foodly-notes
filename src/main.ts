@@ -15,7 +15,8 @@ import {
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { errorInterceptor } from '@shared/interceptors/error-interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -23,7 +24,7 @@ bootstrapApplication(AppComponent, {
     provideZoneChangeDetection(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([errorInterceptor])),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),

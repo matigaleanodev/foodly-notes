@@ -1,12 +1,8 @@
-<div class="recipe-hero">
-  <ion-img class="hero-image" [src]="imageUrl()" [alt]="title()" />
-  <div class="hero-overlay"></div>
-
-  <div class="hero-header">
-    <ion-back-button defaultHref="/home" />
-  </div>
-
-  <div class="hero-title">
-    <h1>{{ title() }}</h1>
+<div class="recipe-hero gradient-header">
+  <div class="hero-overlay">
+    <ion-img class="hero-image" [src]="imageUrl()" [alt]="title()" />
+    <div class="hero-title">
+      <h1>{{ title() }}</h1>
+    </div>
   </div>
 </div>

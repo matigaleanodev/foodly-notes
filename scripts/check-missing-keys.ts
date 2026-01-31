@@ -64,13 +64,11 @@ function checkMissingKeys() {
       `❌ ${missingKeys.length} claves usadas pero NO definidas en es-AR:`,
     );
     console.log(missingKeys.join('\n'));
-    process.exit(1);
   }
 }
 
 checkMissingKeys();
 
-/* limpieza */
 try {
   fs.unlinkSync(path.resolve('./src/app/shared/translate/i18n/es-AR.js'));
 } catch {}

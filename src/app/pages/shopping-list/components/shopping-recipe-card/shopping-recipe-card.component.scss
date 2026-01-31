@@ -23,17 +23,17 @@
 .paper-content {
   position: relative;
 
-  background: linear-gradient(transparent, transparent 19px, #91d1d3 19px);
-  background-size: 20px 20px;
+  background: linear-gradient(transparent, transparent 39px, #91d1d3 39px);
+  background-size: 40px 40px;
 }
 
 .paper-spacer {
-  height: 20px;
+  height: 40px;
 }
 
 .paper-title {
-  height: 20px;
-  line-height: 20px;
+  height: 40px;
+  line-height: 40px;
   padding: 0 12px;
   margin-inline-start: 60px;
   font-size: 1rem;
@@ -42,12 +42,12 @@
 }
 
 .paper-line {
-  --min-height: 20px;
+  --min-height: 40px;
   --padding-start: 12px;
   --padding-end: 12px;
 
-  height: 20px;
-  line-height: 20px;
+  height: 40px;
+  line-height: 40px;
 
   font-size: 0.9rem;
   color: #1f3a5f;

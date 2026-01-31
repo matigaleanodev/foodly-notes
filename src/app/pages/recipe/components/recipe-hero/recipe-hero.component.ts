@@ -1,9 +1,9 @@
-import { Component, input, OnInit } from '@angular/core';
-import { IonBackButton, IonImg } from '@ionic/angular/standalone';
+import { Component, input } from '@angular/core';
+import { IonImg } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-recipe-hero',
-  imports: [IonImg, IonBackButton],
+  imports: [IonImg],
   templateUrl: './recipe-hero.component.html',
   styleUrls: ['./recipe-hero.component.scss'],
 })

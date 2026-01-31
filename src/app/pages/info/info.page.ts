@@ -6,6 +6,11 @@ import {
   IonList,
   IonIcon,
   IonItem,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonMenuButton,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
@@ -26,6 +31,11 @@ import {
   styleUrls: ['./info.page.scss'],
   standalone: true,
   imports: [
+    IonMenuButton,
+    IonBackButton,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
     IonItem,
     IonIcon,
     IonList,

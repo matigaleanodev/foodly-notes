@@ -3,12 +3,14 @@ import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonGrid,
   IonCol,
   IonRow,
+  IonButtons,
+  IonBackButton,
+  IonMenuButton,
+  IonHeader,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -23,6 +25,11 @@ import { TranslateService } from '@shared/translate/translate.service';
   styleUrls: ['./similar.page.scss'],
   standalone: true,
   imports: [
+    IonToolbar,
+    IonHeader,
+    IonMenuButton,
+    IonBackButton,
+    IonButtons,
     IonRow,
     IonCol,
     IonGrid,

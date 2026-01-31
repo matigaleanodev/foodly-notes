@@ -34,4 +34,7 @@ export const enUS: Record<string, string> = {
   xTema: 'Theme',
   xCargando: 'Loading',
   xCancelar: 'Cancel',
+  xErrorTimeout: 'The request took too long',
+  xErrorConexion: 'Could not connect to the server',
+  xErrorDesconocido: 'An unexpected error occurred',
 };
