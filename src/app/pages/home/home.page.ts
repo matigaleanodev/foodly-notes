@@ -1,7 +1,15 @@
 import { Component, computed, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonCol,
+  IonRow,
+  IonGrid,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
+} from '@ionic/angular/standalone';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -15,6 +23,8 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonGrid,
     IonRow,
     IonCol,
@@ -34,6 +44,17 @@ export class HomePage {
   ionViewWillEnter() {
     this._favorites.loadFavorites();
     this._recipes.loadDailyRecipes();
+  }
+
+  onRefresh(event: RefresherCustomEvent) {
+    this._recipes.refreshDailyRecipes().subscribe({
+      next: () => {
+        event.target.complete();
+      },
+      error: () => {
+        event.target.complete();
+      },
+    });
   }
 
   toggleFavorite(recipe: DailyRecipe) {

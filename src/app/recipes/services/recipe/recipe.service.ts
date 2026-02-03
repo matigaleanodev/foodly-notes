@@ -3,7 +3,7 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { LoadingService } from '@shared/services/loading/loading.service';
-import { finalize } from 'rxjs';
+import { finalize, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +50,15 @@ export class RecipeService {
     return this._api
       .getRecipesByQuery(query)
       .pipe(finalize(() => loading.dismiss()));
+  }
+
+  refreshDailyRecipes() {
+    return this._api.getDailyRecipes().pipe(
+      map((recipes) => {
+        this.recipes.set(recipes);
+        return recipes;
+      }),
+    );
   }
 
   searchRecipes(query: string) {
