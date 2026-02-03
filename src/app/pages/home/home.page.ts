@@ -7,6 +7,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { HomeHeroComponent } from './components/home-hero/home-hero.component';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
     FormsModule,
     RecipeCardComponent,
     HomeHeroComponent,
+    EmptyStatesComponent,
   ],
 })
 export class HomePage {

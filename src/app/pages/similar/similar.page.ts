@@ -14,6 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
@@ -37,6 +38,7 @@ import { TranslateService } from '@shared/translate/translate.service';
     FormsModule,
     RecipeCardComponent,
     TranslatePipe,
+    EmptyStatesComponent,
   ],
 })
 export class SimilarPage {

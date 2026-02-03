@@ -25,6 +25,10 @@
           (similarRecipes)="toSimilarRecipes($event)"
         />
       </ion-col>
+      } @empty {
+      <ion-col>
+        <app-empty-states imagen="favorito" text="xAunNoSeleccionaFavoritos" />
+      </ion-col>
       }
     </ion-row>
   </ion-grid>

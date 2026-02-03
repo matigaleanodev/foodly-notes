@@ -16,6 +16,7 @@ import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 
 @Component({
   selector: 'app-favorites',
@@ -34,6 +35,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
     IonContent,
     RecipeCardComponent,
     TranslatePipe,
+    EmptyStatesComponent,
   ],
 })
 export class FavoritesPage {

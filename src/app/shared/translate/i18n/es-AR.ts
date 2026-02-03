@@ -37,4 +37,8 @@ export const esAR: Record<string, string> = {
   xErrorTimeout: 'La solicitud tardó demasiado tiempo',
   xErrorConexion: 'No se pudo conectar con el servidor',
   xErrorDesconocido: 'Ocurrió un error inesperado',
+  xAunNoSeleccionaFavoritos: 'Todavía no marcaste ninguna receta como favorita',
+  xSinRecetasDisponibles: 'No encontramos recetas para mostrar en este momento',
+  xGuardeFavoritosParaListaCompras:
+    'Guardá algunas recetas en favoritos para armar tu lista de compras',
 };

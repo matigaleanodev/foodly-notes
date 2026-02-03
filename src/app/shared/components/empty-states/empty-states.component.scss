@@ -1,0 +1,29 @@
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+
+  width: 100%;
+  min-height: 100%;
+
+  padding: 2rem;
+  text-align: center;
+}
+.empty-state-container img {
+  width: 15rem;
+  max-width: 90%;
+  height: auto;
+
+  opacity: 0.95;
+}
+.empty-state-text {
+  max-width: 30rem;
+
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.5;
+
+  color: currentColor;
+}

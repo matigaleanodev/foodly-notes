@@ -37,4 +37,8 @@ export const enUS: Record<string, string> = {
   xErrorTimeout: 'The request took too long',
   xErrorConexion: 'Could not connect to the server',
   xErrorDesconocido: 'An unexpected error occurred',
+  xAunNoSeleccionaFavoritos: 'You haven’t marked any recipes as favorites yet',
+  xSinRecetasDisponibles: 'We couldn’t find any recipes to show right now',
+  xGuardeFavoritosParaListaCompras:
+    'Save some recipes to your favorites to build your shopping list',
 };

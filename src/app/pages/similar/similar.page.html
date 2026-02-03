@@ -26,6 +26,10 @@
           (recipeDetail)="detalleReceta($event)"
         />
       </ion-col>
+      } @empty {
+      <ion-col>
+        <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
+      </ion-col>
       }
     </ion-row>
   </ion-grid>

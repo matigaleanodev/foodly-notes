@@ -23,6 +23,13 @@
         [shoppingState]="item.state"
       />
     </div>
+    } @empty {
+    <ion-col>
+      <app-empty-states
+        imagen="shoplist"
+        text="xGuardeFavoritosParaListaCompras"
+      />
+    </ion-col>
     }
   </div>
 </ion-content>

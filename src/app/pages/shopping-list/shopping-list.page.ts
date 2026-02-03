@@ -6,6 +6,7 @@ import {
   IonToolbar,
   IonHeader,
   IonMenuButton,
+  IonCol,
 } from '@ionic/angular/standalone';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
@@ -13,6 +14,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { ShoppingRecipesService } from './services/shopping-recipe/shopping-recipe.service';
 import { LoadingService } from '@shared/services/loading/loading.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -20,6 +22,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
   imports: [
+    IonCol,
     IonMenuButton,
     IonHeader,
     IonToolbar,
@@ -28,6 +31,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
     IonContent,
     ShoppingRecipeCardComponent,
     TranslatePipe,
+    EmptyStatesComponent,
   ],
 })
 export class ShoppingListPage {

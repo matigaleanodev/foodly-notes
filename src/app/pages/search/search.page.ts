@@ -11,6 +11,7 @@ import { HomeHeroComponent } from '@pages/home/components/home-hero/home-hero.co
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 
@@ -26,6 +27,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
     IonContent,
     HomeHeroComponent,
     RecipeCardComponent,
+    EmptyStatesComponent,
   ],
 })
 export class SearchPage {
