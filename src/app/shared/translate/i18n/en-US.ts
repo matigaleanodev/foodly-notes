@@ -43,4 +43,12 @@ export const enUS: Record<string, string> = {
     'Save some recipes to your favorites to build your shopping list',
   xMarcaIngredientes: 'Check the ingredients you already have',
   xVerReceta: 'View recipe',
+  xListoEn: 'Ready in',
+  xVegano: 'Vegan',
+  xVegetarian: 'Vegetarian',
+  xSinGluten: 'Gluten free',
+  xSinLacteos: 'Dairy free',
+  xAgregarFavorito: 'Add to favorites',
+  xVerSimilares: 'View similar recipes',
+  xToggleFavorito: 'Add or remove from favorites',
 };

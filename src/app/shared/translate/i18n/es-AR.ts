@@ -43,4 +43,12 @@ export const esAR: Record<string, string> = {
     'Guardá algunas recetas en favoritos para armar tu lista de compras',
   xMarcaIngredientes: 'Marcá los ingredientes que ya tenés',
   xVerReceta: 'Ver receta',
+  xListoEn: 'Listo en',
+  xVegano: 'Vegano',
+  xVegetarian: 'Vegetariano',
+  xSinGluten: 'Sin gluten',
+  xSinLacteos: 'Sin lácteos',
+  xAgregarFavorito: 'Agregar a favoritos',
+  xVerSimilares: 'Ver recetas similares',
+  xToggleFavorito: 'Marcar o quitar de favoritos',
 };

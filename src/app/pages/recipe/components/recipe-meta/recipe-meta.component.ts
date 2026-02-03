@@ -1,12 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { TooltipDirective } from '@shared/directives/tooltip.directive';
 import { addIcons } from 'ionicons';
 import {
-  banOutline,
-  cafeOutline,
   heartOutline,
   leafOutline,
-  nutritionOutline,
   repeatOutline,
   restaurantOutline,
   timeOutline,
@@ -14,7 +12,7 @@ import {
 
 @Component({
   selector: 'app-recipe-meta',
-  imports: [IonButton, IonIcon],
+  imports: [IonButton, IonIcon, TooltipDirective],
   templateUrl: './recipe-meta.component.html',
   styleUrls: ['./recipe-meta.component.scss'],
 })
@@ -34,12 +32,12 @@ export class RecipeMetaComponent {
     addIcons({
       repeatOutline,
       heartOutline,
-      cafeOutline,
-      banOutline,
-      nutritionOutline,
       leafOutline,
       restaurantOutline,
       timeOutline,
+      salad: 'assets/diet/salad.svg',
+      glutten: 'assets/diet/wheat-off.svg',
+      dairy: 'assets/diet/milk-off.svg',
     });
   }
 }

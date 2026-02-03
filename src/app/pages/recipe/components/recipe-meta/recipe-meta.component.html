@@ -1,11 +1,11 @@
 <div class="recipe-meta">
   <div class="meta-info">
-    <div class="meta-item">
+    <div class="meta-item" appTooltip tooltipKey="xListoEn">
       <ion-icon name="time-outline"></ion-icon>
       <span>{{ readyInMinutes() }}m</span>
     </div>
 
-    <div class="meta-item">
+    <div class="meta-item" appTooltip tooltipKey="xPreparacion">
       <ion-icon name="restaurant-outline"></ion-icon>
       <span>{{ servings() }}</span>
     </div>
@@ -13,41 +13,55 @@
 
   <div class="meta-flags">
     <ion-icon
+      appTooltip
+      tooltipKey="xVegano"
       name="leaf-outline"
       [class.active]="vegan()"
-      ion-tooltip="Vegan"
-    ></ion-icon>
+    />
 
     <ion-icon
-      name="nutrition-outline"
+      name="salad"
       [class.active]="vegetarian()"
-      ion-tooltip="Vegetarian"
-    ></ion-icon>
+      appTooltip
+      tooltipKey="xVegetarian"
+    />
 
     <ion-icon
-      name="ban-outline"
+      name="glutten"
       [class.active]="glutenFree()"
-      ion-tooltip="Gluten free"
-    ></ion-icon>
+      appTooltip
+      tooltipKey="xSinGluten"
+    />
 
     <ion-icon
-      name="cafe-outline"
+      name="dairy"
       [class.active]="dairyFree()"
-      ion-tooltip="Dairy free"
-    ></ion-icon>
+      appTooltip
+      tooltipKey="xSinLacteos"
+    />
   </div>
 
   <div class="meta-actions">
-    <ion-button fill="clear" (click)="toggleFavorite.emit()">
+    <ion-button
+      appTooltip
+      tooltipKey="xToggleFavorito"
+      fill="clear"
+      (click)="toggleFavorite.emit()"
+    >
       <ion-icon
         slot="icon-only"
         [color]="isFavorite() ? 'danger' : 'medium'"
         name="heart-outline"
-      ></ion-icon>
+      />
     </ion-button>
 
-    <ion-button fill="clear" (click)="viewSimilar.emit()">
-      <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
+    <ion-button
+      appTooltip
+      tooltipKey="xVerSimilares"
+      fill="clear"
+      (click)="viewSimilar.emit()"
+    >
+      <ion-icon slot="icon-only" name="repeat-outline" />
     </ion-button>
   </div>
 </div>
