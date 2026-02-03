@@ -4,11 +4,14 @@
       <ion-back-button defaultHref="/home" color="medium" />
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button color="medium" class="ion-margin-end" />
+      <ion-menu-button color="medium" />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
   <div>
     <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
   </div>

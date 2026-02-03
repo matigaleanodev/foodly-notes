@@ -1,12 +1,17 @@
 <section class="ingredients-paper">
-  <div class="paper-spacer"></div>
   <div class="paper-margin"></div>
+  <div class="paper-spacer"></div>
 
   <div class="paper-content">
-    <div class="paper-title">
-      {{ recipe().title }}
+    <div class="paper-title-container">
+      <ion-icon name="cart-outline" size="large" />
+      <span class="paper-title">
+        {{ recipe().title }}
+      </span>
     </div>
-
+    <div class="paper-subtitle">
+      {{ "xMarcaIngredientes" | translate }}
+    </div>
     <div class="paper-spacer"></div>
 
     @for (ingredient of ingredients(); track $index) {
@@ -30,5 +35,12 @@
     <div class="paper-spacer"></div>
   </div>
 
-  <div class="paper-spacer"></div>
+  <div class="paper-footer">
+    <ion-button shape="round" fill="clear" (click)="goToRecipe()">
+      <ion-label>
+        {{ "xVerReceta" | translate }}
+      </ion-label>
+      <ion-icon slot="end" name="arrow-forward" />
+    </ion-button>
+  </div>
 </section>

@@ -21,16 +21,10 @@
 }
 
 .masonry {
-  column-count: 3;
+  column-count: 2;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
-}
-
-@media (max-width: 1024px) {
-  .masonry {
-    column-count: 2;
-  }
 }
 
 @media (max-width: 640px) {
@@ -42,4 +36,7 @@
 .masonry > * {
   break-inside: avoid;
   margin-bottom: 1rem;
+}
+.masonry > ion-row {
+  column-span: all;
 }

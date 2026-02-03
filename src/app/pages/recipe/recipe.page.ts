@@ -1,4 +1,11 @@
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,6 +19,9 @@ import {
   IonBackButton,
   IonButtons,
   IonMenuButton,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
 } from '@ionic/angular/standalone';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
@@ -20,9 +30,9 @@ import { RecipeInstructionsComponent } from './components/recipe-instructions/re
 import { RecipeAttrComponent } from './components/recipe-attr/recipe-attr.component';
 import { RecipeMetaExtendedComponent } from './components/recipe-meta-extended/recipe-meta-extended.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
-import { NavService } from '@shared/services/nav/nav.service';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { TranslateService } from '@shared/translate/translate.service';
 
 @Component({
   selector: 'app-recipe',
@@ -30,6 +40,8 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
   styleUrls: ['./recipe.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonButtons,
     IonMenuButton,
     IonBackButton,
@@ -50,11 +62,13 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
   ],
 })
 export class RecipePage {
-  readonly recipe = input.required<RecipeDetail>();
+  readonly data = input.required<RecipeDetail>();
+
+  readonly recipe = linkedSignal(() => this.data());
 
   private readonly _favorites = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
-  private readonly _nav = inject(NavService);
+  private readonly _translate = inject(TranslateService);
 
   readonly imageUrl = computed(() => {
     const recipe = this.recipe();
@@ -63,9 +77,35 @@ export class RecipePage {
     return recipe.image;
   });
 
+  constructor() {
+    effect(() => {
+      const lang = this._translate.currentLang();
+
+      if (lang) {
+        const { sourceId } = this.data();
+        this._recipes.refreshRecipeDetail(sourceId).subscribe({
+          next: (recipe) => this.recipe.set(recipe),
+        });
+      }
+    });
+  }
+
   isFavorite = computed(() =>
     this._favorites.isFavorite(this.recipe().sourceId),
   );
+
+  onRefresh(event: RefresherCustomEvent) {
+    const { sourceId } = this.data();
+    this._recipes.refreshRecipeDetail(sourceId).subscribe({
+      next: (recipe) => {
+        this.recipe.set(recipe);
+        event.target.complete();
+      },
+      error: () => {
+        event.target.complete();
+      },
+    });
+  }
 
   toggleFavorite() {
     const recipe = this.recipe();
@@ -84,6 +124,6 @@ export class RecipePage {
     const { sourceId, title, image } = this.recipe();
     this._recipes.selectRecipe({ sourceId, title, image });
 
-    this._nav.forward(`similares/${sourceId}`);
+    this._recipes.toSimilarRecipes(sourceId);
   }
 }

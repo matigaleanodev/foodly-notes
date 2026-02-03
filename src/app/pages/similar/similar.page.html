@@ -9,6 +9,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
   <div class="similar-header gradient-header">
     <div class="similar-header-inner">
       <h1>{{'xRecetasSimilares' | translate}}</h1>
@@ -25,6 +28,10 @@
           (similarRecipes)="toSimilarRecipes($event)"
           (recipeDetail)="detalleReceta($event)"
         />
+      </ion-col>
+      } @empty {
+      <ion-col>
+        <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
       </ion-col>
       }
     </ion-row>

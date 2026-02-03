@@ -13,7 +13,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@pages/recipe/recipe.page').then((m) => m.RecipePage),
     resolve: {
-      recipe: recipeDetailResolver,
+      data: recipeDetailResolver,
     },
   },
   {
@@ -21,7 +21,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@pages/similar/similar.page').then((m) => m.SimilarPage),
     resolve: {
-      recipes: similarRecipesResolver,
+      data: similarRecipesResolver,
     },
   },
   {
@@ -41,7 +41,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/search/search.page').then((m) => m.SearchPage),
     resolve: {
-      initialList: searchResolver,
+      data: searchResolver,
     },
   },
   {

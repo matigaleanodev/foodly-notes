@@ -129,3 +129,9 @@ ion-header.overlay-header ion-toolbar {
   box-shadow: none;
   --border-width: 0;
 }
+
+@media (min-width: 992px) {
+  ion-header.overlay-header ion-toolbar {
+    --padding-end: 1rem;
+  }
+}

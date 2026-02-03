@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { RecipeApiService } from '@recipes/services/recipe-api/recipe-api.service';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +33,33 @@ export class ShoppingRecipesService {
     } else {
       this.recipes.set(filtrados);
     }
+  }
+
+  refreshSync(force = false) {
+    const favoritos = this.favorites.favorites();
+    const ids = favoritos.map((f) => f.sourceId);
+
+    const current = this.recipes();
+    const currentIds = current.map((r) => r.sourceId);
+
+    const filtrados = current.filter((r) => ids.includes(r.sourceId));
+
+    const nuevosIds = force
+      ? ids
+      : ids.filter((id) => !currentIds.includes(id));
+
+    if (!nuevosIds.length && !force) {
+      this.recipes.set(filtrados);
+      return of(filtrados);
+    }
+
+    return this.api.getIngredientsForRecipes(nuevosIds).pipe(
+      map((nuevas) => {
+        const result = force ? nuevas : [...filtrados, ...nuevas];
+        this.recipes.set(result);
+        return result;
+      }),
+    );
   }
 
   getRecipe(sourceId: number) {

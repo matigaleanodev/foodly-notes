@@ -1,6 +1,14 @@
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  OnInit,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonGrid,
@@ -11,9 +19,13 @@ import {
   IonMenuButton,
   IonHeader,
   IonToolbar,
+  RefresherCustomEvent,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
@@ -25,6 +37,8 @@ import { TranslateService } from '@shared/translate/translate.service';
   styleUrls: ['./similar.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonToolbar,
     IonHeader,
     IonMenuButton,
@@ -37,14 +51,19 @@ import { TranslateService } from '@shared/translate/translate.service';
     FormsModule,
     RecipeCardComponent,
     TranslatePipe,
+    EmptyStatesComponent,
   ],
 })
 export class SimilarPage {
-  readonly recipes = input.required<SimilarRecipe[]>();
+  readonly data = input.required<SimilarRecipe[]>();
+
+  readonly recipes = linkedSignal(() => this.data());
 
   readonly _translator = inject(TranslateService);
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
+
+  private readonly _route = inject(ActivatedRoute);
 
   readonly subtitle = computed(() => {
     const recipe = this._recipes.recipeSelected();
@@ -58,6 +77,19 @@ export class SimilarPage {
     this._favorites.loadFavorites();
   }
 
+  onRefresh(event: RefresherCustomEvent) {
+    const sourceId = Number(this._route.snapshot.paramMap.get('id'));
+
+    this._recipes.refreshSimilarRecipes(sourceId).subscribe({
+      next: (recipes) => {
+        this.recipes.set(recipes);
+        event.target.complete();
+      },
+      error: () => {
+        event.target.complete();
+      },
+    });
+  }
   toggleFavorite(receta: SimilarRecipe) {
     const isFav = this._favorites.isFavorite(receta.sourceId);
     if (isFav) {
