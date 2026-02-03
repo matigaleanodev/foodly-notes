@@ -8,8 +8,10 @@
           [color]="isFavorite() ? 'danger' : 'medium'"
           class="recipe-card-action"
           (click)="toggleFavoriteState($event)"
+          appTooltip
+          tooltipKey="xToggleFavorito"
         >
-          <ion-icon slot="icon-only" name="heart"></ion-icon>
+          <ion-icon slot="icon-only" name="heart" />
         </ion-button>
         <ion-button
           fill="solid"
@@ -17,8 +19,10 @@
           color="primary"
           class="recipe-card-action"
           (click)="toSimilarRecipes($event)"
+          appTooltip
+          tooltipKey="xVerSimilares"
         >
-          <ion-icon slot="icon-only" name="repeat"></ion-icon>
+          <ion-icon slot="icon-only" name="repeat" />
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
