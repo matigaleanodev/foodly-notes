@@ -7,6 +7,9 @@ import {
   IonHeader,
   IonMenuButton,
   IonCol,
+  RefresherCustomEvent,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
@@ -22,6 +25,8 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonCol,
     IonMenuButton,
     IonHeader,
@@ -62,6 +67,20 @@ export class ShoppingListPage {
     } finally {
       loading.dismiss();
     }
+  }
+
+  onRefresh(event: RefresherCustomEvent) {
+    this._favorites.loadFavorites().then(() => {
+      this._state.init();
+      this._recipes.refreshSync().subscribe({
+        next: () => {
+          event.target.complete();
+        },
+        error: () => {
+          event.target.complete();
+        },
+      });
+    });
   }
 
   getShoppingState(recipeId: number) {

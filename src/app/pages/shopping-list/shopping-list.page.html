@@ -9,6 +9,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
   <div class="shopping-header gradient-header">
     <div class="shopping-header-inner">
       <h1>{{'xListaCompras' | translate}}</h1>
