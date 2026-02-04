@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeMetaExtendedComponent } from './recipe-meta-extended.component';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
+import { Storage } from '@ionic/storage-angular';
 
 describe('RecipeMetaExtendedComponent', () => {
   let component: RecipeMetaExtendedComponent;
@@ -7,7 +10,8 @@ describe('RecipeMetaExtendedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecipeMetaExtendedComponent],
+      imports: [RecipeMetaExtendedComponent, TranslatePipeStub],
+      providers: [{ provide: Storage, useValue: IonicStorageMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeMetaExtendedComponent);

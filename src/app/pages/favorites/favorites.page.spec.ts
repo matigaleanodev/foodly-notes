@@ -1,9 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
+
 import { FavoritesPage } from './favorites.page';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
-import { NavService } from '@shared/services/nav/nav.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
+import { overrideTranslatePipe } from 'src/test.setup';
+import { Storage } from '@ionic/storage-angular';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
 describe('FavoritesPage', () => {
   let component: FavoritesPage;
@@ -16,31 +21,27 @@ describe('FavoritesPage', () => {
   };
 
   const favoritesServiceMock = {
-    favoritos: jasmine.createSpy(),
-    cargarFavoritos: jasmine.createSpy(),
-    isFavorite: jasmine.createSpy(),
-    agregarFavorito: jasmine.createSpy(),
-    removerFavorito: jasmine.createSpy(),
+    favorites: signal<DailyRecipe[]>([recipeMock]),
+    loadFavorites: jasmine.createSpy('loadFavorites'),
+    isFavorite: jasmine.createSpy('isFavorite').and.returnValue(true),
+    addFavorite: jasmine.createSpy('addFavorite'),
+    removeFavorite: jasmine.createSpy('removeFavorite'),
   };
 
   const recipeServiceMock = {
-    seleccionarReceta: jasmine.createSpy(),
-  };
-
-  const navServiceMock = {
-    forward: jasmine.createSpy(),
+    selectRecipe: jasmine.createSpy('selectRecipe'),
+    toSimilarRecipes: jasmine.createSpy('toSimilarRecipes'),
+    toRecipeDetail: jasmine.createSpy('toRecipeDetail'),
   };
 
   beforeEach(async () => {
-    favoritesServiceMock.favoritos.and.returnValue([recipeMock]);
-    favoritesServiceMock.isFavorite.and.returnValue(true);
-
+    overrideTranslatePipe();
     await TestBed.configureTestingModule({
-      imports: [FavoritesPage],
+      imports: [FavoritesPage, TranslatePipeStub],
       providers: [
+        { provide: Storage, useValue: IonicStorageMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
-        { provide: NavService, useValue: navServiceMock },
       ],
     }).compileComponents();
 
@@ -56,10 +57,10 @@ describe('FavoritesPage', () => {
   it('debería cargar los favoritos al entrar a la vista', () => {
     component.ionViewWillEnter();
 
-    expect(favoritesServiceMock.cargarFavoritos).toHaveBeenCalled();
+    expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
   });
 
-  it('debería exponer los favoritos del service', () => {
+  it('debería exponer los favoritos del FavoritesService', () => {
     expect(component.favorites()).toEqual([recipeMock]);
   });
 
@@ -68,9 +69,7 @@ describe('FavoritesPage', () => {
 
     component.toggleFav(recipeMock);
 
-    expect(favoritesServiceMock.removerFavorito).toHaveBeenCalledWith(
-      recipeMock.sourceId,
-    );
+    expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
   it('debería agregar un favorito si no lo es', () => {
@@ -78,8 +77,19 @@ describe('FavoritesPage', () => {
 
     component.toggleFav(recipeMock);
 
-    expect(favoritesServiceMock.agregarFavorito).toHaveBeenCalledWith(
-      recipeMock,
-    );
+    expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith(recipeMock);
+  });
+
+  it('debería navegar a recetas similares', () => {
+    component.toSimilarRecipes(recipeMock);
+
+    expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith(recipeMock);
+    expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
+  });
+
+  it('debería navegar al detalle de receta', () => {
+    component.detalleReceta(recipeMock);
+
+    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
   });
 });

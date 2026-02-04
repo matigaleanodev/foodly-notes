@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 
 export const similarRecipesResolver: ResolveFn<SimilarRecipe[] | null> = async (
   route,
-  state,
 ) => {
   const recipes = inject(RecipeService);
   const id = Number(route.paramMap.get('id'));

@@ -17,9 +17,7 @@ export class TranslateService {
 
   readonly currentLang = signal<Language>(Language.EN);
 
-  constructor() {
-    this.initLang();
-  }
+  constructor() {}
 
   async initLang(): Promise<void> {
     const lang = await this.getStoredLang();

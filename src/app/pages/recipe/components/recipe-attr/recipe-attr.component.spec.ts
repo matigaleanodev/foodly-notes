@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecipeAttrComponent } from './recipe-attr.component';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
+import { Storage } from '@ionic/storage-angular';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
 describe('RecipeAttrComponent', () => {
   let component: RecipeAttrComponent;
@@ -8,7 +11,8 @@ describe('RecipeAttrComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecipeAttrComponent],
+      imports: [RecipeAttrComponent, TranslatePipeStub],
+      providers: [{ provide: Storage, useValue: IonicStorageMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeAttrComponent);

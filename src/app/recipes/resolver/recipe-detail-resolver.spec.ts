@@ -1,16 +1,21 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  convertToParamMap,
+} from '@angular/router';
 import { of } from 'rxjs';
+
+import { recipeDetailResolver } from './recipe-detail-resolver';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
-import { recipeDetailResolver } from './recipe-detail-resolver';
 
 describe('recipeDetailResolver', () => {
   let recipeService: jasmine.SpyObj<RecipeService>;
 
   beforeEach(() => {
-    recipeService = jasmine.createSpyObj('RecipeService', [
-      'buscarDetalleReceta',
+    recipeService = jasmine.createSpyObj<RecipeService>('RecipeService', [
+      'loadRecipeDeatil',
     ]);
 
     TestBed.configureTestingModule({
@@ -20,8 +25,8 @@ describe('recipeDetailResolver', () => {
 
   it('debería devolver null si no hay id', async () => {
     const route = {
-      paramMap: new Map(),
-    } as unknown as ActivatedRouteSnapshot;
+      paramMap: convertToParamMap({}),
+    } as ActivatedRouteSnapshot;
 
     const result = await TestBed.runInInjectionContext(() =>
       recipeDetailResolver(route, {} as RouterStateSnapshot),
@@ -30,7 +35,7 @@ describe('recipeDetailResolver', () => {
     expect(result).toBeNull();
   });
 
-  it('debería devolver el detalle de la receta', async () => {
+  it('debería devolver el detalle de la receta cuando hay id', async () => {
     const data: RecipeDetail = {
       sourceId: 1,
       title: 'Receta',
@@ -53,11 +58,11 @@ describe('recipeDetailResolver', () => {
       lang: 'en',
     };
 
-    recipeService.loadRecipeDeatil.and.returnValue(Promise.resolve(of(data)));
+    recipeService.loadRecipeDeatil.and.resolveTo(of(data));
 
     const route = {
-      paramMap: new Map([['id', '1']]),
-    } as unknown as ActivatedRouteSnapshot;
+      paramMap: convertToParamMap({ id: '1' }),
+    } as ActivatedRouteSnapshot;
 
     const result = await TestBed.runInInjectionContext(() =>
       recipeDetailResolver(route, {} as RouterStateSnapshot),

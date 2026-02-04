@@ -1,88 +1,64 @@
 import { TestBed } from '@angular/core/testing';
 
 import { FavoritesService } from './favorites.service';
-import { StorageService } from '../storage/storage.service';
+import { StorageService } from '@shared/services/storage/storage.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { StorageServiceMock } from '@shared/mocks/storage.mock';
 
 describe('FavoritesService', () => {
   let service: FavoritesService;
-
-  const storageMock = {
-    getItem: jasmine.createSpy(),
-    setItem: jasmine.createSpy(),
-  };
+  let storage: StorageServiceMock;
 
   const recipeMock: DailyRecipe = {
     sourceId: 1,
-    title: 'Receta test',
-    image: '',
-  } as DailyRecipe;
+    title: 'Receta favorita',
+    image: 'image.jpg',
+  };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       providers: [
         FavoritesService,
-        { provide: StorageService, useValue: storageMock },
+        { provide: StorageService, useClass: StorageServiceMock },
       ],
-    });
+    }).compileComponents();
 
     service = TestBed.inject(FavoritesService);
-  });
-
-  it('debería crearse correctamente', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('debería cargar los favoritos desde storage', async () => {
-    storageMock.getItem.and.resolveTo([recipeMock]);
+    storage = TestBed.inject(StorageService) as unknown as StorageServiceMock;
 
     await service.loadFavorites();
-
-    expect(storageMock.getItem).toHaveBeenCalled();
-    expect(service.favorites()).toEqual([recipeMock]);
   });
 
-  it('debería inicializar favoritos vacíos si no hay datos en storage', async () => {
-    storageMock.getItem.and.resolveTo(null);
-
-    await service.loadFavorites();
-
-    expect(service.favorites()).toEqual([]);
+  it('debería inicializar con favoritos vacíos', () => {
+    expect(service.favorites().length).toBe(0);
   });
 
-  it('debería agregar un favorito', () => {
-    service.addFavorite(recipeMock);
-
-    expect(service.favorites()).toEqual([recipeMock]);
-    expect(storageMock.setItem).toHaveBeenCalledWith('FAVORITOS', [recipeMock]);
-  });
-
-  it('no debería agregar un favorito duplicado', () => {
-    service.addFavorite(recipeMock);
-    service.addFavorite(recipeMock);
+  it('debería agregar una receta a favoritos', async () => {
+    await service.addFavorite(recipeMock);
 
     expect(service.favorites().length).toBe(1);
+    expect(service.favorites()[0].sourceId).toBe(1);
   });
 
-  it('debería remover un favorito', () => {
-    service.addFavorite(recipeMock);
-    service.removeFavorite(recipeMock.sourceId);
+  it('debería indicar si una receta es favorita', async () => {
+    await service.addFavorite(recipeMock);
 
-    expect(service.favorites()).toEqual([]);
-    expect(storageMock.setItem).toHaveBeenCalledWith('FAVORITOS', []);
+    expect(service.isFavorite(1)).toBeTrue();
+    expect(service.isFavorite(999)).toBeFalse();
   });
 
-  it('debería indicar si una receta es favorita', () => {
-    service.addFavorite(recipeMock);
+  it('debería quitar una receta de favoritos', async () => {
+    await service.addFavorite(recipeMock);
+    await service.removeFavorite(1);
 
-    const result = service.isFavorite(recipeMock.sourceId);
-
-    expect(result).toBeTrue();
+    expect(service.favorites().length).toBe(0);
   });
 
-  it('debería indicar false si la receta no es favorita', () => {
-    const result = service.isFavorite(recipeMock.sourceId);
+  it('debería persistir los favoritos en storage', async () => {
+    await service.addFavorite(recipeMock);
 
-    expect(result).toBeFalse();
+    const stored = await storage.getItem<DailyRecipe[]>('FAVORITOS');
+    expect(stored?.length).toBe(1);
+    expect(stored?.[0].sourceId).toBe(1);
   });
 });

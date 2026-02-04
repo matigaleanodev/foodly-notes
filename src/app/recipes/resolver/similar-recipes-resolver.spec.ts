@@ -1,16 +1,21 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  convertToParamMap,
+} from '@angular/router';
 import { of } from 'rxjs';
+
+import { similarRecipesResolver } from './similar-recipes-resolver';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
-import { similarRecipesResolver } from './similar-recipes-resolver';
 
 describe('similarRecipesResolver', () => {
   let recipeService: jasmine.SpyObj<RecipeService>;
 
   beforeEach(() => {
-    recipeService = jasmine.createSpyObj('RecipeService', [
-      'buscartoSimilarRecipes',
+    recipeService = jasmine.createSpyObj<RecipeService>('RecipeService', [
+      'loadSimilaRecipes',
     ]);
 
     TestBed.configureTestingModule({
@@ -20,8 +25,8 @@ describe('similarRecipesResolver', () => {
 
   it('debería devolver null si no hay id', async () => {
     const route = {
-      paramMap: new Map(),
-    } as unknown as ActivatedRouteSnapshot;
+      paramMap: convertToParamMap({}),
+    } as ActivatedRouteSnapshot;
 
     const result = await TestBed.runInInjectionContext(() =>
       similarRecipesResolver(route, {} as RouterStateSnapshot),
@@ -30,16 +35,16 @@ describe('similarRecipesResolver', () => {
     expect(result).toBeNull();
   });
 
-  it('debería devolver las recetas similares', async () => {
+  it('debería devolver las recetas similares cuando hay id', async () => {
     const data: SimilarRecipe[] = [
-      { id: 1, title: 'Receta similar', image: 'img.jpg' },
+      { sourceId: 1, title: 'Receta similar', image: 'img.jpg' },
     ];
 
-    recipeService.loadSimilaRecipes.and.returnValue(Promise.resolve(of(data)));
+    recipeService.loadSimilaRecipes.and.resolveTo(of(data));
 
     const route = {
-      paramMap: new Map([['id', '1']]),
-    } as unknown as ActivatedRouteSnapshot;
+      paramMap: convertToParamMap({ id: '1' }),
+    } as ActivatedRouteSnapshot;
 
     const result = await TestBed.runInInjectionContext(() =>
       similarRecipesResolver(route, {} as RouterStateSnapshot),

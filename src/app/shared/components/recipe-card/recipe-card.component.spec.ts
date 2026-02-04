@@ -3,6 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeCardComponent } from './recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
+import { TooltipDirectiveStub } from '@shared/mocks/tooltip-directive.mock';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
+
+import { Storage } from '@ionic/storage-angular';
 
 describe('RecipeCardComponent', () => {
   let component: RecipeCardComponent;
@@ -15,13 +20,16 @@ describe('RecipeCardComponent', () => {
   };
 
   const favoritesServiceMock = {
-    isFavorite: jasmine.createSpy(),
+    isFavorite: jasmine.createSpy('isFavorite'),
   };
 
   beforeEach(async () => {
+    favoritesServiceMock.isFavorite.and.returnValue(false);
+
     await TestBed.configureTestingModule({
-      imports: [RecipeCardComponent],
+      imports: [RecipeCardComponent, TooltipDirectiveStub, TranslatePipeStub],
       providers: [
+        { provide: Storage, useValue: IonicStorageMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
       ],
     }).compileComponents();
@@ -30,8 +38,6 @@ describe('RecipeCardComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('recipe', recipeMock);
-    favoritesServiceMock.isFavorite.and.returnValue(false);
-
     fixture.detectChanges();
   });
 
@@ -43,48 +49,52 @@ describe('RecipeCardComponent', () => {
     favoritesServiceMock.isFavorite.and.returnValue(true);
 
     fixture.componentRef.setInput('recipe', { ...recipeMock });
+    fixture.detectChanges();
+
+    expect(favoritesServiceMock.isFavorite).toHaveBeenCalledWith(1);
     expect(component.isFavorite()).toBeTrue();
   });
 
-  it('debería construir correctamente la url de la imagen', () => {
-    expect(component.recipeImageUrl()).toBe(
-      'https://img.spoonacular.com/recipes/1-556x370.jpg',
-    );
+  it('debería exponer correctamente la imagen de la receta', () => {
+    expect(component.recipeImageUrl()).toBe('jpg');
   });
 
-  it('debería emitir el evento seleccionar', () => {
-    spyOn(component.seleccionar, 'emit');
+  it('debería emitir el evento de detalle de receta', () => {
+    spyOn(component.recipeDetail, 'emit');
 
-    const event = new Event('click');
-    spyOn(event, 'stopPropagation');
+    const event = {
+      stopPropagation: jasmine.createSpy(),
+    } as unknown as Event;
 
-    component.seleccionarReceta(event);
+    component.toRecipeDetail(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.seleccionar.emit).toHaveBeenCalledWith(recipeMock);
+    expect(component.recipeDetail.emit).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería emitir el evento similares', () => {
-    spyOn(component.similares, 'emit');
+  it('debería emitir el evento de recetas similares', () => {
+    spyOn(component.similarRecipes, 'emit');
 
-    const event = new Event('click');
-    spyOn(event, 'stopPropagation');
+    const event = {
+      stopPropagation: jasmine.createSpy(),
+    } as unknown as Event;
 
     component.toSimilarRecipes(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.similares.emit).toHaveBeenCalledWith(recipeMock);
+    expect(component.similarRecipes.emit).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería emitir el evento favorito', () => {
-    spyOn(component.favorite, 'emit');
+  it('debería emitir el evento de toggle favorito', () => {
+    spyOn(component.toggleFavorite, 'emit');
 
-    const event = new Event('click');
-    spyOn(event, 'stopPropagation');
+    const event = {
+      stopPropagation: jasmine.createSpy(),
+    } as unknown as Event;
 
     component.toggleFavoriteState(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.favorite.emit).toHaveBeenCalledWith(recipeMock);
+    expect(component.toggleFavorite.emit).toHaveBeenCalledWith(recipeMock);
   });
 });

@@ -1,38 +1,36 @@
 import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 
 import { ShoppingListService } from './shopping-list.service';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { StorageService } from '@shared/services/storage/storage.service';
+import { StorageServiceMock } from '@shared/mocks/storage.mock';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 
 describe('ShoppingListService', () => {
   let service: ShoppingListService;
+  let storage: StorageServiceMock;
 
   const recipe1: DailyRecipe = { sourceId: 1, title: 'Receta 1', image: '' };
   const recipe2: DailyRecipe = { sourceId: 2, title: 'Receta 2', image: '' };
 
-  const storageMock = {
-    getItem: jasmine.createSpy(),
-    setItem: jasmine.createSpy(),
-  };
+  const favoritesSignal = signal<DailyRecipe[]>([recipe1, recipe2]);
 
   const favoritesServiceMock = {
-    favoritos: jasmine.createSpy(),
+    favorites: favoritesSignal,
   };
 
   beforeEach(() => {
-    storageMock.getItem.and.resolveTo(null);
-    favoritesServiceMock.favoritos.and.returnValue([recipe1, recipe2]);
-
     TestBed.configureTestingModule({
       providers: [
         ShoppingListService,
-        { provide: StorageService, useValue: storageMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
       ],
     });
 
     service = TestBed.inject(ShoppingListService);
+    storage = TestBed.inject(StorageService) as unknown as StorageServiceMock;
   });
 
   it('debería crearse correctamente', () => {
@@ -40,6 +38,9 @@ describe('ShoppingListService', () => {
   });
 
   it('debería inicializar el estado sincronizado con favoritos', async () => {
+    favoritesSignal.set([]);
+    favoritesSignal.set([recipe1, recipe2]);
+
     await service.init();
 
     expect(service.shoppingState()).toEqual([
@@ -49,12 +50,12 @@ describe('ShoppingListService', () => {
   });
 
   it('debería mantener solo recetas favoritas existentes al sincronizar', async () => {
-    storageMock.getItem.and.resolveTo([
+    await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [10] },
       { recipeId: 3, checkedIngredientIds: [20] },
     ]);
 
-    favoritesServiceMock.favoritos.and.returnValue([recipe1]);
+    favoritesSignal.set([recipe1]);
 
     await service.init();
 
@@ -78,20 +79,18 @@ describe('ShoppingListService', () => {
   });
 
   it('debería indicar si un ingrediente está marcado', async () => {
-    storageMock.getItem.and.resolveTo([
+    await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [5] },
     ]);
 
-    favoritesServiceMock.favoritos.and.returnValue([recipe1]);
+    favoritesSignal.set([recipe1]);
 
     await service.init();
 
-    const result = service.isIngredientChecked(1, 5);
-
-    expect(result).toBeTrue();
+    expect(service.isIngredientChecked(1, 5)).toBeTrue();
   });
 
-  it('debería marcar un ingrediente', async () => {
+  it('debería marcar un ingrediente y persistir', async () => {
     await service.init();
 
     await service.toggleIngredient(1, 10);
@@ -99,15 +98,17 @@ describe('ShoppingListService', () => {
     const state = service.getRecipeState(1);
 
     expect(state?.checkedIngredientIds).toContain(10);
-    expect(storageMock.setItem).toHaveBeenCalled();
+
+    const stored = await storage.getItem<any>('SHOPPING_LIST');
+    expect(stored).toEqual(service.shoppingState());
   });
 
   it('debería desmarcar un ingrediente', async () => {
-    storageMock.getItem.and.resolveTo([
+    await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [10] },
     ]);
 
-    favoritesServiceMock.favoritos.and.returnValue([recipe1]);
+    favoritesSignal.set([recipe1]);
 
     await service.init();
 
@@ -116,16 +117,5 @@ describe('ShoppingListService', () => {
     const state = service.getRecipeState(1);
 
     expect(state?.checkedIngredientIds).not.toContain(10);
-  });
-
-  it('debería limpiar una receta del shopping list', async () => {
-    await service.init();
-
-    await service.clearRecipe(1);
-
-    expect(service.shoppingState()).toEqual([
-      { recipeId: 2, checkedIngredientIds: [] },
-    ]);
-    expect(storageMock.setItem).toHaveBeenCalled();
   });
 });

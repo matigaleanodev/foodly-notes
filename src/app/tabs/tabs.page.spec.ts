@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { TABS, TabsPage } from './tabs.page';
+import { Storage } from '@ionic/storage-angular';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 
 describe('TabsPage', () => {
   let component: TabsPage;
@@ -9,8 +12,11 @@ describe('TabsPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TabsPage],
-      providers: [provideRouter([])],
+      imports: [TabsPage, TranslatePipeStub],
+      providers: [
+        provideRouter([]),
+        { provide: Storage, useValue: IonicStorageMock },
+      ],
     }).compileComponents();
   });
 

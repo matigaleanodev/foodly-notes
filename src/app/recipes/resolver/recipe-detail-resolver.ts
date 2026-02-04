@@ -6,7 +6,6 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
 
 export const recipeDetailResolver: ResolveFn<RecipeDetail | null> = async (
   route,
-  state,
 ) => {
   const recipe = inject(RecipeService);
 

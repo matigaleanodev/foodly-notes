@@ -4,7 +4,6 @@ import {
   inject,
   input,
   linkedSignal,
-  OnInit,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';

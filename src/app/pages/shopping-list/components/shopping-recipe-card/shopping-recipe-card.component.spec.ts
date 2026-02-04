@@ -6,6 +6,10 @@ import {
   ShoppingListService,
 } from '@pages/shopping-list/services/shopping-list/shopping-list.service';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
+import { Storage } from '@ionic/storage-angular';
 
 describe('ShoppingRecipeCardComponent', () => {
   let component: ShoppingRecipeCardComponent;
@@ -33,28 +37,30 @@ describe('ShoppingRecipeCardComponent', () => {
       },
     ],
   };
+
   const shoppingStateMock: ShoppingRecipeState = {
     recipeId: 1,
     checkedIngredientIds: [10],
   };
 
   const shoppingListServiceMock = {
-    isIngredientChecked: jasmine.createSpy(),
-    toggleIngredient: jasmine.createSpy(),
+    isIngredientChecked: jasmine
+      .createSpy('isIngredientChecked')
+      .and.returnValue(true),
+    toggleIngredient: jasmine.createSpy('toggleIngredient').and.resolveTo(),
   };
 
   beforeEach(async () => {
-    shoppingListServiceMock.isIngredientChecked.and.returnValue(true);
-    shoppingListServiceMock.toggleIngredient.and.resolveTo();
-
     await TestBed.configureTestingModule({
-      imports: [ShoppingRecipeCardComponent],
+      imports: [ShoppingRecipeCardComponent, TranslatePipeStub],
       providers: [
+        { provide: Storage, useValue: IonicStorageMock },
         {
           provide: ShoppingListService,
           useValue: shoppingListServiceMock,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ShoppingRecipeCardComponent);
@@ -84,12 +90,25 @@ describe('ShoppingRecipeCardComponent', () => {
     expect(result).toBeTrue();
   });
 
-  it('debería alternar un ingrediente', async () => {
-    await component.toggleIngredient({} as Event, 20);
+  it('debería alternar un ingrediente y detener la propagación del evento', async () => {
+    const eventMock = {
+      stopPropagation: jasmine.createSpy('stopPropagation'),
+    } as unknown as Event;
 
+    await component.toggleIngredient(eventMock, 20);
+
+    expect(eventMock.stopPropagation).toHaveBeenCalled();
     expect(shoppingListServiceMock.toggleIngredient).toHaveBeenCalledWith(
       1,
       20,
     );
+  });
+
+  it('debería emitir el evento para ir a la receta', () => {
+    spyOn(component.toRecipe, 'emit');
+
+    component.goToRecipe();
+
+    expect(component.toRecipe.emit).toHaveBeenCalledWith(recipeMock);
   });
 });

@@ -8,10 +8,6 @@ export class StorageService {
   private _storage: Storage | null = null;
   private readonly storage = inject(Storage);
 
-  constructor() {
-    this.init();
-  }
-
   private async init(): Promise<void> {
     if (!this._storage) {
       this._storage = await this.storage.create();
