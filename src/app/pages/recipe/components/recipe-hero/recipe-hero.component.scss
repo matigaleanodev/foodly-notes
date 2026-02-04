@@ -34,7 +34,7 @@
   z-index: 2;
 
   ion-back-button {
-    --color: #fff;
+    --color: var(--ion-color-light);
     --background: rgba(0, 0, 0, 0.35);
     --border-radius: 50%;
 
@@ -52,11 +52,8 @@
 
   h1 {
     margin: 0;
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.2;
 
-    color: #fff;
+    color: var(--ion-color-light);
 
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
   }
@@ -65,9 +62,5 @@
 @media (min-width: 768px) {
   .recipe-hero {
     height: 340px;
-  }
-
-  .hero-title h1 {
-    font-size: 1.8rem;
   }
 }

@@ -50,10 +50,11 @@
 }
 
 .paper-title {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #1f3a5f;
 
+  font-family: var(--ion-font-family-secondary);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -104,4 +105,8 @@
   justify-content: end;
   align-items: center;
   color: #1f3a5f;
+}
+
+ion-item:hover ion-label {
+  color: var(--ion-color-primary);
 }
