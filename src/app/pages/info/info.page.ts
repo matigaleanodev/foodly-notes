@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   IonContent,
   IonListHeader,
@@ -11,6 +12,7 @@ import {
   IonButtons,
   IonBackButton,
   IonMenuButton,
+  IonRouterLink,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
@@ -43,6 +45,8 @@ import {
     IonListHeader,
     IonContent,
     TranslatePipe,
+    RouterLink,
+    IonRouterLink,
   ],
 })
 export class InfoPage {
@@ -51,8 +55,6 @@ export class InfoPage {
   readonly linkedinUrl = 'https://www.linkedin.com/in/matias-galeano';
   readonly contactEmail = 'contacto@matiasgaleano.com.ar';
   readonly spoonacularUrl = 'https://spoonacular.com/food-api';
-  readonly privacyUrl = 'https://matiasgaleano.dev/foodly-notes/privacy';
-  readonly termsUrl = 'https://matiasgaleano.dev/foodly-notes/terms';
 
   constructor() {
     addIcons({
