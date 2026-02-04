@@ -1,5 +1,11 @@
 import { Component, inject, input, linkedSignal } from '@angular/core';
-import { IonContent, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonFooter,
+} from '@ionic/angular/standalone';
 import { HomeHeroComponent } from '@pages/home/components/home-hero/home-hero.component';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
@@ -14,6 +20,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
   styleUrls: ['./search.page.scss'],
   standalone: true,
   imports: [
+    IonFooter,
     IonCol,
     IonRow,
     IonGrid,

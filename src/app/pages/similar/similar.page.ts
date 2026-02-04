@@ -21,6 +21,7 @@ import {
   RefresherCustomEvent,
   IonRefresher,
   IonRefresherContent,
+  IonFooter,
 } from '@ionic/angular/standalone';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -36,6 +37,7 @@ import { TranslateService } from '@shared/translate/translate.service';
   styleUrls: ['./similar.page.scss'],
   standalone: true,
   imports: [
+    IonFooter,
     IonRefresherContent,
     IonRefresher,
     IonToolbar,

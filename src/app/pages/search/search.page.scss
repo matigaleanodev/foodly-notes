@@ -2,3 +2,20 @@ ion-grid {
   max-width: 1200px;
   margin: 0 auto;
 }
+ion-footer {
+  background: var(--ion-background-color);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  .footer-content {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-size: 12px;
+      opacity: 0.5;
+      user-select: none;
+    }
+  }
+}

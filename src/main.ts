@@ -17,6 +17,10 @@ import { AppComponent } from './app/app.component';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from '@shared/interceptors/error-interceptor';
+import { StatusBar } from '@capacitor/status-bar';
+
+StatusBar.setOverlaysWebView({ overlay: false });
+StatusBar.setBackgroundColor({ color: '#4caf50' });
 
 bootstrapApplication(AppComponent, {
   providers: [

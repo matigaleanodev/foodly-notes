@@ -87,6 +87,11 @@ ion-toast {
   }
 }
 
+.safe-area-top {
+  padding-top: env(safe-area-inset-top) !important;
+  --padding-top: env(safe-area-inset-top) !important;
+}
+
 h1 {
   margin: 0;
 

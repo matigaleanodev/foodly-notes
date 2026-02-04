@@ -12,7 +12,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content />
   </ion-refresher>
-  <div class="similar-header gradient-header">
+  <div class="similar-header gradient-header safe-area-top">
     <div class="similar-header-inner">
       <h1>{{'xRecetasSimilares' | translate}}</h1>
       <p>{{ subtitle() }}</p>
@@ -37,3 +37,8 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+<ion-footer fixed slot="bottom" class="neutral-footer">
+  <div class="footer-content">
+    <span>Recipe data by Spoonacular</span>
+  </div>
+</ion-footer>
