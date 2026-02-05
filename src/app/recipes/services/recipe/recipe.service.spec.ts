@@ -6,6 +6,8 @@ import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { LoadingService } from '@shared/services/loading/loading.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
+import { Storage } from '@ionic/storage-angular';
 
 describe('RecipeService', () => {
   let service: RecipeService;
@@ -47,6 +49,7 @@ describe('RecipeService', () => {
     TestBed.configureTestingModule({
       providers: [
         RecipeService,
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: RecipeApiService, useValue: apiMock },
         { provide: NavService, useValue: navMock },
         { provide: LoadingService, useValue: loadingServiceMock },

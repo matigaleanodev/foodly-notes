@@ -91,6 +91,8 @@ describe('RecipeApiService', () => {
   });
 
   it('debería obtener ingredientes para recetas vía POST', () => {
+    translateMock.currentLang.and.returnValue(Language.EN);
+
     service.getIngredientsForRecipes([1, 2]).subscribe();
 
     const req = httpMock.expectOne(

@@ -30,7 +30,7 @@ describe('TranslateService', () => {
   });
 
   it('debería devolver la key cuando no existe traducción', () => {
-    const value = service.translate('xNoKey', Language.EN);
-    expect(value).toBe('xNoKey');
+    const value = service.translate('xNoKeyTranslate', Language.EN);
+    expect(value).toBe('xNoKeyTranslate');
   });
 });

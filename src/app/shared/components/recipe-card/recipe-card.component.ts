@@ -10,7 +10,6 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
-import { TooltipDirective } from '@shared/directives/tooltip.directive';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { addIcons } from 'ionicons';
 import { heart, repeat } from 'ionicons/icons';
@@ -26,7 +25,6 @@ import { heart, repeat } from 'ionicons/icons';
     IonCardTitle,
     IonImg,
     IonCard,
-    TooltipDirective,
   ],
   templateUrl: './recipe-card.component.html',
   styleUrls: ['./recipe-card.component.scss'],

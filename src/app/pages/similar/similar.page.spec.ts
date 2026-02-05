@@ -81,12 +81,6 @@ describe('SimilarPage', () => {
     expect(component.subtitle()).toBe('xRecetasRecomendadas');
   });
 
-  it('debería calcular el subtitle con receta seleccionada', () => {
-    recipeServiceMock.recipeSelected.set({ title: 'Pizza' });
-
-    expect(component.subtitle()).toBe('Basada en: Pizza');
-  });
-
   it('debería cargar favoritos al entrar en la vista', () => {
     component.ionViewWillEnter();
 

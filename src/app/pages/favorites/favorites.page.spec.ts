@@ -6,7 +6,6 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
-import { overrideTranslatePipe } from 'src/test.setup';
 import { Storage } from '@ionic/storage-angular';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
@@ -35,7 +34,6 @@ describe('FavoritesPage', () => {
   };
 
   beforeEach(async () => {
-    overrideTranslatePipe();
     await TestBed.configureTestingModule({
       imports: [FavoritesPage, TranslatePipeStub],
       providers: [

@@ -4,7 +4,6 @@ import { RecipeCardComponent } from './recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
-import { TooltipDirectiveStub } from '@shared/mocks/tooltip-directive.mock';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
 import { Storage } from '@ionic/storage-angular';
@@ -27,7 +26,7 @@ describe('RecipeCardComponent', () => {
     favoritesServiceMock.isFavorite.and.returnValue(false);
 
     await TestBed.configureTestingModule({
-      imports: [RecipeCardComponent, TooltipDirectiveStub, TranslatePipeStub],
+      imports: [RecipeCardComponent, TranslatePipeStub],
       providers: [
         { provide: Storage, useValue: IonicStorageMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },

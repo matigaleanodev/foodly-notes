@@ -1,6 +1,5 @@
 import { Component, input, output } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
-import { TooltipDirective } from '@shared/directives/tooltip.directive';
 import { addIcons } from 'ionicons';
 import {
   heartOutline,
@@ -12,7 +11,7 @@ import {
 
 @Component({
   selector: 'app-recipe-meta',
-  imports: [IonButton, IonIcon, TooltipDirective],
+  imports: [IonButton, IonIcon],
   templateUrl: './recipe-meta.component.html',
   styleUrls: ['./recipe-meta.component.scss'],
 })

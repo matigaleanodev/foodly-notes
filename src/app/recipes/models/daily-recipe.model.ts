@@ -3,3 +3,8 @@ export interface DailyRecipe {
   title: string;
   image: string;
 }
+
+export interface StoredDaily {
+  recipes: DailyRecipe[];
+  date: string;
+}
