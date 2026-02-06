@@ -106,4 +106,5 @@ export const enUS: Record<string, string> = {
   xPrivacyContactTitle: 'Contact',
   xPrivacyContactDescription:
     'If you have questions about this privacy policy, you can contact us through the channels available in the application.',
+  xBuscarRecetas: 'Search recipes',
 };

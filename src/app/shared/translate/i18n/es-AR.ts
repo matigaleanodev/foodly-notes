@@ -106,4 +106,5 @@ export const esAR: Record<string, string | any> = {
   xPrivacyContactTitle: 'Contacto',
   xPrivacyContactDescription:
     'Si tenés preguntas sobre esta política de privacidad, podés contactarnos a través de los medios disponibles en la aplicación.',
+  xBuscarRecetas: 'Buscar recetas',
 };

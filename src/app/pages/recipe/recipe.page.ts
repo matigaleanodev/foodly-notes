@@ -5,6 +5,7 @@ import {
   inject,
   input,
   linkedSignal,
+  signal,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -33,6 +34,8 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslateService } from '@shared/translate/translate.service';
+import { RecipeSummaryComponent } from './components/recipe-summary/recipe-summary.component';
+import { Language } from '@shared/translate/language.model';
 
 @Component({
   selector: 'app-recipe',
@@ -59,6 +62,7 @@ import { TranslateService } from '@shared/translate/translate.service';
     RecipeInstructionsComponent,
     RecipeAttrComponent,
     RecipeMetaExtendedComponent,
+    RecipeSummaryComponent,
   ],
 })
 export class RecipePage {
@@ -77,15 +81,25 @@ export class RecipePage {
     return recipe.image;
   });
 
+  private readonly _initialLang = signal<Language | null>(null);
+
   constructor() {
     effect(() => {
       const lang = this._translate.currentLang();
+      if (!lang) return;
 
-      if (lang) {
+      if (this._initialLang() === null) {
+        this._initialLang.set(lang);
+        return;
+      }
+
+      if (lang !== this._initialLang()) {
         const { sourceId } = this.data();
         this._recipes.refreshRecipeDetail(sourceId).subscribe({
           next: (recipe) => this.recipe.set(recipe),
         });
+
+        this._initialLang.set(lang);
       }
     });
   }

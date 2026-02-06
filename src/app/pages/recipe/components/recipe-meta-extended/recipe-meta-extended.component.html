@@ -15,6 +15,36 @@
     </div>
   }
 
+  @if (vegan()) {
+    <div class="meta-item">
+      <ion-icon name="leaf-outline"></ion-icon>
+      <span>
+        {{ "xVegano" | translate }}
+      </span>
+    </div>
+  }
+
+  @if (vegetarian()) {
+    <div class="meta-item">
+      <ion-icon name="salad"></ion-icon>
+      <span>{{ "xVegetarian" | translate }}</span>
+    </div>
+  }
+
+  @if (glutenFree()) {
+    <div class="meta-item">
+      <ion-icon name="glutten"></ion-icon>
+      <span>{{ "xSinGluten" | translate }}</span>
+    </div>
+  }
+
+  @if (dairyFree()) {
+    <div class="meta-item">
+      <ion-icon name="dairy"></ion-icon>
+      <span>{{ "xSinLacteos" | translate }}</span>
+    </div>
+  }
+
   @if (healthScore()) {
     <div class="meta-item">
       <ion-icon name="fitness-outline"></ion-icon>

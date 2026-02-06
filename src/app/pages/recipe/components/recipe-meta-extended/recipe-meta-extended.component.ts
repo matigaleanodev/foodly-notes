@@ -6,6 +6,7 @@ import {
   fitnessOutline,
   flameOutline,
   heartOutline,
+  leafOutline,
   timeOutline,
 } from 'ionicons/icons';
 
@@ -20,6 +21,10 @@ export class RecipeMetaExtendedComponent {
   readonly cookingMinutes = input.required<number>();
   readonly healthScore = input.required<number>();
   readonly aggregateLikes = input.required<number>();
+  readonly vegan = input<boolean>(false);
+  readonly vegetarian = input<boolean>(false);
+  readonly glutenFree = input<boolean>(false);
+  readonly dairyFree = input<boolean>(false);
 
   constructor() {
     addIcons({
@@ -27,6 +32,10 @@ export class RecipeMetaExtendedComponent {
       timeOutline,
       flameOutline,
       fitnessOutline,
+      leafOutline,
+      salad: 'assets/diet/salad.svg',
+      glutten: 'assets/diet/wheat-off.svg',
+      dairy: 'assets/diet/milk-off.svg',
     });
   }
 }

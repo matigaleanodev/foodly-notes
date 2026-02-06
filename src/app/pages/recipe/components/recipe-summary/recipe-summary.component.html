@@ -1,0 +1,7 @@
+@if (sanitizedSummary()) {
+  <section
+    class="recipe-summary"
+    [innerHTML]="sanitizedSummary()"
+    (click)="onSummaryClick($event)"
+  ></section>
+}
