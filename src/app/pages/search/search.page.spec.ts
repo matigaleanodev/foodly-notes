@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-
 import { SearchPage } from './search.page';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -18,9 +16,8 @@ describe('SearchPage', () => {
   ];
 
   const recipeServiceMock = {
-    queryReacipeSearch: jasmine
-      .createSpy('queryReacipeSearch')
-      .and.resolveTo(of(recipesMock)),
+    searchRecipes: jasmine.createSpy('searchRecipes'),
+    queryReacipeSearch: jasmine.createSpy('queryReacipeSearch'),
     selectRecipe: jasmine.createSpy('selectRecipe'),
     toSimilarRecipes: jasmine.createSpy('toSimilarRecipes'),
     toRecipeDetail: jasmine.createSpy('toRecipeDetail'),
@@ -95,10 +92,10 @@ describe('SearchPage', () => {
     expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
   });
 
-  it('debería buscar nuevas recetas y actualizar el signal', async () => {
-    await component.searchNewRecipes('pollo');
+  it('debería navegar a una nueva búsqueda desde search', () => {
+    component.searchNewRecipes('pollo');
 
-    expect(recipeServiceMock.queryReacipeSearch).toHaveBeenCalledWith('pollo');
-    expect(component.recipes()).toEqual(recipesMock);
+    expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');
+    expect(recipeServiceMock.queryReacipeSearch).not.toHaveBeenCalled();
   });
 });

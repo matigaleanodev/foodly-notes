@@ -24,5 +24,6 @@ export class HomeHeroComponent {
     if (q.length < 3) return;
 
     this.searchSubmit.emit(q);
+    this.query.set('');
   }
 }

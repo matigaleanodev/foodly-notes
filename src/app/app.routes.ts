@@ -43,6 +43,7 @@ export const routes: Routes = [
     resolve: {
       data: searchResolver,
     },
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
   },
   {
     path: 'terms',

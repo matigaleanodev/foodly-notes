@@ -55,5 +55,6 @@ describe('HomeHeroComponent', () => {
     component.onEnter();
 
     expect(component.searchSubmit.emit).toHaveBeenCalledWith('pizza');
+    expect(component.query()).toBe('');
   });
 });

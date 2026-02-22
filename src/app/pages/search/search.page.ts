@@ -70,11 +70,7 @@ export class SearchPage {
     this._recipes.toRecipeDetail(sourceId);
   }
 
-  async searchNewRecipes(query: string) {
-    const request = await this._recipes.queryReacipeSearch(query);
-
-    request.subscribe({
-      next: (recipes) => this.recipes.set(recipes),
-    });
+  searchNewRecipes(query: string) {
+    this._recipes.searchRecipes(query);
   }
 }
