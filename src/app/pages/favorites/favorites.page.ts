@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import {
   IonContent,
@@ -17,6 +17,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
+import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
 
 @Component({
   selector: 'app-favorites',
@@ -34,6 +35,7 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
     IonRow,
     IonContent,
     RecipeCardComponent,
+    RecipeCardSkeletonComponent,
     TranslatePipe,
     EmptyStatesComponent,
   ],
@@ -43,9 +45,17 @@ export class FavoritesPage {
   private readonly _recipes = inject(RecipeService);
 
   readonly favorites = computed(() => this._service.favorites());
+  readonly isLoading = signal(true);
+  readonly skeletonCards = Array.from({ length: 3 });
 
-  ionViewWillEnter() {
-    this._service.loadFavorites();
+  async ionViewWillEnter() {
+    this.isLoading.set(true);
+
+    try {
+      await this._service.loadFavorites();
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   toggleFav(receta: DailyRecipe) {

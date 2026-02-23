@@ -2,8 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { DailyRecipe, StoredDaily } from '@recipes/models/daily-recipe.model';
 import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
-import { LoadingService } from '@shared/services/loading/loading.service';
-import { finalize, map } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { StorageService } from '@shared/services/storage/storage.service';
 
 const DAILY_KEY = 'daily_recipes';
@@ -14,7 +13,6 @@ const DAILY_KEY = 'daily_recipes';
 export class RecipeService {
   private readonly _api = inject(RecipeApiService);
   private readonly _nav = inject(NavService);
-  private readonly _loading = inject(LoadingService);
   private readonly _storage = inject(StorageService);
 
   readonly recipes = signal<DailyRecipe[]>([]);
@@ -22,54 +20,34 @@ export class RecipeService {
   readonly recipeSelected = signal<DailyRecipe | null>(null);
 
   async loadDailyRecipes() {
-    const loading = await this._loading.show();
-
     const stored = await this._getStoredDaily();
 
     if (stored && this._isToday(stored.date)) {
       this.recipes.set(stored.recipes);
-      loading.dismiss();
       return;
     }
 
-    this._api
-      .getDailyRecipes()
-      .pipe(finalize(() => loading.dismiss()))
-      .subscribe({
-        next: async (recetas) => {
-          this.recipes.set(recetas);
-          await this._storeDaily(recetas);
-        },
-        error: () => {
-          if (stored) {
-            this.recipes.set(stored.recipes);
-          }
-        },
-      });
+    try {
+      const recetas = await firstValueFrom(this._api.getDailyRecipes());
+      this.recipes.set(recetas);
+      await this._storeDaily(recetas);
+    } catch {
+      if (stored) {
+        this.recipes.set(stored.recipes);
+      }
+    }
   }
 
   async loadRecipeDeatil(sourceId: number) {
-    const loading = await this._loading.show();
-
-    return this._api
-      .getRecipeDetail(sourceId)
-      .pipe(finalize(() => loading.dismiss()));
+    return this._api.getRecipeDetail(sourceId);
   }
 
   async loadSimilaRecipes(sourceId: number) {
-    const loading = await this._loading.show();
-
-    return this._api
-      .getSimilarRecipes(sourceId)
-      .pipe(finalize(() => loading.dismiss()));
+    return this._api.getSimilarRecipes(sourceId);
   }
 
   async queryReacipeSearch(query: string) {
-    const loading = await this._loading.show();
-
-    return this._api
-      .getRecipesByQuery(query)
-      .pipe(finalize(() => loading.dismiss()));
+    return this._api.getRecipesByQuery(query);
   }
 
   refreshDailyRecipes() {

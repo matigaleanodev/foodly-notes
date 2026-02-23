@@ -52,7 +52,7 @@ describe('HomePage', () => {
 
   const recipeServiceMock = {
     recipes: signal<DailyRecipe[]>([recipeMock]),
-    loadDailyRecipes: jasmine.createSpy(),
+    loadDailyRecipes: jasmine.createSpy().and.resolveTo(undefined),
     refreshDailyRecipes: jasmine.createSpy().and.returnValue({
       subscribe: ({ next }: any) => next(),
     }),
@@ -93,11 +93,12 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería cargar favoritos y recetas al entrar en la vista', () => {
-    component.ionViewWillEnter();
+  it('debería cargar favoritos y recetas al entrar en la vista', async () => {
+    await component.ionViewWillEnter();
 
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
     expect(recipeServiceMock.loadDailyRecipes).toHaveBeenCalled();
+    expect(component.isLoading()).toBeFalse();
   });
 
   it('debería exponer las recetas del RecipeService', () => {

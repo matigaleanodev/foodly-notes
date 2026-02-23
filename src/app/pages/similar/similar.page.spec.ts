@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 import { SimilarPage } from './similar.page';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -20,9 +20,7 @@ describe('SimilarPage', () => {
     recipeSelected: signal<any>(null),
     refreshSimilarRecipes: jasmine
       .createSpy('refreshSimilarRecipes')
-      .and.returnValue({
-        subscribe: () => {},
-      }),
+      .and.returnValue(of(recipesMock)),
     selectRecipe: jasmine.createSpy('selectRecipe'),
     toSimilarRecipes: jasmine.createSpy('toSimilarRecipes'),
     toRecipeDetail: jasmine.createSpy('toRecipeDetail'),
@@ -41,14 +39,6 @@ describe('SimilarPage', () => {
       .and.callFake((key: string) => key),
   };
 
-  const activatedRouteMock = {
-    snapshot: {
-      paramMap: {
-        get: () => '1',
-      },
-    },
-  };
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SimilarPage],
@@ -56,14 +46,12 @@ describe('SimilarPage', () => {
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: TranslateService, useValue: translateMock },
-        { provide: ActivatedRoute, useValue: activatedRouteMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimilarPage);
     component = fixture.componentInstance;
-
-    fixture.componentRef.setInput('data', recipesMock);
+    fixture.componentRef.setInput('id', '1');
     fixture.detectChanges();
   });
 
@@ -71,8 +59,10 @@ describe('SimilarPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer las recetas desde el input', () => {
+  it('debería cargar recetas similares desde params', () => {
+    expect(recipeServiceMock.refreshSimilarRecipes).toHaveBeenCalledWith(1);
     expect(component.recipes()).toEqual(recipesMock);
+    expect(component.isLoading()).toBeFalse();
   });
 
   it('debería calcular el subtitle sin receta seleccionada', () => {

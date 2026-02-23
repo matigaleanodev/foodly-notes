@@ -1,0 +1,40 @@
+@use '../shopping-recipe-card/shopping-recipe-card.component.scss' as *;
+
+.skeleton-paper {
+  pointer-events: none;
+}
+
+.icon-skeleton {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  margin: 0 0.5rem 0 0;
+}
+
+.title-skeleton {
+  width: 70%;
+  height: 20px;
+  margin: 0;
+}
+
+.subtitle-skeleton {
+  width: 55%;
+  height: 14px;
+  margin: 0.5rem 0 0;
+}
+
+.line-skeleton {
+  width: 92%;
+  height: 14px;
+  margin: 0;
+}
+
+.button-skeleton {
+  width: 90px;
+  height: 16px;
+  margin: 0;
+}
+
+ion-checkbox[disabled] {
+  opacity: 0.7;
+}
