@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { SearchPage } from './search.page';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -17,6 +18,7 @@ describe('SearchPage', () => {
 
   const recipeServiceMock = {
     searchRecipes: jasmine.createSpy('searchRecipes'),
+    refreshSearch: jasmine.createSpy('refreshSearch').and.returnValue(of(recipesMock)),
     queryReacipeSearch: jasmine.createSpy('queryReacipeSearch'),
     selectRecipe: jasmine.createSpy('selectRecipe'),
     toSimilarRecipes: jasmine.createSpy('toSimilarRecipes'),
@@ -42,8 +44,7 @@ describe('SearchPage', () => {
 
     fixture = TestBed.createComponent(SearchPage);
     component = fixture.componentInstance;
-
-    fixture.componentRef.setInput('data', recipesMock);
+    fixture.componentRef.setInput('q', 'pollo');
     fixture.detectChanges();
   });
 
@@ -51,8 +52,10 @@ describe('SearchPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer las recetas desde el input', () => {
+  it('debería cargar recetas desde query params', () => {
+    expect(recipeServiceMock.refreshSearch).toHaveBeenCalledWith('pollo');
     expect(component.recipes()).toEqual(recipesMock);
+    expect(component.isLoading()).toBeFalse();
   });
 
   it('debería cargar favoritos al entrar en la vista', () => {

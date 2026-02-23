@@ -14,6 +14,13 @@
 
   <ion-grid>
     <ion-row>
+      @if (isLoading()) {
+      @for (_item of skeletonCards; track $index) {
+      <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
+        <app-recipe-card-skeleton />
+      </ion-col>
+      }
+      } @else {
       @for (recipe of recipes(); track $index) {
       <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">
         <app-recipe-card
@@ -27,6 +34,7 @@
       <ion-col>
         <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
       </ion-col>
+      }
       }
     </ion-row>
   </ion-grid>

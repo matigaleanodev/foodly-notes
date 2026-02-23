@@ -15,6 +15,9 @@ describe('searchResolver', () => {
     TestBed.runInInjectionContext(() => searchResolver(...resolverParameters));
 
   beforeEach(() => {
+    recipeServiceMock.queryReacipeSearch.calls.reset();
+    recipeServiceMock.queryReacipeSearch.and.stub();
+
     TestBed.configureTestingModule({
       providers: [{ provide: RecipeService, useValue: recipeServiceMock }],
     });

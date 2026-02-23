@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,6 +20,7 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { HomeHeroComponent } from './components/home-hero/home-hero.component';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
+import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,7 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
     IonContent,
     FormsModule,
     RecipeCardComponent,
+    RecipeCardSkeletonComponent,
     HomeHeroComponent,
     EmptyStatesComponent,
   ],
@@ -48,10 +50,18 @@ export class HomePage {
   readonly _favorites = inject(FavoritesService);
 
   readonly recipes = computed(() => this._recipes.recipes());
+  readonly isLoading = signal(true);
+  readonly skeletonCards = Array.from({ length: 3 });
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this._favorites.loadFavorites();
-    this._recipes.loadDailyRecipes();
+    this.isLoading.set(true);
+
+    try {
+      await this._recipes.loadDailyRecipes();
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   onRefresh(event: RefresherCustomEvent) {

@@ -1,13 +1,13 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   input,
-  linkedSignal,
+  signal,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonGrid,
@@ -30,6 +30,8 @@ import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { TranslateService } from '@shared/translate/translate.service';
+import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-similar',
@@ -51,20 +53,21 @@ import { TranslateService } from '@shared/translate/translate.service';
     IonContent,
     FormsModule,
     RecipeCardComponent,
+    RecipeCardSkeletonComponent,
     TranslatePipe,
     EmptyStatesComponent,
   ],
 })
 export class SimilarPage {
-  readonly data = input.required<SimilarRecipe[]>();
+  readonly id = input<string>('');
 
-  readonly recipes = linkedSignal(() => this.data());
+  readonly recipes = signal<SimilarRecipe[]>([]);
+  readonly isLoading = signal(true);
+  readonly skeletonCards = Array.from({ length: 3 });
 
   readonly _translator = inject(TranslateService);
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
-
-  private readonly _route = inject(ActivatedRoute);
 
   readonly subtitle = computed(() => {
     const recipe = this._recipes.recipeSelected();
@@ -74,22 +77,32 @@ export class SimilarPage {
       : this._translator.translate('xRecetasRecomendadas');
   });
 
+  constructor() {
+    effect(() => {
+      const sourceId = Number(this.id());
+
+      if (!sourceId) {
+        this.recipes.set([]);
+        this.isLoading.set(false);
+        return;
+      }
+
+      this._loadSimilarRecipes(sourceId, true);
+    });
+  }
+
   ionViewWillEnter() {
     this._favorites.loadFavorites();
   }
 
   onRefresh(event: RefresherCustomEvent) {
-    const sourceId = Number(this._route.snapshot.paramMap.get('id'));
+    const sourceId = Number(this.id());
+    if (!sourceId) {
+      event.target.complete();
+      return;
+    }
 
-    this._recipes.refreshSimilarRecipes(sourceId).subscribe({
-      next: (recipes) => {
-        this.recipes.set(recipes);
-        event.target.complete();
-      },
-      error: () => {
-        event.target.complete();
-      },
-    });
+    this._loadSimilarRecipes(sourceId, false, () => event.target.complete());
   }
   toggleFavorite(receta: SimilarRecipe) {
     const isFav = this._favorites.isFavorite(receta.sourceId);
@@ -108,5 +121,30 @@ export class SimilarPage {
 
   detalleReceta({ sourceId }: SimilarRecipe) {
     this._recipes.toRecipeDetail(sourceId);
+  }
+
+  private _loadSimilarRecipes(
+    sourceId: number,
+    showSkeleton: boolean,
+    onComplete?: () => void,
+  ) {
+    if (showSkeleton) {
+      this.isLoading.set(true);
+    }
+
+    this._recipes
+      .refreshSimilarRecipes(sourceId)
+      .pipe(
+        finalize(() => {
+          if (showSkeleton) {
+            this.isLoading.set(false);
+          }
+          onComplete?.();
+        }),
+      )
+      .subscribe({
+        next: (recipes) => this.recipes.set(recipes),
+        error: () => this.recipes.set([]),
+      });
   }
 }

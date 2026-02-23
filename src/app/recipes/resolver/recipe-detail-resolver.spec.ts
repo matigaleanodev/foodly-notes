@@ -4,6 +4,7 @@ import {
   RouterStateSnapshot,
   convertToParamMap,
 } from '@angular/router';
+import { LoadingController } from '@ionic/angular/standalone';
 import { of } from 'rxjs';
 
 import { recipeDetailResolver } from './recipe-detail-resolver';
@@ -12,14 +13,28 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 
 describe('recipeDetailResolver', () => {
   let recipeService: jasmine.SpyObj<RecipeService>;
+  let loadingController: jasmine.SpyObj<LoadingController>;
+
+  const loadingElementMock = {
+    present: jasmine.createSpy('present').and.resolveTo(),
+    dismiss: jasmine.createSpy('dismiss').and.resolveTo(),
+  } as unknown as HTMLIonLoadingElement;
 
   beforeEach(() => {
     recipeService = jasmine.createSpyObj<RecipeService>('RecipeService', [
       'loadRecipeDeatil',
     ]);
+    loadingController = jasmine.createSpyObj<LoadingController>(
+      'LoadingController',
+      ['create'],
+    );
+    loadingController.create.and.resolveTo(loadingElementMock);
 
     TestBed.configureTestingModule({
-      providers: [{ provide: RecipeService, useValue: recipeService }],
+      providers: [
+        { provide: RecipeService, useValue: recipeService },
+        { provide: LoadingController, useValue: loadingController },
+      ],
     });
   });
 
@@ -33,6 +48,7 @@ describe('recipeDetailResolver', () => {
     );
 
     expect(result).toBeNull();
+    expect(loadingController.create).not.toHaveBeenCalled();
   });
 
   it('debería devolver el detalle de la receta cuando hay id', async () => {
@@ -68,7 +84,14 @@ describe('recipeDetailResolver', () => {
       recipeDetailResolver(route, {} as RouterStateSnapshot),
     );
 
+    expect(loadingController.create).toHaveBeenCalledWith({
+      spinner: 'crescent',
+      translucent: true,
+      cssClass: 'recipe-detail-loading',
+    });
+    expect(loadingElementMock.present).toHaveBeenCalled();
     expect(recipeService.loadRecipeDeatil).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
+    expect(loadingElementMock.dismiss).toHaveBeenCalled();
   });
 });

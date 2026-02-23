@@ -1,0 +1,32 @@
+<section class="ingredients-paper skeleton-paper" aria-hidden="true">
+  <div class="paper-margin"></div>
+  <div class="paper-spacer"></div>
+
+  <div class="paper-content">
+    <div class="paper-title-container">
+      <ion-skeleton-text animated class="icon-skeleton" />
+      <ion-skeleton-text animated class="title-skeleton" />
+    </div>
+
+    <ion-skeleton-text animated class="subtitle-skeleton" />
+
+    <div class="paper-spacer"></div>
+
+    @for (_item of [1, 2, 3, 4]; track $index) {
+      <ion-item class="paper-line" lines="none">
+        <ion-checkbox slot="start" disabled></ion-checkbox>
+        <ion-label>
+          <ion-skeleton-text animated class="line-skeleton" />
+        </ion-label>
+      </ion-item>
+    }
+
+    <div class="paper-spacer"></div>
+  </div>
+
+  <div class="paper-footer">
+    <ion-button shape="round" fill="clear" disabled>
+      <ion-skeleton-text animated class="button-skeleton" />
+    </ion-button>
+  </div>
+</section>

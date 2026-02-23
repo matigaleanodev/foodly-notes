@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import {
   IonContent,
   IonButtons,
@@ -16,7 +16,6 @@ import { ShoppingListService } from './services/shopping-list/shopping-list.serv
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { ShoppingRecipesService } from './services/shopping-recipe/shopping-recipe.service';
-import { LoadingService } from '@shared/services/loading/loading.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 import { TranslateService } from '@shared/translate/translate.service';
@@ -24,6 +23,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { skip, switchMap } from 'rxjs';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recipe-card-skeleton/shopping-recipe-card-skeleton.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -42,6 +42,7 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
     IonButtons,
     IonContent,
     ShoppingRecipeCardComponent,
+    ShoppingRecipeCardSkeletonComponent,
     TranslatePipe,
     EmptyStatesComponent,
   ],
@@ -51,7 +52,6 @@ export class ShoppingListPage implements OnInit {
   private readonly _favorites = inject(FavoritesService);
   private readonly _shopping = inject(ShoppingRecipesService);
   private readonly _recipes = inject(RecipeService);
-  private readonly _loading = inject(LoadingService);
   private readonly _translate = inject(TranslateService);
 
   readonly currentLang = computed(() => this._translate.currentLang());
@@ -70,6 +70,8 @@ export class ShoppingListPage implements OnInit {
       state: this.getShoppingState(recipe.sourceId),
     })),
   );
+  readonly isLoading = signal(true);
+  readonly skeletonCards = Array.from({ length: 3 });
 
   ngOnInit() {
     this.currentLang$
@@ -82,29 +84,34 @@ export class ShoppingListPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    const loading = await this._loading.show();
+    this.isLoading.set(true);
 
     try {
       await this._favorites.loadFavorites();
       await this._state.init();
       await this._shopping.sync();
     } finally {
-      loading.dismiss();
+      this.isLoading.set(false);
     }
   }
 
   onRefresh(event: RefresherCustomEvent) {
-    this._favorites.loadFavorites().then(() => {
-      this._state.init();
-      this._shopping.refreshSync().subscribe({
-        next: () => {
-          event.target.complete();
-        },
-        error: () => {
-          event.target.complete();
-        },
+    this._favorites
+      .loadFavorites()
+      .then(() => this._state.init())
+      .then(() => {
+        this._shopping.refreshSync().subscribe({
+          next: () => {
+            event.target.complete();
+          },
+          error: () => {
+            event.target.complete();
+          },
+        });
+      })
+      .catch(() => {
+        event.target.complete();
       });
-    });
   }
 
   getShoppingState(recipeId: number) {

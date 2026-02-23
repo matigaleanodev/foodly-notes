@@ -4,7 +4,6 @@ import { of } from 'rxjs';
 import { RecipeService } from './recipe.service';
 import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
-import { LoadingService } from '@shared/services/loading/loading.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { Storage } from '@ionic/storage-angular';
@@ -16,14 +15,6 @@ describe('RecipeService', () => {
     { sourceId: 1, title: 'Receta 1', image: 'img1' },
     { sourceId: 2, title: 'Receta 2', image: 'img2' },
   ];
-
-  const loadingElementMock = {
-    dismiss: jasmine.createSpy('dismiss'),
-  };
-
-  const loadingServiceMock = {
-    show: jasmine.createSpy('show').and.resolveTo(loadingElementMock),
-  };
 
   const apiMock = {
     getDailyRecipes: jasmine
@@ -52,7 +43,6 @@ describe('RecipeService', () => {
         { provide: Storage, useClass: IonicStorageMock },
         { provide: RecipeApiService, useValue: apiMock },
         { provide: NavService, useValue: navMock },
-        { provide: LoadingService, useValue: loadingServiceMock },
       ],
     });
 
@@ -68,7 +58,6 @@ describe('RecipeService', () => {
 
     expect(apiMock.getDailyRecipes).toHaveBeenCalled();
     expect(service.recipes()).toEqual(recipesMock);
-    expect(loadingElementMock.dismiss).toHaveBeenCalled();
   });
 
   it('debería refrescar recetas diarias sin loading', (done) => {

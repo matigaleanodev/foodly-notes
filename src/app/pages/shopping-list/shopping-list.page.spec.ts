@@ -6,7 +6,6 @@ import {
   ShoppingListService,
 } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipesService } from './services/shopping-recipe/shopping-recipe.service';
-import { LoadingService } from '@shared/services/loading/loading.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
@@ -48,14 +47,6 @@ describe('ShoppingListPage', () => {
     refreshSync: jasmine.createSpy().and.returnValue(of([])),
   };
 
-  const loadingMock = {
-    dismiss: jasmine.createSpy('dismiss'),
-  };
-
-  const loadingServiceMock = {
-    show: jasmine.createSpy().and.resolveTo(loadingMock),
-  };
-
   const translateServiceMock = {
     currentLang: jasmine.createSpy().and.returnValue('es'),
     translate: (key: string) => key,
@@ -77,7 +68,6 @@ describe('ShoppingListPage', () => {
           provide: ShoppingRecipesService,
           useValue: shoppingRecipesServiceMock,
         },
-        { provide: LoadingService, useValue: loadingServiceMock },
         { provide: TranslateService, useValue: translateServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
       ],
@@ -109,10 +99,9 @@ describe('ShoppingListPage', () => {
   it('debería cargar favoritos y sincronizar al entrar a la vista', async () => {
     await component.ionViewWillEnter();
 
-    expect(loadingServiceMock.show).toHaveBeenCalled();
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
     expect(shoppingListServiceMock.init).toHaveBeenCalled();
     expect(shoppingRecipesServiceMock.sync).toHaveBeenCalled();
-    expect(loadingMock.dismiss).toHaveBeenCalled();
+    expect(component.isLoading()).toBeFalse();
   });
 });

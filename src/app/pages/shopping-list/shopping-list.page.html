@@ -20,6 +20,13 @@
     </div>
   </div>
   <div class="masonry">
+    @if (isLoading()) {
+    @for (_item of skeletonCards; track $index) {
+    <div class="ion-padding-verical">
+      <app-shopping-recipe-card-skeleton />
+    </div>
+    }
+    } @else {
     @for (item of shoppingList(); track $index) {
     <div class="ion-padding-verical">
       <app-shopping-recipe-card
@@ -37,6 +44,7 @@
         />
       </ion-col>
     </ion-row>
+    }
     }
   </div>
 </ion-content>

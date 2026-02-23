@@ -21,7 +21,7 @@ describe('FavoritesPage', () => {
 
   const favoritesServiceMock = {
     favorites: signal<DailyRecipe[]>([recipeMock]),
-    loadFavorites: jasmine.createSpy('loadFavorites'),
+    loadFavorites: jasmine.createSpy('loadFavorites').and.resolveTo(undefined),
     isFavorite: jasmine.createSpy('isFavorite').and.returnValue(true),
     addFavorite: jasmine.createSpy('addFavorite'),
     removeFavorite: jasmine.createSpy('removeFavorite'),
@@ -52,10 +52,11 @@ describe('FavoritesPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería cargar los favoritos al entrar a la vista', () => {
-    component.ionViewWillEnter();
+  it('debería cargar los favoritos al entrar a la vista', async () => {
+    await component.ionViewWillEnter();
 
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
+    expect(component.isLoading()).toBeFalse();
   });
 
   it('debería exponer los favoritos del FavoritesService', () => {
