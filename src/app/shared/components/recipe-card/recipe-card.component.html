@@ -1,4 +1,9 @@
-<ion-card class="recipe-card" [button]="true" (click)="toRecipeDetail($event)">
+<ion-card
+  class="recipe-card"
+  [button]="true"
+  [attr.aria-label]="'Ver receta: ' + recipe().title"
+  (click)="toRecipeDetail($event)"
+>
   <ion-card-header class="recipe-card-header">
     <ion-toolbar color="transparent">
       <ion-buttons slot="end">
@@ -7,22 +12,25 @@
           shape="round"
           [color]="isFavorite() ? 'danger' : 'medium'"
           class="recipe-card-action"
+          [attr.aria-label]="'Alternar favorito para ' + recipe().title"
+          [attr.aria-pressed]="isFavorite()"
           (click)="toggleFavoriteState($event)"
           appTooltip
           tooltipKey="xToggleFavorito"
         >
-          <ion-icon slot="icon-only" name="heart" />
+          <ion-icon slot="icon-only" name="heart" aria-hidden="true" />
         </ion-button>
         <ion-button
           fill="solid"
           shape="round"
           color="secondary"
           class="recipe-card-action"
+          [attr.aria-label]="'Ver recetas similares de ' + recipe().title"
           (click)="toSimilarRecipes($event)"
           appTooltip
           tooltipKey="xVerSimilares"
         >
-          <ion-icon slot="icon-only" name="repeat" />
+          <ion-icon slot="icon-only" name="repeat" aria-hidden="true" />
         </ion-button>
       </ion-buttons>
     </ion-toolbar>

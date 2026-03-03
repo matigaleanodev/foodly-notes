@@ -46,7 +46,7 @@ export class FavoritesPage {
 
   readonly favorites = computed(() => this._service.favorites());
   readonly isLoading = signal(true);
-  readonly skeletonCards = Array.from({ length: 3 });
+  readonly skeletonCards = Array.from({ length: 12 });
 
   async ionViewWillEnter() {
     this.isLoading.set(true);
