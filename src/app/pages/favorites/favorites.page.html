@@ -9,13 +9,13 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div class="favorites-header gradient-header">
-    <div class="favorites-header-inner">
+  <div class="page-header gradient-header">
+    <div class="page-header-inner">
       <h1>{{'xFavoritos' | translate }}</h1>
-      <p>{{'xFavoritosSubitulo' | translate }}</p>
+      <p class="page-header-subtitle">{{'xFavoritosSubitulo' | translate }}</p>
     </div>
   </div>
-  <ion-grid>
+  <ion-grid class="page-grid">
     <ion-row>
       @if (isLoading()) {
       @for (_item of skeletonCards; track $index) {

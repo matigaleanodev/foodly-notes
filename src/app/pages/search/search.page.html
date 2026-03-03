@@ -11,7 +11,7 @@
 <ion-content>
   <app-home-hero (searchSubmit)="searchNewRecipes($event)" />
 
-  <ion-grid>
+  <ion-grid class="page-grid">
     <ion-row>
       @if (isLoading()) { @for (_item of skeletonCards; track $index) {
       <ion-col size="12" sizeSm="6" sizeMd="4" sizeLg="3">

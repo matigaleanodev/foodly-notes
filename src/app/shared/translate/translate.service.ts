@@ -37,6 +37,7 @@ export class TranslateService {
   setLanguage(lang: Language): void {
     if (this.translations[lang]) {
       this.currentLang.set(lang);
+      this.updateDocumentLanguage(lang);
       this.store.setItem<Language>('lang', lang);
     }
   }
@@ -53,5 +54,11 @@ export class TranslateService {
     }
 
     return value ?? key;
+  }
+
+  private updateDocumentLanguage(lang: Language): void {
+    if (typeof document === 'undefined') return;
+
+    document.documentElement.lang = lang;
   }
 }

@@ -17,6 +17,8 @@
       tooltipKey="xVegano"
       name="leaf-outline"
       [class.active]="vegan()"
+      [attr.aria-label]="'Vegano: ' + (vegan() ? 'sí' : 'no')"
+      role="img"
     />
 
     <ion-icon
@@ -24,6 +26,8 @@
       [class.active]="vegetarian()"
       appTooltip
       tooltipKey="xVegetarian"
+      [attr.aria-label]="'Vegetariano: ' + (vegetarian() ? 'sí' : 'no')"
+      role="img"
     />
 
     <ion-icon
@@ -31,6 +35,8 @@
       [class.active]="glutenFree()"
       appTooltip
       tooltipKey="xSinGluten"
+      [attr.aria-label]="'Sin gluten: ' + (glutenFree() ? 'sí' : 'no')"
+      role="img"
     />
 
     <ion-icon
@@ -38,6 +44,8 @@
       [class.active]="dairyFree()"
       appTooltip
       tooltipKey="xSinLacteos"
+      [attr.aria-label]="'Sin lácteos: ' + (dairyFree() ? 'sí' : 'no')"
+      role="img"
     />
   </div>
 
@@ -46,12 +54,17 @@
       appTooltip
       tooltipKey="xToggleFavorito"
       fill="clear"
+      [attr.aria-label]="
+        isFavorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'
+      "
+      [attr.aria-pressed]="isFavorite()"
       (click)="toggleFavorite.emit()"
     >
       <ion-icon
         slot="icon-only"
         [color]="isFavorite() ? 'danger' : 'medium'"
         name="heart-outline"
+        aria-hidden="true"
       />
     </ion-button>
 
@@ -59,9 +72,10 @@
       appTooltip
       tooltipKey="xVerSimilares"
       fill="clear"
+      aria-label="Ver recetas similares"
       (click)="viewSimilar.emit()"
     >
-      <ion-icon slot="icon-only" name="repeat-outline" />
+      <ion-icon slot="icon-only" name="repeat-outline" aria-hidden="true" />
     </ion-button>
   </div>
 </div>

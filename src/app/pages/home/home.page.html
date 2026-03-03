@@ -12,7 +12,7 @@
   </ion-refresher>
   <app-home-hero (searchSubmit)="toSearchRecipe($event)" />
 
-  <ion-grid>
+  <ion-grid class="page-grid">
     <ion-row>
       @if (isLoading()) {
       @for (_item of skeletonCards; track $index) {

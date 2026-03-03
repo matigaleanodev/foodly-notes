@@ -51,7 +51,7 @@ export class HomePage {
 
   readonly recipes = computed(() => this._recipes.recipes());
   readonly isLoading = signal(true);
-  readonly skeletonCards = Array.from({ length: 3 });
+  readonly skeletonCards = Array.from({ length: 12 });
 
   async ionViewWillEnter() {
     this._favorites.loadFavorites();

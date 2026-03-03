@@ -63,7 +63,7 @@ export class SimilarPage {
 
   readonly recipes = signal<SimilarRecipe[]>([]);
   readonly isLoading = signal(true);
-  readonly skeletonCards = Array.from({ length: 3 });
+  readonly skeletonCards = Array.from({ length: 12 });
 
   readonly _translator = inject(TranslateService);
   readonly _recipes = inject(RecipeService);

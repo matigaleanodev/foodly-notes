@@ -48,7 +48,7 @@ export class SearchPage {
 
   readonly recipes = signal<SearchRecipe[]>([]);
   readonly isLoading = signal(true);
-  readonly skeletonCards = Array.from({ length: 3 });
+  readonly skeletonCards = Array.from({ length: 12 });
 
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
