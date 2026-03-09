@@ -139,8 +139,9 @@ The repository keeps operational workflows separated by responsibility:
 - `CI - Foodly Front`: runs lint, i18n validation, `npm run test:ci`, and `npm run build` on pull requests to `dev` and `main`
 - `Sync Dev From Main`: merges `main` back into `dev` on each push to `main` and can also be triggered manually
 - `Deploy Web - Firebase Hosting`: deploys the web build to Firebase Hosting on pushes to `main`
+- `Deploy Android - Google Play`: builds a signed Android App Bundle and publishes it to Google Play on pushes to `main`
 
-Android / Google Play release automation is intentionally kept out of the web deploy workflow and remains a separate pending track.
+Android / Google Play release automation is intentionally kept out of the web deploy workflow and runs as its own pipeline with separate secrets and retries.
 
 ---
 
@@ -164,7 +165,7 @@ Android / Google Play release automation is intentionally kept out of the web de
 - run `npx cap copy android`
 - from `android/`, run `cmd /c gradlew.bat assembleDebug` at minimum to validate the native container
 - verify `versionName` and `versionCode` before publishing any signed artifact
-- keep Google Play publication in its own workflow or manual release flow, separate from web deploy
+- keep Google Play publication in its own workflow, separate from web deploy
 
 ---
 
