@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipePage } from './recipe.page';
@@ -38,14 +39,12 @@ describe('RecipePage (Vitest)', () => {
 
   const favoritesServiceMock = {
     isFavorite: vi.fn().mockReturnValue(false),
-    addFavorite: vi.fn(),
-    removeFavorite: vi.fn(),
+    toggleFavorite: vi.fn(),
   };
 
   const recipeServiceMock = {
     refreshRecipeDetail: vi.fn().mockReturnValue(of(recipeMock)),
-    selectRecipe: vi.fn(),
-    toSimilarRecipes: vi.fn(),
+    openSimilarRecipes: vi.fn(),
   };
 
   const translateServiceMock = {
@@ -56,11 +55,9 @@ describe('RecipePage (Vitest)', () => {
   beforeEach(async () => {
     favoritesServiceMock.isFavorite.mockClear();
     favoritesServiceMock.isFavorite.mockReturnValue(false);
-    favoritesServiceMock.addFavorite.mockClear();
-    favoritesServiceMock.removeFavorite.mockClear();
+    favoritesServiceMock.toggleFavorite.mockClear();
     recipeServiceMock.refreshRecipeDetail.mockClear();
-    recipeServiceMock.selectRecipe.mockClear();
-    recipeServiceMock.toSimilarRecipes.mockClear();
+    recipeServiceMock.openSimilarRecipes.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [RecipePage],
@@ -69,6 +66,14 @@ describe('RecipePage (Vitest)', () => {
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: TranslateService, useValue: translateServiceMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: convertToParamMap({ returnTo: '/favorites' }),
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -88,6 +93,10 @@ describe('RecipePage (Vitest)', () => {
     expect(component.imageUrl()).toBe('image.jpg');
   });
 
+  it('exposes the back href from the navigation context', () => {
+    expect(component.backHref()).toBe('/favorites');
+  });
+
   it('reports whether the recipe is a favorite', () => {
     favoritesServiceMock.isFavorite.mockReturnValue(true);
 
@@ -96,35 +105,43 @@ describe('RecipePage (Vitest)', () => {
     expect(component.isFavorite()).toBe(true);
   });
 
-  it('adds the recipe to favorites when needed', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(false);
-
+  it('delegates favorite toggling to the service', () => {
     component.toggleFavorite();
 
-    expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith({
+    expect(favoritesServiceMock.toggleFavorite).toHaveBeenCalledWith({
       sourceId: 1,
       title: 'Receta test',
       image: 'image.jpg',
     });
-  });
-
-  it('removes the recipe from favorites when already saved', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(true);
-
-    component.toggleFavorite();
-
-    expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
   it('navigates to similar recipes', () => {
     component.toSimilaRecipes();
 
-    expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith({
+    expect(recipeServiceMock.openSimilarRecipes).toHaveBeenCalledWith({
       sourceId: 1,
       title: 'Receta test',
       image: 'image.jpg',
+    }, {
+      returnTo: '/recipe/1?returnTo=%2Ffavorites',
     });
+  });
 
-    expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
+  it('surfaces a refresh error without clearing the current recipe', () => {
+    const refresherEvent = {
+      target: {
+        complete: vi.fn(),
+      },
+    } as any;
+
+    recipeServiceMock.refreshRecipeDetail.mockReturnValueOnce(
+      throwError(() => new Error('refresh failed')),
+    );
+
+    component.onRefresh(refresherEvent);
+
+    expect(component.recipe()).toEqual(recipeMock);
+    expect(component.errorStateKey()).toBe('xErrorActualizacionReceta');
+    expect(refresherEvent.target.complete).toHaveBeenCalled();
   });
 });

@@ -23,7 +23,7 @@ export const recipeDetailResolver: ResolveFn<RecipeDetail | null> = async (
   await loading.present();
 
   try {
-    return firstValueFrom(await recipe.loadRecipeDeatil(id));
+    return firstValueFrom(recipe.loadRecipeDetail(id));
   } finally {
     await loading.dismiss();
   }

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { of } from 'rxjs';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SimilarPage } from './similar.page';
@@ -20,16 +21,14 @@ describe('SimilarPage (Vitest)', () => {
   const recipeServiceMock = {
     recipeSelected: signal<unknown>(null),
     refreshSimilarRecipes: vi.fn().mockReturnValue(of(recipesMock)),
-    selectRecipe: vi.fn(),
-    toSimilarRecipes: vi.fn(),
+    openSimilarRecipes: vi.fn(),
     toRecipeDetail: vi.fn(),
   };
 
   const favoritesServiceMock = {
     loadFavorites: vi.fn(),
     isFavorite: vi.fn().mockReturnValue(false),
-    addFavorite: vi.fn(),
-    removeFavorite: vi.fn(),
+    toggleFavorite: vi.fn(),
   };
 
   const translateMock = {
@@ -38,14 +37,12 @@ describe('SimilarPage (Vitest)', () => {
 
   beforeEach(async () => {
     recipeServiceMock.refreshSimilarRecipes.mockClear();
-    recipeServiceMock.selectRecipe.mockClear();
-    recipeServiceMock.toSimilarRecipes.mockClear();
+    recipeServiceMock.openSimilarRecipes.mockClear();
     recipeServiceMock.toRecipeDetail.mockClear();
     favoritesServiceMock.loadFavorites.mockClear();
     favoritesServiceMock.isFavorite.mockClear();
     favoritesServiceMock.isFavorite.mockReturnValue(false);
-    favoritesServiceMock.addFavorite.mockClear();
-    favoritesServiceMock.removeFavorite.mockClear();
+    favoritesServiceMock.toggleFavorite.mockClear();
     translateMock.translate.mockClear();
 
     await TestBed.configureTestingModule({
@@ -54,6 +51,14 @@ describe('SimilarPage (Vitest)', () => {
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: TranslateService, useValue: translateMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: convertToParamMap({ returnTo: '/favorites' }),
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -71,6 +76,11 @@ describe('SimilarPage (Vitest)', () => {
     expect(recipeServiceMock.refreshSimilarRecipes).toHaveBeenCalledWith(1);
     expect(component.recipes()).toEqual(recipesMock);
     expect(component.isLoading()).toBe(false);
+    expect(component.errorStateKey()).toBeNull();
+  });
+
+  it('exposes the back href from the navigation context', () => {
+    expect(component.backHref()).toBe('/favorites');
   });
 
   it('computes the subtitle without a selected recipe', () => {
@@ -85,34 +95,53 @@ describe('SimilarPage (Vitest)', () => {
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
   });
 
-  it('adds a favorite when the recipe is not already saved', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(false);
-
+  it('delegates favorite toggling to the service', () => {
     component.toggleFavorite(recipesMock[0]);
 
-    expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith(
+    expect(favoritesServiceMock.toggleFavorite).toHaveBeenCalledWith(
       recipesMock[0],
     );
-  });
-
-  it('removes a favorite when the recipe is already saved', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(true);
-
-    component.toggleFavorite(recipesMock[0]);
-
-    expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
   it('navigates to similar recipes', () => {
     component.toSimilarRecipes(recipesMock[0]);
 
-    expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith(recipesMock[0]);
-    expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.openSimilarRecipes).toHaveBeenCalledWith(
+      recipesMock[0],
+      { returnTo: '/similar/1?returnTo=%2Ffavorites' },
+    );
   });
 
   it('navigates to recipe detail', () => {
     component.detalleReceta(recipesMock[0]);
 
-    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1, {
+      returnTo: '/similar/1?returnTo=%2Ffavorites',
+    });
+  });
+
+  it('exposes an empty-state key when there are no similar recipes', async () => {
+    recipeServiceMock.refreshSimilarRecipes.mockReturnValueOnce(of([]));
+
+    fixture.componentRef.setInput('id', '2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.emptyStateKey()).toBe('xSinRecetasSimilares');
+  });
+
+  it('exposes an error-state key when similar recipes fail to load', async () => {
+    recipeServiceMock.refreshSimilarRecipes.mockReturnValueOnce(
+      throwError(() => new Error('similar failed')),
+    );
+
+    fixture.componentRef.setInput('id', '2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.errorStateKey()).toBe('xErrorRecetasSimilares');
+    expect(component.emptyStateKey()).toBe('xErrorRecetasSimilares');
   });
 });

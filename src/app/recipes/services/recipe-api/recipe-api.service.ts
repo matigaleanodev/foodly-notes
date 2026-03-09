@@ -1,6 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
@@ -10,6 +10,12 @@ import { environment } from '@env/environment';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
 import { TranslateService } from '@shared/translate/translate.service';
 import { Language } from '@shared/translate/language.model';
+
+interface RecipeSummaryResponse {
+  sourceId: number;
+  title: string;
+  image?: string | null;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +33,13 @@ export class RecipeApiService {
   });
 
   getDailyRecipes(): Observable<DailyRecipe[]> {
-    return this.http.get<DailyRecipe[]>(`${this.baseUrl}/recipes/daily`, {
-      params: {
-        lang: this.lang(),
-      },
-    });
+    return this.http
+      .get<RecipeSummaryResponse[]>(`${this.baseUrl}/recipes/daily`, {
+        params: {
+          lang: this.lang(),
+        },
+      })
+      .pipe(map((recipes) => recipes.map((recipe) => this.normalizeSummary(recipe))));
   }
 
   getRecipeDetail(sourceId: number): Observable<RecipeDetail> {
@@ -43,9 +51,9 @@ export class RecipeApiService {
   }
 
   getSimilarRecipes(sourceId: number): Observable<SimilarRecipe[]> {
-    return this.http.get<SimilarRecipe[]>(
-      `${this.baseUrl}/recipes/${sourceId}/similar`,
-    );
+    return this.http
+      .get<RecipeSummaryResponse[]>(`${this.baseUrl}/recipes/${sourceId}/similar`)
+      .pipe(map((recipes) => recipes.map((recipe) => this.normalizeSummary(recipe))));
   }
 
   getIngredientsForRecipes(sourceIds: number[]): Observable<ShoppingRecipe[]> {
@@ -66,8 +74,18 @@ export class RecipeApiService {
 
     const params = new HttpParams().set('q', q);
 
-    return this.http.get<SearchRecipe[]>(`${this.baseUrl}/recipes/search`, {
-      params,
-    });
+    return this.http
+      .get<RecipeSummaryResponse[]>(`${this.baseUrl}/recipes/search`, {
+        params,
+      })
+      .pipe(map((recipes) => recipes.map((recipe) => this.normalizeSummary(recipe))));
+  }
+
+  private normalizeSummary(recipe: RecipeSummaryResponse): DailyRecipe {
+    return {
+      sourceId: recipe.sourceId,
+      title: recipe.title,
+      image: recipe.image ?? '',
+    };
   }
 }

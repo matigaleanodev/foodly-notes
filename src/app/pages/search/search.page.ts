@@ -1,4 +1,5 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonGrid,
@@ -48,10 +49,12 @@ export class SearchPage {
 
   readonly recipes = signal<SearchRecipe[]>([]);
   readonly isLoading = signal(true);
+  readonly errorStateKey = signal<string | null>(null);
   readonly skeletonCards = Array.from({ length: 12 });
 
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
+  readonly _route = inject(ActivatedRoute);
 
   constructor() {
     effect(() => {
@@ -64,41 +67,62 @@ export class SearchPage {
   }
 
   toggleFavorite(recipe: DailyRecipe) {
-    const isFav = this._favorites.isFavorite(recipe.sourceId);
-    if (isFav) {
-      this._favorites.removeFavorite(recipe.sourceId);
-    } else {
-      this._favorites.addFavorite(recipe);
-    }
+    this._favorites.toggleFavorite(recipe);
   }
 
   toSimilarRecipes(recipe: DailyRecipe) {
-    this._recipes.selectRecipe(recipe);
-    this._recipes.toSimilarRecipes(recipe.sourceId);
+    this._recipes.openSimilarRecipes(recipe, { returnTo: this._currentRoute() });
   }
 
   toRecipeDetail({ sourceId }: DailyRecipe) {
-    this._recipes.toRecipeDetail(sourceId);
+    this._recipes.toRecipeDetail(sourceId, { returnTo: this._currentRoute() });
   }
 
   searchNewRecipes(query: string) {
     this._recipes.searchRecipes(query);
   }
 
+  readonly emptyStateKey = (): string => {
+    if (this.errorStateKey()) {
+      return this.errorStateKey() ?? 'xErrorBusquedaRecetas';
+    }
+
+    if (!this.q().trim()) {
+      return 'xBuscaTuProximaReceta';
+    }
+
+    return 'xSinResultadosBusqueda';
+  };
+
   private _loadSearch(query: string) {
     if (!query) {
       this.recipes.set([]);
+      this.errorStateKey.set(null);
       this.isLoading.set(false);
       return;
     }
 
     this.isLoading.set(true);
+    this.errorStateKey.set(null);
     this._recipes
       .refreshSearch(query)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (recipes) => this.recipes.set(recipes),
-        error: () => this.recipes.set([]),
+        error: () => {
+          this.recipes.set([]);
+          this.errorStateKey.set('xErrorBusquedaRecetas');
+        },
       });
+  }
+
+  private _currentRoute() {
+    const query = this.q().trim() || this._route.snapshot.queryParamMap.get('q')?.trim();
+
+    if (!query) {
+      return '/search';
+    }
+
+    return `/search?q=${encodeURIComponent(query)}`;
   }
 }

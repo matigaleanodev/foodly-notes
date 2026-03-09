@@ -39,6 +39,15 @@ export const enUS: Record<string, string> = {
   xErrorDesconocido: 'An unexpected error occurred',
   xAunNoSeleccionaFavoritos: 'You haven’t marked any recipes as favorites yet',
   xSinRecetasDisponibles: 'We couldn’t find any recipes to show right now',
+  xBuscaTuProximaReceta: 'Type something to search for recipes',
+  xSinResultadosBusqueda: 'We could not find recipes for that search',
+  xErrorBusquedaRecetas:
+    'We could not load the search results right now. Please try again in a few minutes.',
+  xSinRecetasSimilares: 'We could not find similar recipes to show right now',
+  xErrorRecetasSimilares:
+    'We could not load similar recipes right now.',
+  xErrorActualizacionReceta:
+    'We could not refresh this recipe. Showing the latest available version instead.',
   xGuardeFavoritosParaListaCompras:
     'Save some recipes to your favorites to build your shopping list',
   xMarcaIngredientes: 'Check the ingredients you already have',

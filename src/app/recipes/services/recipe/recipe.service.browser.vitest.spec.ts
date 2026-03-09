@@ -116,12 +116,61 @@ describe('RecipeService (Vitest)', () => {
 
     expect(result).toEqual(recipesMock);
     expect(service.recipes()).toEqual(recipesMock);
+    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes', {
+      recipes: recipesMock,
+      date: new Date().toISOString().split('T')[0],
+    });
+  });
+
+  it('loads recipe detail from the API without wrapping the observable in a promise', async () => {
+    const detail = { sourceId: 10 };
+    apiMock.getRecipeDetail.mockReturnValue(of(detail));
+
+    const result = await new Promise((resolve) => {
+      service.loadRecipeDetail(10).subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getRecipeDetail).toHaveBeenCalledWith(10);
+    expect(result).toEqual(detail);
+  });
+
+  it('loads similar recipes from the API without wrapping the observable in a promise', async () => {
+    const similarRecipes = [{ sourceId: 5 }];
+    apiMock.getSimilarRecipes.mockReturnValue(of(similarRecipes));
+
+    const result = await new Promise((resolve) => {
+      service.loadSimilarRecipes(5).subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getSimilarRecipes).toHaveBeenCalledWith(5);
+    expect(result).toEqual(similarRecipes);
+  });
+
+  it('loads search results from the API without wrapping the observable in a promise', async () => {
+    const searchResults = [{ sourceId: 7, title: 'Receta', image: 'img' }];
+    apiMock.getRecipesByQuery.mockReturnValue(of(searchResults));
+
+    const result = await new Promise((resolve) => {
+      service.searchRecipesByQuery('pollo').subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getRecipesByQuery).toHaveBeenCalledWith('pollo');
+    expect(result).toEqual(searchResults);
   });
 
   it('selects a recipe', () => {
     service.selectRecipe(recipesMock[0]);
 
     expect(service.recipeSelected()).toEqual(recipesMock[0]);
+  });
+
+  it('opens similar recipes using the selected recipe context', () => {
+    service.openSimilarRecipes(recipesMock[0]);
+
+    expect(service.recipeSelected()).toEqual(recipesMock[0]);
+    expect(navMock.forward).toHaveBeenCalledWith('similar/1', {
+      returnTo: undefined,
+    });
   });
 
   it('navigates to search', () => {
@@ -133,12 +182,16 @@ describe('RecipeService (Vitest)', () => {
   it('navigates to recipe detail', () => {
     service.toRecipeDetail(10);
 
-    expect(navMock.forward).toHaveBeenCalledWith('recipe/10');
+    expect(navMock.forward).toHaveBeenCalledWith('recipe/10', {
+      returnTo: undefined,
+    });
   });
 
   it('navigates to similar recipes', () => {
     service.toSimilarRecipes(5);
 
-    expect(navMock.forward).toHaveBeenCalledWith('similar/5');
+    expect(navMock.forward).toHaveBeenCalledWith('similar/5', {
+      returnTo: undefined,
+    });
   });
 });

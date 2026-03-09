@@ -10,5 +10,5 @@ export const searchResolver: ResolveFn<SearchRecipe[]> = async (route) => {
 
   if (!query) return [];
 
-  return firstValueFrom(await recipeService.queryReacipeSearch(query));
+  return firstValueFrom(recipeService.searchRecipesByQuery(query));
 };

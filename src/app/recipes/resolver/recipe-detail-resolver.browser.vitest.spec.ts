@@ -14,7 +14,7 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 
 describe('recipeDetailResolver (Vitest)', () => {
   const recipeService = {
-    loadRecipeDeatil: vi.fn(),
+    loadRecipeDetail: vi.fn(),
   };
 
   const loadingElementMock = {
@@ -27,7 +27,7 @@ describe('recipeDetailResolver (Vitest)', () => {
   };
 
   beforeEach(() => {
-    recipeService.loadRecipeDeatil.mockReset();
+    recipeService.loadRecipeDetail.mockReset();
     loadingController.create.mockClear();
     loadingElementMock.present = vi.fn().mockResolvedValue(undefined);
     loadingElementMock.dismiss = vi.fn().mockResolvedValue(undefined);
@@ -76,7 +76,7 @@ describe('recipeDetailResolver (Vitest)', () => {
       lang: 'en',
     };
 
-    recipeService.loadRecipeDeatil.mockResolvedValue(of(data));
+    recipeService.loadRecipeDetail.mockReturnValue(of(data));
 
     const route = {
       paramMap: convertToParamMap({ id: '1' }),
@@ -92,13 +92,13 @@ describe('recipeDetailResolver (Vitest)', () => {
       cssClass: 'recipe-detail-loading',
     });
     expect(loadingElementMock.present).toHaveBeenCalled();
-    expect(recipeService.loadRecipeDeatil).toHaveBeenCalledWith(1);
+    expect(recipeService.loadRecipeDetail).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
     expect(loadingElementMock.dismiss).toHaveBeenCalled();
   });
 
   it('dismisses loading even if detail request fails', async () => {
-    recipeService.loadRecipeDeatil.mockResolvedValue(
+    recipeService.loadRecipeDetail.mockReturnValue(
       throwError(() => new Error('detail error')),
     );
 

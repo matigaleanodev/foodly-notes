@@ -12,6 +12,7 @@ import { ShoppingRecipesService } from './services/shopping-recipe/shopping-reci
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 import { Storage } from '@ionic/storage-angular';
@@ -24,6 +25,12 @@ describe('ShoppingListPage (Vitest)', () => {
     sourceId: 1,
     title: 'Receta test',
     image: '',
+  };
+
+  const shoppingRecipeMock: ShoppingRecipe = {
+    sourceId: 1,
+    title: 'Receta test',
+    ingredients: [],
   };
 
   const shoppingStateMock: ShoppingRecipeState[] = [
@@ -115,5 +122,17 @@ describe('ShoppingListPage (Vitest)', () => {
     expect(shoppingListServiceMock.init).toHaveBeenCalled();
     expect(shoppingRecipesServiceMock.sync).toHaveBeenCalled();
     expect(component.isLoading()).toBe(false);
+  });
+
+  it('navigates to recipe detail preserving shopping list context', () => {
+    component.toRecipeDetail(shoppingRecipeMock);
+
+    expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith({
+      ...shoppingRecipeMock,
+      image: '',
+    });
+    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1, {
+      returnTo: '/shopping-list',
+    });
   });
 });

@@ -6,6 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -63,11 +64,13 @@ export class SimilarPage {
 
   readonly recipes = signal<SimilarRecipe[]>([]);
   readonly isLoading = signal(true);
+  readonly errorStateKey = signal<string | null>(null);
   readonly skeletonCards = Array.from({ length: 12 });
 
   readonly _translator = inject(TranslateService);
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
+  readonly _route = inject(ActivatedRoute);
 
   readonly subtitle = computed(() => {
     const recipe = this._recipes.recipeSelected();
@@ -76,6 +79,9 @@ export class SimilarPage {
       ? `${this._translator.translate('xBasadaEn')}: ${recipe.title}`
       : this._translator.translate('xRecetasRecomendadas');
   });
+  readonly backHref = computed(
+    () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
+  );
 
   constructor() {
     effect(() => {
@@ -83,6 +89,7 @@ export class SimilarPage {
 
       if (!sourceId) {
         this.recipes.set([]);
+        this.errorStateKey.set(null);
         this.isLoading.set(false);
         return;
       }
@@ -105,23 +112,24 @@ export class SimilarPage {
     this._loadSimilarRecipes(sourceId, false, () => event.target.complete());
   }
   toggleFavorite(receta: SimilarRecipe) {
-    const isFav = this._favorites.isFavorite(receta.sourceId);
-    if (isFav) {
-      this._favorites.removeFavorite(receta.sourceId);
-    } else {
-      this._favorites.addFavorite(receta);
-    }
+    this._favorites.toggleFavorite(receta);
   }
 
   toSimilarRecipes(recipe: SimilarRecipe) {
-    this._recipes.selectRecipe(recipe);
-
-    this._recipes.toSimilarRecipes(recipe.sourceId);
+    this._recipes.openSimilarRecipes(recipe, { returnTo: this._currentRoute() });
   }
 
   detalleReceta({ sourceId }: SimilarRecipe) {
-    this._recipes.toRecipeDetail(sourceId);
+    this._recipes.toRecipeDetail(sourceId, { returnTo: this._currentRoute() });
   }
+
+  readonly emptyStateKey = (): string => {
+    if (this.errorStateKey()) {
+      return this.errorStateKey() ?? 'xErrorRecetasSimilares';
+    }
+
+    return 'xSinRecetasSimilares';
+  };
 
   private _loadSimilarRecipes(
     sourceId: number,
@@ -131,6 +139,8 @@ export class SimilarPage {
     if (showSkeleton) {
       this.isLoading.set(true);
     }
+
+    this.errorStateKey.set(null);
 
     this._recipes
       .refreshSimilarRecipes(sourceId)
@@ -144,7 +154,14 @@ export class SimilarPage {
       )
       .subscribe({
         next: (recipes) => this.recipes.set(recipes),
-        error: () => this.recipes.set([]),
+        error: () => {
+          this.recipes.set([]);
+          this.errorStateKey.set('xErrorRecetasSimilares');
+        },
       });
+  }
+
+  private _currentRoute() {
+    return `/similar/${this.id()}?returnTo=${encodeURIComponent(this.backHref())}`;
   }
 }
