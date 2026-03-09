@@ -129,6 +129,18 @@ cmd /c gradlew.bat assembleDebug
 
 ---
 
+## ⚙️ GitHub Actions
+
+El repositorio mantiene workflows operativos separados por responsabilidad:
+
+- `CI - Foodly Front`: corre lint, validación i18n, `npm run test:ci` y `npm run build` en pull requests hacia `dev` y `main`
+- `Sync Dev From Main`: mergea `main` de vuelta sobre `dev` en cada push a `main` y también puede dispararse manualmente
+- `Deploy Web - Firebase Hosting`: publica el build web en Firebase Hosting sobre pushes a `main`
+
+La automatización de release Android / Google Play se mantiene intencionalmente fuera del deploy web y sigue como frente separado pendiente.
+
+---
+
 ## 📁 Estructura
 
 La estructura principal del proyecto se organiza con:
