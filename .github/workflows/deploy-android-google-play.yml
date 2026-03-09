@@ -108,9 +108,9 @@ jobs:
         if: ${{ env.skip_publish != 'true' }}
         run: npm run build
 
-      - name: Sync web assets into Android
+      - name: Sync web assets and Android plugins
         if: ${{ env.skip_publish != 'true' }}
-        run: npx cap copy android
+        run: npx cap sync android
 
       - name: Restore Android signing keystore
         if: ${{ env.skip_publish != 'true' }}
