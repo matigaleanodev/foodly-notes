@@ -141,6 +141,30 @@ La automatización de release Android / Google Play se mantiene intencionalmente
 
 ---
 
+## ✅ Checklist de release
+
+### Release web
+
+- confirmar la versión objetivo en `package.json` y en la metadata de `environment`
+- correr `npm run lint`
+- correr `npm run i18n:check`
+- correr `npm run test:ci`
+- correr `npm run build`
+- verificar la salida en `www/`
+- mergear o pushear la release validada a `main` para que pueda correr el workflow de deploy web
+
+### Release mobile
+
+- confirmar la versión objetivo en `package.json`, `environment*` y `android/app/build.gradle`
+- asegurarse de que `java -version` resuelva a JDK 21
+- correr `npm run build`
+- correr `npx cap copy android`
+- desde `android/`, correr como mínimo `cmd /c gradlew.bat assembleDebug` para validar el contenedor nativo
+- verificar `versionName` y `versionCode` antes de publicar cualquier artefacto firmado
+- mantener Google Play en un workflow o flujo manual separado del deploy web
+
+---
+
 ## 📁 Estructura
 
 La estructura principal del proyecto se organiza con:

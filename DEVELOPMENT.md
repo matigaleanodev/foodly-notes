@@ -144,6 +144,30 @@ Android / Google Play release automation is intentionally kept out of the web de
 
 ---
 
+## ✅ Release checklist
+
+### Web release
+
+- confirm the target version in `package.json` and environment metadata
+- run `npm run lint`
+- run `npm run i18n:check`
+- run `npm run test:ci`
+- run `npm run build`
+- verify the output in `www/`
+- merge or push the validated release branch into `main` so the web deploy workflow can run
+
+### Mobile release
+
+- confirm the target version in `package.json`, `environment*`, and `android/app/build.gradle`
+- make sure `java -version` resolves to JDK 21
+- run `npm run build`
+- run `npx cap copy android`
+- from `android/`, run `cmd /c gradlew.bat assembleDebug` at minimum to validate the native container
+- verify `versionName` and `versionCode` before publishing any signed artifact
+- keep Google Play publication in its own workflow or manual release flow, separate from web deploy
+
+---
+
 ## 📁 Project structure
 
 The project follows a feature-based structure with:
