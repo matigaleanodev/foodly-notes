@@ -1,6 +1,8 @@
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 
+const maxLength = 500;
+const locales = ["en-US", "es-419", "es-US"];
 const outputDirectory = process.env.RELEASE_NOTES_DIR;
 const versionName = process.env.RELEASE_VERSION_NAME;
 const releaseRef = process.env.RELEASE_REF;
@@ -18,13 +20,11 @@ mkdirSync(outputDirectory, { recursive: true });
 
 const commits = getCommitLines();
 const header = tagHeader(versionName, releaseRef);
-const notes =
-  commits.length > 0
-    ? `${header}\n\n${commits.map((line) => `- ${line}`).join("\n")}\n`
-    : `${header}\n\n- Release generated from ${githubSha.slice(0, 7)}\n`;
+const notes = buildNotes(header, commits);
 
-writeFileSync(`${outputDirectory}/whatsnew-en-US`, notes, "utf8");
-writeFileSync(`${outputDirectory}/whatsnew-es-AR`, notes, "utf8");
+for (const locale of locales) {
+  writeFileSync(`${outputDirectory}/whatsnew-${locale}`, notes, "utf8");
+}
 
 function getCommitLines() {
   const previousTag = resolvePreviousTag();
@@ -61,6 +61,35 @@ function tagHeader(name, ref) {
   }
 
   return `Release ${name}`;
+}
+
+function buildNotes(header, commits) {
+  const fallbackLine = `- Release generated from ${githubSha.slice(0, 7) || "current commit"}`;
+  const lines =
+    commits.length > 0 ? commits.map((line) => `- ${line}`) : [fallbackLine];
+  const selectedLines = [];
+  let candidate = `${header}\n\n${fallbackLine}\n`;
+
+  for (const line of lines) {
+    const nextNotes = `${header}\n\n${[...selectedLines, line].join("\n")}\n`;
+
+    if (nextNotes.length > maxLength) {
+      break;
+    }
+
+    candidate = nextNotes;
+    selectedLines.push(line);
+  }
+
+  return truncateNotes(candidate);
+}
+
+function truncateNotes(notes) {
+  if (notes.length <= maxLength) {
+    return notes;
+  }
+
+  return `${notes.slice(0, maxLength - 1).trimEnd()}…`;
 }
 
 function execGit(args) {
