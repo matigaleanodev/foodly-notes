@@ -30,11 +30,22 @@ describe('FavoritesService (Vitest)', () => {
     await service.loadFavorites();
   });
 
+  it('starts with empty favorites', () => {
+    expect(service.favorites()).toEqual([]);
+  });
+
   it('adds a recipe only once', async () => {
     await service.addFavorite(recipeMock);
     await service.addFavorite(recipeMock);
 
     expect(service.favorites()).toEqual([recipeMock]);
+  });
+
+  it('reports whether a recipe is a favorite', async () => {
+    await service.addFavorite(recipeMock);
+
+    expect(service.isFavorite(recipeMock.sourceId)).toBe(true);
+    expect(service.isFavorite(999)).toBe(false);
   });
 
   it('persists favorite removals', async () => {
@@ -44,6 +55,14 @@ describe('FavoritesService (Vitest)', () => {
     expect(service.favorites()).toEqual([]);
     await expect(storage.getItem<DailyRecipe[]>('FAVORITOS')).resolves.toEqual(
       [],
+    );
+  });
+
+  it('persists added favorites in storage', async () => {
+    await service.addFavorite(recipeMock);
+
+    await expect(storage.getItem<DailyRecipe[]>('FAVORITOS')).resolves.toEqual(
+      [recipeMock],
     );
   });
 });

@@ -1,18 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HomeHeroComponent } from './home-hero.component';
-import { TranslateService } from '@shared/translate/translate.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-describe('HomeHeroComponent', () => {
+import { TranslateService } from '@shared/translate/translate.service';
+import { HomeHeroComponent } from './home-hero.component';
+
+describe('HomeHeroComponent (Vitest browser)', () => {
   let component: HomeHeroComponent;
   let fixture: ComponentFixture<HomeHeroComponent>;
 
   const translateMock = {
-    translate: jasmine
-      .createSpy('translate')
-      .and.callFake((key: string) => key),
+    translate: vi.fn((key: string) => key),
   };
 
   beforeEach(async () => {
+    translateMock.translate.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [HomeHeroComponent],
       providers: [{ provide: TranslateService, useValue: translateMock }],
@@ -23,11 +25,7 @@ describe('HomeHeroComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('debería actualizar el query al escribir', () => {
+  it('updates the query while typing', () => {
     const event = {
       target: {
         value: 'Pizza',
@@ -39,22 +37,22 @@ describe('HomeHeroComponent', () => {
     expect(component.query()).toBe('pizza');
   });
 
-  it('no debería emitir búsqueda si el texto es menor a 3 caracteres', () => {
-    spyOn(component.searchSubmit, 'emit');
+  it('does not emit a search when the query is shorter than three characters', () => {
+    const emitSpy = vi.spyOn(component.searchSubmit, 'emit');
 
     component.query.set('pi');
     component.onEnter();
 
-    expect(component.searchSubmit.emit).not.toHaveBeenCalled();
+    expect(emitSpy).not.toHaveBeenCalled();
   });
 
-  it('debería emitir búsqueda si el texto es válido', () => {
-    spyOn(component.searchSubmit, 'emit');
+  it('emits a search and resets the query when the input is valid', () => {
+    const emitSpy = vi.spyOn(component.searchSubmit, 'emit');
 
     component.query.set('pizza');
     component.onEnter();
 
-    expect(component.searchSubmit.emit).toHaveBeenCalledWith('pizza');
+    expect(emitSpy).toHaveBeenCalledWith('pizza');
     expect(component.query()).toBe('');
   });
 });
