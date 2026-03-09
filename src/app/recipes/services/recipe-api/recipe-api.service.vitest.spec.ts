@@ -48,7 +48,9 @@ describe('RecipeApiService (Vitest)', () => {
     translateMock.currentLang.mockReturnValue(Language.EN);
     service = TestBed.inject(RecipeApiService);
 
-    service.getDailyRecipes().subscribe();
+    service.getDailyRecipes().subscribe((recipes) => {
+      expect(recipes).toEqual([]);
+    });
 
     const req = httpMock.expectOne(
       `${environment.API_URL}/recipes/daily?lang=en`,
@@ -62,7 +64,9 @@ describe('RecipeApiService (Vitest)', () => {
     translateMock.currentLang.mockReturnValue(Language.ES);
     service = TestBed.inject(RecipeApiService);
 
-    service.getDailyRecipes().subscribe();
+    service.getDailyRecipes().subscribe((recipes) => {
+      expect(recipes).toEqual([]);
+    });
 
     const req = httpMock.expectOne(
       `${environment.API_URL}/recipes/daily?lang=es`,
@@ -85,7 +89,9 @@ describe('RecipeApiService (Vitest)', () => {
   });
 
   it('gets similar recipes without lang', () => {
-    service.getSimilarRecipes(5).subscribe();
+    service.getSimilarRecipes(5).subscribe((recipes) => {
+      expect(recipes).toEqual([]);
+    });
 
     const req = httpMock.expectOne(`${environment.API_URL}/recipes/5/similar`);
 
@@ -120,7 +126,9 @@ describe('RecipeApiService (Vitest)', () => {
   });
 
   it('searches recipes by a valid query', () => {
-    service.getRecipesByQuery('pollo').subscribe();
+    service.getRecipesByQuery('pollo').subscribe((recipes) => {
+      expect(recipes).toEqual([]);
+    });
 
     const req = httpMock.expectOne(
       `${environment.API_URL}/recipes/search?q=pollo`,
@@ -128,5 +136,87 @@ describe('RecipeApiService (Vitest)', () => {
 
     expect(req.request.method).toBe('GET');
     req.flush([]);
+  });
+
+  it('normalizes nullable images from daily summaries', () => {
+    let result: unknown;
+
+    service.getDailyRecipes().subscribe((recipes) => {
+      result = recipes;
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.API_URL}/recipes/daily?lang=en`,
+    );
+
+    req.flush([
+      {
+        sourceId: 1,
+        title: 'Daily recipe',
+        image: null,
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        sourceId: 1,
+        title: 'Daily recipe',
+        image: '',
+      },
+    ]);
+  });
+
+  it('normalizes nullable images from similar summaries', () => {
+    let result: unknown;
+
+    service.getSimilarRecipes(5).subscribe((recipes) => {
+      result = recipes;
+    });
+
+    const req = httpMock.expectOne(`${environment.API_URL}/recipes/5/similar`);
+
+    req.flush([
+      {
+        sourceId: 5,
+        title: 'Similar recipe',
+        image: null,
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        sourceId: 5,
+        title: 'Similar recipe',
+        image: '',
+      },
+    ]);
+  });
+
+  it('normalizes nullable images from search summaries', () => {
+    let result: unknown;
+
+    service.getRecipesByQuery('pollo').subscribe((recipes) => {
+      result = recipes;
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.API_URL}/recipes/search?q=pollo`,
+    );
+
+    req.flush([
+      {
+        sourceId: 9,
+        title: 'Search recipe',
+        image: null,
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        sourceId: 9,
+        title: 'Search recipe',
+        image: '',
+      },
+    ]);
   });
 });

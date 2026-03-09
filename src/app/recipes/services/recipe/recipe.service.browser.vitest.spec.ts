@@ -116,6 +116,10 @@ describe('RecipeService (Vitest)', () => {
 
     expect(result).toEqual(recipesMock);
     expect(service.recipes()).toEqual(recipesMock);
+    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes', {
+      recipes: recipesMock,
+      date: new Date().toISOString().split('T')[0],
+    });
   });
 
   it('loads recipe detail from the API without wrapping the observable in a promise', async () => {

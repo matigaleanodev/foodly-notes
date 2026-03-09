@@ -58,6 +58,7 @@ export class RecipeService {
     return this._api.getDailyRecipes().pipe(
       map((recipes) => {
         this.recipes.set(recipes);
+        void this._storeDaily(recipes);
         return recipes;
       }),
     );
