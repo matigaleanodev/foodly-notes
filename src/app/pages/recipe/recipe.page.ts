@@ -7,6 +7,7 @@ import {
   linkedSignal,
   signal,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -76,6 +77,7 @@ export class RecipePage {
   private readonly _favorites = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
   private readonly _translate = inject(TranslateService);
+  private readonly _route = inject(ActivatedRoute);
 
   readonly imageUrl = computed(() => {
     const recipe = this.recipe();
@@ -85,6 +87,9 @@ export class RecipePage {
   });
 
   private readonly _initialLang = signal<Language | null>(null);
+  readonly backHref = computed(
+    () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
+  );
 
   constructor() {
     effect(() => {
@@ -137,6 +142,13 @@ export class RecipePage {
 
   toSimilaRecipes() {
     const { sourceId, title, image } = this.recipe();
-    this._recipes.openSimilarRecipes({ sourceId, title, image });
+    this._recipes.openSimilarRecipes(
+      { sourceId, title, image },
+      { returnTo: this._currentRoute() },
+    );
+  }
+
+  private _currentRoute() {
+    return `/recipe/${this.recipe().sourceId}?returnTo=${encodeURIComponent(this.backHref())}`;
   }
 }

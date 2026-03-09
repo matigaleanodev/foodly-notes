@@ -164,7 +164,9 @@ describe('RecipeService (Vitest)', () => {
     service.openSimilarRecipes(recipesMock[0]);
 
     expect(service.recipeSelected()).toEqual(recipesMock[0]);
-    expect(navMock.forward).toHaveBeenCalledWith('similar/1');
+    expect(navMock.forward).toHaveBeenCalledWith('similar/1', {
+      returnTo: undefined,
+    });
   });
 
   it('navigates to search', () => {
@@ -176,12 +178,16 @@ describe('RecipeService (Vitest)', () => {
   it('navigates to recipe detail', () => {
     service.toRecipeDetail(10);
 
-    expect(navMock.forward).toHaveBeenCalledWith('recipe/10');
+    expect(navMock.forward).toHaveBeenCalledWith('recipe/10', {
+      returnTo: undefined,
+    });
   });
 
   it('navigates to similar recipes', () => {
     service.toSimilarRecipes(5);
 
-    expect(navMock.forward).toHaveBeenCalledWith('similar/5');
+    expect(navMock.forward).toHaveBeenCalledWith('similar/5', {
+      returnTo: undefined,
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonGrid,
@@ -53,6 +54,7 @@ export class SearchPage {
 
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
+  readonly _route = inject(ActivatedRoute);
 
   constructor() {
     effect(() => {
@@ -69,11 +71,11 @@ export class SearchPage {
   }
 
   toSimilarRecipes(recipe: DailyRecipe) {
-    this._recipes.openSimilarRecipes(recipe);
+    this._recipes.openSimilarRecipes(recipe, { returnTo: this._currentRoute() });
   }
 
   toRecipeDetail({ sourceId }: DailyRecipe) {
-    this._recipes.toRecipeDetail(sourceId);
+    this._recipes.toRecipeDetail(sourceId, { returnTo: this._currentRoute() });
   }
 
   searchNewRecipes(query: string) {
@@ -112,5 +114,15 @@ export class SearchPage {
           this.errorStateKey.set('xErrorBusquedaRecetas');
         },
       });
+  }
+
+  private _currentRoute() {
+    const query = this.q().trim() || this._route.snapshot.queryParamMap.get('q')?.trim();
+
+    if (!query) {
+      return '/search';
+    }
+
+    return `/search?q=${encodeURIComponent(query)}`;
   }
 }

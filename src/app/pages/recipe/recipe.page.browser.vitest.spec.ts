@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -65,6 +66,14 @@ describe('RecipePage (Vitest)', () => {
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: TranslateService, useValue: translateServiceMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: convertToParamMap({ returnTo: '/favorites' }),
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -82,6 +91,10 @@ describe('RecipePage (Vitest)', () => {
 
   it('exposes the recipe image', () => {
     expect(component.imageUrl()).toBe('image.jpg');
+  });
+
+  it('exposes the back href from the navigation context', () => {
+    expect(component.backHref()).toBe('/favorites');
   });
 
   it('reports whether the recipe is a favorite', () => {
@@ -109,6 +122,8 @@ describe('RecipePage (Vitest)', () => {
       sourceId: 1,
       title: 'Receta test',
       image: 'image.jpg',
+    }, {
+      returnTo: '/recipe/1?returnTo=%2Ffavorites',
     });
   });
 

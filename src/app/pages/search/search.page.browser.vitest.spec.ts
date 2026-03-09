@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -49,6 +50,14 @@ describe('SearchPage (Vitest)', () => {
         { provide: Storage, useClass: IonicStorageMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: convertToParamMap({ q: 'pollo' }),
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -111,13 +120,16 @@ describe('SearchPage (Vitest)', () => {
 
     expect(recipeServiceMock.openSimilarRecipes).toHaveBeenCalledWith(
       recipesMock[0],
+      { returnTo: '/search?q=pollo' },
     );
   });
 
   it('navigates to recipe detail', () => {
     component.toRecipeDetail(recipesMock[0] as unknown as DailyRecipe);
 
-    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1, {
+      returnTo: '/search?q=pollo',
+    });
   });
 
   it('navigates to a new search from the search page', () => {

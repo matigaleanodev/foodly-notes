@@ -121,13 +121,16 @@ describe('HomePage (Vitest)', () => {
 
     expect(recipeServiceMock.openSimilarRecipes).toHaveBeenCalledWith(
       recipeMock,
+      { returnTo: '/home' },
     );
   });
 
   it('navigates to recipe detail', () => {
     component.toRecipeDetail(recipeMock);
 
-    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1, {
+      returnTo: '/home',
+    });
   });
 
   it('navigates to search', () => {

@@ -7,6 +7,10 @@ import { StorageService } from '@shared/services/storage/storage.service';
 
 const DAILY_KEY = 'daily_recipes';
 
+interface RecipeNavigationOptions {
+  returnTo?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -79,17 +83,24 @@ export class RecipeService {
     this.recipeSelected.set(recipe);
   }
 
-  openSimilarRecipes(recipe: DailyRecipe) {
+  openSimilarRecipes(
+    recipe: DailyRecipe,
+    options?: RecipeNavigationOptions,
+  ) {
     this.selectRecipe(recipe);
-    this.toSimilarRecipes(recipe.sourceId);
+    this.toSimilarRecipes(recipe.sourceId, options);
   }
 
-  toSimilarRecipes(sourceId: number) {
-    this._nav.forward(`similar/${sourceId}`);
+  toSimilarRecipes(sourceId: number, options?: RecipeNavigationOptions) {
+    this._nav.forward(`similar/${sourceId}`, {
+      returnTo: options?.returnTo,
+    });
   }
 
-  toRecipeDetail(sourceId: number) {
-    this._nav.forward(`recipe/${sourceId}`);
+  toRecipeDetail(sourceId: number, options?: RecipeNavigationOptions) {
+    this._nav.forward(`recipe/${sourceId}`, {
+      returnTo: options?.returnTo,
+    });
   }
 
   private async _getStoredDaily() {

@@ -48,6 +48,8 @@ import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recip
   ],
 })
 export class ShoppingListPage implements OnInit {
+  private static readonly returnTo = '/shopping-list';
+
   private readonly _state = inject(ShoppingListService);
   private readonly _favorites = inject(FavoritesService);
   private readonly _shopping = inject(ShoppingRecipesService);
@@ -121,6 +123,8 @@ export class ShoppingListPage implements OnInit {
   toRecipeDetail(recipe: ShoppingRecipe) {
     this._recipes.selectRecipe({ ...recipe, image: '' });
 
-    this._recipes.toRecipeDetail(recipe.sourceId);
+    this._recipes.toRecipeDetail(recipe.sourceId, {
+      returnTo: ShoppingListPage.returnTo,
+    });
   }
 }

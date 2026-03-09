@@ -46,6 +46,8 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   ],
 })
 export class HomePage {
+  private static readonly returnTo = '/home';
+
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
 
@@ -80,11 +82,15 @@ export class HomePage {
   }
 
   toSimilarRecipes(recipe: DailyRecipe) {
-    this._recipes.openSimilarRecipes(recipe);
+    this._recipes.openSimilarRecipes(recipe, {
+      returnTo: HomePage.returnTo,
+    });
   }
 
   toRecipeDetail({ sourceId }: DailyRecipe) {
-    this._recipes.toRecipeDetail(sourceId);
+    this._recipes.toRecipeDetail(sourceId, {
+      returnTo: HomePage.returnTo,
+    });
   }
 
   toSearchRecipe(query: string) {
