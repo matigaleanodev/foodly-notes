@@ -39,6 +39,15 @@ export const esAR: Record<string, string | any> = {
   xErrorDesconocido: 'Ocurrió un error inesperado',
   xAunNoSeleccionaFavoritos: 'Todavía no marcaste ninguna receta como favorita',
   xSinRecetasDisponibles: 'No encontramos recetas para mostrar en este momento',
+  xBuscaTuProximaReceta: 'Escribí algo para buscar recetas',
+  xSinResultadosBusqueda: 'No encontramos recetas para esa búsqueda',
+  xErrorBusquedaRecetas:
+    'No pudimos cargar los resultados de búsqueda. Probá de nuevo en unos minutos.',
+  xSinRecetasSimilares: 'No encontramos recetas similares para mostrar ahora',
+  xErrorRecetasSimilares:
+    'No pudimos cargar las recetas similares en este momento.',
+  xErrorActualizacionReceta:
+    'No pudimos actualizar la receta. Te mostramos la última versión disponible.',
   xGuardeFavoritosParaListaCompras:
     'Guardá algunas recetas en favoritos para armar tu lista de compras',
   xMarcaIngredientes: 'Marcá los ingredientes que ya tenés',

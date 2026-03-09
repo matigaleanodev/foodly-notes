@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="light" />
+      <ion-back-button [defaultHref]="backHref()" color="light" />
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-menu-button color="light" />
@@ -12,13 +12,13 @@
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content />
   </ion-refresher>
-  <div class="similar-header gradient-header">
-    <div class="similar-header-inner">
+  <div class="page-header gradient-header">
+    <div class="page-header-inner">
       <h1>{{'xRecetasSimilares' | translate}}</h1>
-      <p>{{ subtitle() }}</p>
+      <p class="page-header-subtitle">{{ subtitle() }}</p>
     </div>
   </div>
-  <ion-grid>
+  <ion-grid class="page-grid">
     <ion-row>
       @if (isLoading()) {
       @for (_item of skeletonCards; track $index) {
@@ -38,7 +38,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
+        <app-empty-states imagen="receta" [text]="emptyStateKey()" />
       </ion-col>
       }
       }

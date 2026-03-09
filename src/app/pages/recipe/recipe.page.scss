@@ -1,17 +1,20 @@
-.recipe-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 ion-footer {
   background: var(--ion-background-color);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.recipe-status-banner {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--ion-color-warning) 45%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ion-color-warning) 14%, var(--ion-background-color));
+  color: var(--ion-color-warning-shade);
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 :host-context(.ion-color-dark) ion-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-ion-footer {
-  padding-bottom: env(safe-area-inset-bottom);
 }

@@ -7,6 +7,10 @@ import { StorageService } from '@shared/services/storage/storage.service';
 
 const DAILY_KEY = 'daily_recipes';
 
+interface RecipeNavigationOptions {
+  returnTo?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,15 +42,15 @@ export class RecipeService {
     }
   }
 
-  async loadRecipeDeatil(sourceId: number) {
+  loadRecipeDetail(sourceId: number) {
     return this._api.getRecipeDetail(sourceId);
   }
 
-  async loadSimilaRecipes(sourceId: number) {
+  loadSimilarRecipes(sourceId: number) {
     return this._api.getSimilarRecipes(sourceId);
   }
 
-  async queryReacipeSearch(query: string) {
+  searchRecipesByQuery(query: string) {
     return this._api.getRecipesByQuery(query);
   }
 
@@ -54,6 +58,7 @@ export class RecipeService {
     return this._api.getDailyRecipes().pipe(
       map((recipes) => {
         this.recipes.set(recipes);
+        void this._storeDaily(recipes);
         return recipes;
       }),
     );
@@ -79,12 +84,24 @@ export class RecipeService {
     this.recipeSelected.set(recipe);
   }
 
-  toSimilarRecipes(sourceId: number) {
-    this._nav.forward(`similar/${sourceId}`);
+  openSimilarRecipes(
+    recipe: DailyRecipe,
+    options?: RecipeNavigationOptions,
+  ) {
+    this.selectRecipe(recipe);
+    this.toSimilarRecipes(recipe.sourceId, options);
   }
 
-  toRecipeDetail(sourceId: number) {
-    this._nav.forward(`recipe/${sourceId}`);
+  toSimilarRecipes(sourceId: number, options?: RecipeNavigationOptions) {
+    this._nav.forward(`similar/${sourceId}`, {
+      returnTo: options?.returnTo,
+    });
+  }
+
+  toRecipeDetail(sourceId: number, options?: RecipeNavigationOptions) {
+    this._nav.forward(`recipe/${sourceId}`, {
+      returnTo: options?.returnTo,
+    });
   }
 
   private async _getStoredDaily() {

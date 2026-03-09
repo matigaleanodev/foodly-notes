@@ -10,6 +10,7 @@ This document describes how to run and work with the **Foodly Notes frontend** i
 - npm
 - Angular CLI
 - Ionic CLI (optional but recommended)
+- JDK 21 for Android/Capacitor builds
 
 ---
 
@@ -41,11 +42,43 @@ http://localhost:4200
 
 ## 🧪 Testing
 
-Run unit tests:
+Run the Vitest node/jsdom suite for local work:
 
 ```bash
 npm run test
 ```
+
+Run the supported CI command:
+
+```bash
+npm run test:ci
+```
+
+Run the Vitest suite that currently targets services and utilities in Node/jsdom:
+
+```bash
+npm run test:vitest
+```
+
+Run the browser-mode Vitest suite for Angular and Ionic components with Playwright + Chromium:
+
+```bash
+npm run test:vitest:browser
+```
+
+Run the combined Vitest CI flow:
+
+```bash
+npm run test:vitest:ci
+```
+
+If Playwright browsers are not installed yet, run:
+
+```bash
+npx playwright install chromium
+```
+
+Vitest is the supported test runner for the project, covering services, utilities, Angular components, and Ionic standalone components.
 
 ---
 
@@ -70,7 +103,69 @@ Generate a production build:
 npm run build
 ```
 
-The output will be generated in the `dist/` directory.
+The output is generated in the `www/` directory.
+
+---
+
+## 🤖 Android / Capacitor
+
+Before validating the Android container, make sure `java -version` resolves to JDK 21.
+
+Sync the current web build into the native project:
+
+```bash
+npx cap copy android
+```
+
+Compile the Android debug build from the native project:
+
+```bash
+cd android
+gradlew.bat assembleDebug
+```
+
+If the current shell resolves `gradlew.bat` incorrectly in PowerShell, run:
+
+```bash
+cmd /c gradlew.bat assembleDebug
+```
+
+---
+
+## ⚙️ GitHub Actions
+
+The repository keeps operational workflows separated by responsibility:
+
+- `CI - Foodly Front`: runs lint, i18n validation, `npm run test:ci`, and `npm run build` on pull requests to `dev` and `main`
+- `Sync Dev From Main`: merges `main` back into `dev` on each push to `main` and can also be triggered manually
+- `Deploy Web - Firebase Hosting`: deploys the web build to Firebase Hosting on pushes to `main`
+- `Deploy Android - Google Play`: builds a signed Android App Bundle and publishes it to Google Play on pushes to `main`
+
+Android / Google Play release automation is intentionally kept out of the web deploy workflow and runs as its own pipeline with separate secrets and retries.
+
+---
+
+## ✅ Release checklist
+
+### Web release
+
+- confirm the target version in `package.json` and environment metadata
+- run `npm run lint`
+- run `npm run i18n:check`
+- run `npm run test:ci`
+- run `npm run build`
+- verify the output in `www/`
+- merge or push the validated release branch into `main` so the web deploy workflow can run
+
+### Mobile release
+
+- confirm the target version in `package.json`, `environment*`, and `android/app/build.gradle`
+- make sure `java -version` resolves to JDK 21
+- run `npm run build`
+- run `npx cap copy android`
+- from `android/`, run `cmd /c gradlew.bat assembleDebug` at minimum to validate the native container
+- verify `versionName` and `versionCode` before publishing any signed artifact
+- keep Google Play publication in its own workflow, separate from web deploy
 
 ---
 
@@ -90,5 +185,11 @@ The project follows a feature-based structure with:
 - Environment-specific values are defined in `environment*.ts`
 - App version and stage are resolved dynamically depending on platform
 - Capacitor is used only for native-specific features
+- Android validation currently assumes the web bundle was copied after the latest `npm run build`
+- `npm run test:ci` is the stable CI entrypoint and runs the full Vitest stack
+- `npm run test:vitest:ci` remains available as the explicit Vitest command
+- Angular modernization should stay incremental: keep `signals`, `computed`, `resource`, and modern template control flow in new or touched UI work, but avoid broad rewrites of existing pages when the current imperative `subscribe()` logic is tied to Ionic lifecycle or refresher flows and already behaves predictably
+- Prioritize modernization only when it removes duplicated state handling, unclear data flow, or brittle template logic; do not rewrite stable screens such as legal/info pages just for stylistic consistency
+- Favorites and shopping-list state are intentionally local in this repo for now; do not add backend sync without an explicit contract and roadmap decision in `foodly-notes-api`
 
 ---

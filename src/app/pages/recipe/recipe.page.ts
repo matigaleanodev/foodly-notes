@@ -7,6 +7,7 @@ import {
   linkedSignal,
   signal,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -36,6 +37,7 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeSummaryComponent } from './components/recipe-summary/recipe-summary.component';
 import { Language } from '@shared/translate/language.model';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-recipe',
@@ -63,16 +65,19 @@ import { Language } from '@shared/translate/language.model';
     RecipeAttrComponent,
     RecipeMetaExtendedComponent,
     RecipeSummaryComponent,
+    TranslatePipe,
   ],
 })
 export class RecipePage {
   readonly data = input.required<RecipeDetail>();
 
   readonly recipe = linkedSignal(() => this.data());
+  readonly errorStateKey = signal<string | null>(null);
 
   private readonly _favorites = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
   private readonly _translate = inject(TranslateService);
+  private readonly _route = inject(ActivatedRoute);
 
   readonly imageUrl = computed(() => {
     const recipe = this.recipe();
@@ -82,6 +87,9 @@ export class RecipePage {
   });
 
   private readonly _initialLang = signal<Language | null>(null);
+  readonly backHref = computed(
+    () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
+  );
 
   constructor() {
     effect(() => {
@@ -96,7 +104,11 @@ export class RecipePage {
       if (lang !== this._initialLang()) {
         const { sourceId } = this.data();
         this._recipes.refreshRecipeDetail(sourceId).subscribe({
-          next: (recipe) => this.recipe.set(recipe),
+          next: (recipe) => {
+            this.recipe.set(recipe);
+            this.errorStateKey.set(null);
+          },
+          error: () => this.errorStateKey.set('xErrorActualizacionReceta'),
         });
 
         this._initialLang.set(lang);
@@ -113,31 +125,30 @@ export class RecipePage {
     this._recipes.refreshRecipeDetail(sourceId).subscribe({
       next: (recipe) => {
         this.recipe.set(recipe);
+        this.errorStateKey.set(null);
         event.target.complete();
       },
       error: () => {
+        this.errorStateKey.set('xErrorActualizacionReceta');
         event.target.complete();
       },
     });
   }
 
   toggleFavorite() {
-    const recipe = this.recipe();
-    const { sourceId, title, image } = recipe;
-
-    const isFavorite = this._favorites.isFavorite(sourceId);
-
-    if (isFavorite) {
-      this._favorites.removeFavorite(sourceId);
-    } else {
-      this._favorites.addFavorite({ sourceId, title, image });
-    }
+    const { sourceId, title, image } = this.recipe();
+    this._favorites.toggleFavorite({ sourceId, title, image });
   }
 
   toSimilaRecipes() {
     const { sourceId, title, image } = this.recipe();
-    this._recipes.selectRecipe({ sourceId, title, image });
+    this._recipes.openSimilarRecipes(
+      { sourceId, title, image },
+      { returnTo: this._currentRoute() },
+    );
+  }
 
-    this._recipes.toSimilarRecipes(sourceId);
+  private _currentRoute() {
+    return `/recipe/${this.recipe().sourceId}?returnTo=${encodeURIComponent(this.backHref())}`;
   }
 }

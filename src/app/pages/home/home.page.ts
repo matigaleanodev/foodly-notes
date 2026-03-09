@@ -46,12 +46,14 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   ],
 })
 export class HomePage {
+  private static readonly returnTo = '/home';
+
   readonly _recipes = inject(RecipeService);
   readonly _favorites = inject(FavoritesService);
 
   readonly recipes = computed(() => this._recipes.recipes());
   readonly isLoading = signal(true);
-  readonly skeletonCards = Array.from({ length: 3 });
+  readonly skeletonCards = Array.from({ length: 12 });
 
   async ionViewWillEnter() {
     this._favorites.loadFavorites();
@@ -76,21 +78,19 @@ export class HomePage {
   }
 
   toggleFavorite(recipe: DailyRecipe) {
-    const isFav = this._favorites.isFavorite(recipe.sourceId);
-    if (isFav) {
-      this._favorites.removeFavorite(recipe.sourceId);
-    } else {
-      this._favorites.addFavorite(recipe);
-    }
+    this._favorites.toggleFavorite(recipe);
   }
 
   toSimilarRecipes(recipe: DailyRecipe) {
-    this._recipes.selectRecipe(recipe);
-    this._recipes.toSimilarRecipes(recipe.sourceId);
+    this._recipes.openSimilarRecipes(recipe, {
+      returnTo: HomePage.returnTo,
+    });
   }
 
   toRecipeDetail({ sourceId }: DailyRecipe) {
-    this._recipes.toRecipeDetail(sourceId);
+    this._recipes.toRecipeDetail(sourceId, {
+      returnTo: HomePage.returnTo,
+    });
   }
 
   toSearchRecipe(query: string) {

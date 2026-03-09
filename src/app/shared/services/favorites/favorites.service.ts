@@ -4,6 +4,8 @@ import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 
 const KEY_favorites = 'FAVORITOS';
 
+export type FavoriteRecipe = Pick<DailyRecipe, 'sourceId' | 'title' | 'image'>;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +29,15 @@ export class FavoritesService {
 
     const nuevaLista = [...favs, recipe];
     this.uploadFavorites(nuevaLista);
+  }
+
+  toggleFavorite(recipe: FavoriteRecipe) {
+    if (this.isFavorite(recipe.sourceId)) {
+      this.removeFavorite(recipe.sourceId);
+      return;
+    }
+
+    this.addFavorite(recipe);
   }
 
   removeFavorite(id: number) {

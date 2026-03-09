@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Run lint
         run: npm run lint
 
@@ -30,7 +33,7 @@ jobs:
         run: npm run i18n:check
 
       - name: Run tests
-        run: npm run test -- --watch=false --browsers=ChromeHeadlessCI
+        run: npm run test:ci
 
       - name: Build project
         run: npm run build

@@ -11,5 +11,5 @@ export const similarRecipesResolver: ResolveFn<SimilarRecipe[] | null> = async (
   const id = Number(route.paramMap.get('id'));
   if (!id) return null;
 
-  return firstValueFrom(await recipes.loadSimilaRecipes(id));
+  return firstValueFrom(recipes.loadSimilarRecipes(id));
 };
