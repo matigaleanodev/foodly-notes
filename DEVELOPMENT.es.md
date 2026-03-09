@@ -10,6 +10,7 @@ Este documento describe cómo ejecutar y mantener el **frontend de Foodly Notes*
 - npm
 - Angular CLI
 - Ionic CLI (opcional)
+- JDK 21 para builds Android/Capacitor
 
 ---
 
@@ -103,6 +104,31 @@ La salida real se genera en `www/`.
 
 ---
 
+## 🤖 Android / Capacitor
+
+Antes de validar el contenedor Android, asegurate de que `java -version` resuelva a JDK 21.
+
+Sincronizá el build web actual dentro del proyecto nativo:
+
+```bash
+npx cap copy android
+```
+
+Compilá el build debug de Android desde el proyecto nativo:
+
+```bash
+cd android
+gradlew.bat assembleDebug
+```
+
+Si PowerShell resuelve mal `gradlew.bat`, ejecutá:
+
+```bash
+cmd /c gradlew.bat assembleDebug
+```
+
+---
+
 ## 📁 Estructura
 
 La estructura principal del proyecto se organiza con:
@@ -120,3 +146,4 @@ La estructura principal del proyecto se organiza con:
 - `npm run test:ci` es la entrada estable de CI y ejecuta la suite completa de Vitest
 - `npm run test:vitest:ci` sigue disponible como comando explícito de Vitest
 - Capacitor se usa solo para capacidades nativas
+- La validación Android asume que el bundle web fue copiado después del último `npm run build`
