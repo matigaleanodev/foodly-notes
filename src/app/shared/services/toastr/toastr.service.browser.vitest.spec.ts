@@ -1,22 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { ToastController } from '@ionic/angular/standalone';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ToastrService } from './toastr.service';
 
-describe('ToastrService', () => {
+describe('ToastrService (Vitest)', () => {
   let service: ToastrService;
 
   const toastElementMock = {
-    present: jasmine.createSpy('present'),
+    present: vi.fn().mockResolvedValue(undefined),
   } as unknown as HTMLIonToastElement;
 
   const toastControllerMock = {
-    create: jasmine.createSpy('create').and.resolveTo(toastElementMock),
+    create: vi.fn().mockResolvedValue(toastElementMock),
   };
 
   beforeEach(() => {
-    (toastControllerMock.create as jasmine.Spy).calls.reset();
-    (toastElementMock.present as jasmine.Spy).calls.reset();
+    toastControllerMock.create.mockClear();
+    (toastElementMock.present as ReturnType<typeof vi.fn>).mockClear();
 
     TestBed.configureTestingModule({
       providers: [
@@ -28,15 +29,15 @@ describe('ToastrService', () => {
     service = TestBed.inject(ToastrService);
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería mostrar un toast de error', async () => {
+  it('shows an error toast', async () => {
     await service.danger('Error grave');
 
     expect(toastControllerMock.create).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         message: 'Error grave',
         color: 'danger',
         icon: 'alert-circle-outline',
@@ -47,15 +48,15 @@ describe('ToastrService', () => {
     expect(toastElementMock.present).toHaveBeenCalled();
   });
 
-  it('debería mostrar un toast de éxito', async () => {
-    await service.success('Todo OK', 'Éxito');
+  it('shows a success toast', async () => {
+    await service.success('Todo OK', 'Exito');
 
     expect(toastControllerMock.create).toHaveBeenCalledWith(
-      jasmine.objectContaining({
+      expect.objectContaining({
         message: 'Todo OK',
         color: 'success',
         icon: 'checkmark-circle-outline',
-        header: 'Éxito',
+        header: 'Exito',
       }),
     );
 

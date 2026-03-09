@@ -1,21 +1,23 @@
 import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { ThemeService } from './theme.service';
 import { StorageService } from '../storage/storage.service';
 
-describe('ThemeService', () => {
+describe('ThemeService (Vitest)', () => {
   let service: ThemeService;
   let storage: StorageServiceMock;
 
   const matchMediaMock = {
     matches: false,
-    addEventListener: jasmine.createSpy('addEventListener'),
+    addEventListener: vi.fn(),
   };
 
   class StorageServiceMock {
-    private store = new Map<string, any>();
+    private store = new Map<string, unknown>();
 
     async getItem<T>(key: string): Promise<T | null> {
-      return this.store.get(key) ?? null;
+      return (this.store.get(key) as T | undefined) ?? null;
     }
 
     async setItem<T>(key: string, value: T): Promise<void> {
@@ -24,7 +26,14 @@ describe('ThemeService', () => {
   }
 
   beforeEach(async () => {
-    spyOn(window, 'matchMedia').and.returnValue(matchMediaMock as any);
+    matchMediaMock.matches = false;
+    matchMediaMock.addEventListener.mockClear();
+
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockReturnValue(matchMediaMock),
+    });
 
     await TestBed.configureTestingModule({
       providers: [
@@ -41,34 +50,34 @@ describe('ThemeService', () => {
     document.documentElement.classList.remove('ion-palette-dark');
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería inicializar con theme "system" si no hay valor en storage', () => {
+  it('initializes with system theme when storage is empty', () => {
     expect(service.currentTheme()).toBe('system');
   });
 
-  it('debería aplicar theme dark cuando se setea explícitamente', () => {
+  it('applies dark theme when explicitly set', () => {
     service.setTheme('dark');
 
     expect(service.currentTheme()).toBe('dark');
     expect(
       document.documentElement.classList.contains('ion-palette-dark'),
-    ).toBeTrue();
+    ).toBe(true);
   });
 
-  it('debería aplicar theme light cuando se setea explícitamente', () => {
+  it('applies light theme when explicitly set', () => {
     service.setTheme('light');
 
     expect(service.currentTheme()).toBe('light');
     expect(
       document.documentElement.classList.contains('ion-palette-dark'),
-    ).toBeFalse();
+    ).toBe(false);
   });
 
-  it('debería guardar el theme en storage al cambiarlo', async () => {
-    const spy = spyOn(storage, 'setItem').and.callThrough();
+  it('stores the theme when it changes', async () => {
+    const spy = vi.spyOn(storage, 'setItem');
 
     service.setTheme('dark');
 

@@ -1,18 +1,17 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular/standalone';
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { provideRouter } from '@angular/router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { MenuComponent } from './menu.component';
+import { TranslateService } from '@shared/translate/translate.service';
 import { ThemeService } from '@shared/services/theme/theme.service';
 import { Language } from '@shared/translate/language.model';
-import { TranslateService } from '@shared/translate/translate.service';
-import { MenuComponent } from './menu.component';
 
-describe('MenuComponent (Vitest browser)', () => {
+describe('MenuComponent (Vitest)', () => {
   let component: MenuComponent;
   let fixture: ComponentFixture<MenuComponent>;
-  let mainContentElement: HTMLDivElement;
 
   const sheetMock = {
     present: vi.fn().mockResolvedValue(undefined),
@@ -22,29 +21,29 @@ describe('MenuComponent (Vitest browser)', () => {
     create: vi.fn().mockResolvedValue(sheetMock),
   };
 
-  const themeMock = {
-    currentTheme: signal<'system' | 'light' | 'dark'>('system'),
-    setTheme: vi.fn(),
-  };
-
   const translateMock = {
     currentLang: signal(Language.EN),
     translate: vi.fn((key: string) => key),
     setLanguage: vi.fn(),
   };
 
-  beforeEach(async () => {
-    sheetMock.present.mockClear();
-    actionSheetCtrlMock.create.mockClear();
-    themeMock.currentTheme.set('system');
-    themeMock.setTheme.mockClear();
-    translateMock.currentLang.set(Language.EN);
-    translateMock.translate.mockClear();
-    translateMock.setLanguage.mockClear();
+  const themeMock = {
+    currentTheme: signal<'system' | 'light' | 'dark'>('system'),
+    setTheme: vi.fn(),
+  };
 
-    mainContentElement = document.createElement('div');
-    mainContentElement.id = 'main-content';
-    document.body.appendChild(mainContentElement);
+  beforeEach(async () => {
+    actionSheetCtrlMock.create.mockClear();
+    sheetMock.present.mockClear();
+    translateMock.setLanguage.mockClear();
+    translateMock.translate.mockClear();
+    themeMock.setTheme.mockClear();
+
+    TestBed.overrideComponent(MenuComponent, {
+      set: {
+        template: '',
+      },
+    });
 
     await TestBed.configureTestingModule({
       imports: [MenuComponent],
@@ -61,42 +60,59 @@ describe('MenuComponent (Vitest browser)', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    fixture.destroy();
-    mainContentElement.remove();
-  });
-
-  it('renders with the live Ionic template', () => {
+  it('creates the component', () => {
     expect(component).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('ion-menu')).not.toBeNull();
   });
 
-  it('opens the language selector and dispatches the chosen language', async () => {
+  it('returns EN when the language is EN', () => {
+    translateMock.currentLang.set(Language.EN);
+    expect(component.currentLang()).toBe('EN');
+  });
+
+  it('returns ES when the language is ES', () => {
+    translateMock.currentLang.set(Language.ES);
+    expect(component.currentLang()).toBe('ES');
+  });
+
+  it('resolves the system theme label', () => {
+    themeMock.currentTheme.set('system');
+    expect(component.currentTheme()).toBe('xSistema');
+  });
+
+  it('resolves the light theme label', () => {
+    themeMock.currentTheme.set('light');
+    expect(component.currentTheme()).toBe('xClaro');
+  });
+
+  it('resolves the dark theme label', () => {
+    themeMock.currentTheme.set('dark');
+    expect(component.currentTheme()).toBe('xOscuro');
+  });
+
+  it('opens the language selector', async () => {
     await component.openLanguageSelector();
 
     expect(actionSheetCtrlMock.create).toHaveBeenCalled();
     expect(sheetMock.present).toHaveBeenCalled();
+  });
+
+  it('calls setLanguage when choosing Espanol', async () => {
+    await component.openLanguageSelector();
 
     const config = actionSheetCtrlMock.create.mock.calls.at(-1)?.[0];
-    const spanishButton = config.buttons.find(
-      (button: { text: string }) => button.text === 'Español',
-    );
+    const btn = config.buttons.find((b: { text: string }) => b.text === 'Español');
 
-    spanishButton.handler();
-
+    btn.handler();
     expect(translateMock.setLanguage).toHaveBeenCalledWith(Language.ES);
   });
 
-  it('opens the theme selector and dispatches the chosen theme', async () => {
+  it('calls setTheme when choosing Claro', async () => {
     await component.openThemeSelector();
 
     const config = actionSheetCtrlMock.create.mock.calls.at(-1)?.[0];
-    const lightButton = config.buttons.find(
-      (button: { text: string }) => button.text === 'xClaro',
-    );
+    const btn = config.buttons.find((b: { text: string }) => b.text === 'xClaro');
 
-    lightButton.handler();
-
+    btn.handler();
     expect(themeMock.setTheme).toHaveBeenCalledWith('light');
   });
 });

@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { ShoppingListPage } from './shopping-list.page';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import {
@@ -9,12 +12,11 @@ import { ShoppingRecipesService } from './services/shopping-recipe/shopping-reci
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
-import { of } from 'rxjs';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 import { Storage } from '@ionic/storage-angular';
 
-describe('ShoppingListPage', () => {
+describe('ShoppingListPage (Vitest)', () => {
   let component: ShoppingListPage;
   let fixture: ComponentFixture<ShoppingListPage>;
 
@@ -32,32 +34,42 @@ describe('ShoppingListPage', () => {
   ];
 
   const shoppingListServiceMock = {
-    shoppingState: jasmine.createSpy().and.returnValue(shoppingStateMock),
-    init: jasmine.createSpy().and.resolveTo(),
+    shoppingState: vi.fn().mockReturnValue(shoppingStateMock),
+    init: vi.fn().mockResolvedValue(undefined),
   };
 
   const favoritesServiceMock = {
-    favorites: jasmine.createSpy().and.returnValue([recipeMock]),
-    loadFavorites: jasmine.createSpy().and.resolveTo(),
+    favorites: vi.fn().mockReturnValue([recipeMock]),
+    loadFavorites: vi.fn().mockResolvedValue(undefined),
   };
 
   const shoppingRecipesServiceMock = {
-    recipes: jasmine.createSpy().and.returnValue([]),
-    sync: jasmine.createSpy().and.resolveTo(),
-    refreshSync: jasmine.createSpy().and.returnValue(of([])),
+    recipes: vi.fn().mockReturnValue([]),
+    sync: vi.fn().mockResolvedValue(undefined),
+    refreshSync: vi.fn().mockReturnValue(of([])),
   };
 
   const translateServiceMock = {
-    currentLang: jasmine.createSpy().and.returnValue('es'),
-    translate: (key: string) => key,
+    currentLang: vi.fn().mockReturnValue('es'),
+    translate: vi.fn((key: string) => key),
   };
 
   const recipeServiceMock = {
-    selectRecipe: jasmine.createSpy(),
-    toRecipeDetail: jasmine.createSpy(),
+    selectRecipe: vi.fn(),
+    toRecipeDetail: vi.fn(),
   };
 
   beforeEach(async () => {
+    shoppingListServiceMock.shoppingState.mockClear();
+    shoppingListServiceMock.init.mockClear();
+    favoritesServiceMock.favorites.mockClear();
+    favoritesServiceMock.loadFavorites.mockClear();
+    shoppingRecipesServiceMock.recipes.mockClear();
+    shoppingRecipesServiceMock.sync.mockClear();
+    shoppingRecipesServiceMock.refreshSync.mockClear();
+    recipeServiceMock.selectRecipe.mockClear();
+    recipeServiceMock.toRecipeDetail.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [ShoppingListPage, TranslatePipeStub],
       providers: [
@@ -78,30 +90,30 @@ describe('ShoppingListPage', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer el estado del shopping list', () => {
+  it('exposes shopping list state', () => {
     expect(component.shoppingState()).toEqual(shoppingStateMock);
   });
 
-  it('debería exponer los favoritos', () => {
+  it('exposes favorite recipes', () => {
     expect(component.favoritos()).toEqual([recipeMock]);
   });
 
-  it('debería devolver el estado de una receta', () => {
+  it('returns the state of a recipe', () => {
     const state = component.getShoppingState(1);
 
     expect(state).toEqual(shoppingStateMock[0]);
   });
 
-  it('debería cargar favoritos y sincronizar al entrar a la vista', async () => {
+  it('loads favorites and syncs data on view enter', async () => {
     await component.ionViewWillEnter();
 
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
     expect(shoppingListServiceMock.init).toHaveBeenCalled();
     expect(shoppingRecipesServiceMock.sync).toHaveBeenCalled();
-    expect(component.isLoading()).toBeFalse();
+    expect(component.isLoading()).toBe(false);
   });
 });

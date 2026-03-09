@@ -1,27 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { InfoPage } from './info.page';
 import { Storage } from '@ionic/storage-angular';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { AppInfoService } from './service/app-info.service';
-import { signal } from '@angular/core';
-import { provideRouter } from '@angular/router';
 
-export const AppInfoServiceMock = {
-  getAppVersion: jasmine.createSpy().and.resolveTo('TEST_VERSION'),
+const appInfoServiceMock = {
+  getAppVersion: vi.fn().mockResolvedValue('TEST_VERSION'),
   appStage: signal('TEST_STAGE'),
 };
 
-describe('InfoPage', () => {
+describe('InfoPage (Vitest)', () => {
   let component: InfoPage;
   let fixture: ComponentFixture<InfoPage>;
 
   beforeEach(async () => {
+    appInfoServiceMock.getAppVersion.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [InfoPage],
       providers: [
         provideRouter([]),
         { provide: Storage, useClass: IonicStorageMock },
-        { provide: AppInfoService, useValue: AppInfoServiceMock },
+        { provide: AppInfoService, useValue: appInfoServiceMock },
       ],
     }).compileComponents();
 
@@ -30,15 +34,15 @@ describe('InfoPage', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer el stage proveniente del servicio', () => {
+  it('exposes the app stage from the service', () => {
     expect(component.appStage()).toBe('TEST_STAGE');
   });
 
-  it('debería exponer las URLs configuradas', () => {
+  it('exposes configured URLs', () => {
     expect(component.githubUrl).toContain('github.com');
     expect(component.helpUrl).toContain('github.com');
   });

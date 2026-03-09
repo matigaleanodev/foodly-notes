@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal, Component, input, output } from '@angular/core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HomePage } from './home.page';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -36,11 +37,11 @@ class HomeHeroStubComponent {
   template: '',
 })
 class EmptyStatesStubComponent {
-  imagen = input<any>();
+  imagen = input<unknown>();
   text = input<string>();
 }
 
-describe('HomePage', () => {
+describe('HomePage (Vitest)', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
 
@@ -52,24 +53,35 @@ describe('HomePage', () => {
 
   const recipeServiceMock = {
     recipes: signal<DailyRecipe[]>([recipeMock]),
-    loadDailyRecipes: jasmine.createSpy().and.resolveTo(undefined),
-    refreshDailyRecipes: jasmine.createSpy().and.returnValue({
-      subscribe: ({ next }: any) => next(),
+    loadDailyRecipes: vi.fn().mockResolvedValue(undefined),
+    refreshDailyRecipes: vi.fn().mockReturnValue({
+      subscribe: ({ next }: { next: () => void }) => next(),
     }),
-    selectRecipe: jasmine.createSpy(),
-    toSimilarRecipes: jasmine.createSpy(),
-    toRecipeDetail: jasmine.createSpy(),
-    searchRecipes: jasmine.createSpy(),
+    selectRecipe: vi.fn(),
+    toSimilarRecipes: vi.fn(),
+    toRecipeDetail: vi.fn(),
+    searchRecipes: vi.fn(),
   };
 
   const favoritesServiceMock = {
-    loadFavorites: jasmine.createSpy(),
-    isFavorite: jasmine.createSpy().and.returnValue(false),
-    addFavorite: jasmine.createSpy(),
-    removeFavorite: jasmine.createSpy(),
+    loadFavorites: vi.fn(),
+    isFavorite: vi.fn().mockReturnValue(false),
+    addFavorite: vi.fn(),
+    removeFavorite: vi.fn(),
   };
 
   beforeEach(async () => {
+    recipeServiceMock.loadDailyRecipes.mockClear();
+    recipeServiceMock.selectRecipe.mockClear();
+    recipeServiceMock.toSimilarRecipes.mockClear();
+    recipeServiceMock.toRecipeDetail.mockClear();
+    recipeServiceMock.searchRecipes.mockClear();
+    favoritesServiceMock.loadFavorites.mockClear();
+    favoritesServiceMock.isFavorite.mockClear();
+    favoritesServiceMock.isFavorite.mockReturnValue(false);
+    favoritesServiceMock.addFavorite.mockClear();
+    favoritesServiceMock.removeFavorite.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [
         HomePage,
@@ -89,52 +101,52 @@ describe('HomePage', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería cargar favoritos y recetas al entrar en la vista', async () => {
+  it('loads favorites and recipes on view enter', async () => {
     await component.ionViewWillEnter();
 
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
     expect(recipeServiceMock.loadDailyRecipes).toHaveBeenCalled();
-    expect(component.isLoading()).toBeFalse();
+    expect(component.isLoading()).toBe(false);
   });
 
-  it('debería exponer las recetas del RecipeService', () => {
+  it('exposes recipes from the service', () => {
     expect(component.recipes()).toEqual([recipeMock]);
   });
 
-  it('debería agregar un favorito si no lo es', () => {
-    favoritesServiceMock.isFavorite.and.returnValue(false);
+  it('adds a favorite when the recipe is not already saved', () => {
+    favoritesServiceMock.isFavorite.mockReturnValue(false);
 
     component.toggleFavorite(recipeMock);
 
     expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería remover un favorito si ya lo es', () => {
-    favoritesServiceMock.isFavorite.and.returnValue(true);
+  it('removes a favorite when the recipe is already saved', () => {
+    favoritesServiceMock.isFavorite.mockReturnValue(true);
 
     component.toggleFavorite(recipeMock);
 
     expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
-  it('debería navegar a recetas similares', () => {
+  it('navigates to similar recipes', () => {
     component.toSimilarRecipes(recipeMock);
 
     expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith(recipeMock);
     expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
   });
 
-  it('debería navegar al detalle de receta', () => {
+  it('navigates to recipe detail', () => {
     component.toRecipeDetail(recipeMock);
 
     expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
   });
 
-  it('debería navegar a búsqueda', () => {
+  it('navigates to search', () => {
     component.toSearchRecipe('pollo');
 
     expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');

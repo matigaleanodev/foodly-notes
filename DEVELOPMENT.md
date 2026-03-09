@@ -41,13 +41,13 @@ http://localhost:4200
 
 ## 🧪 Testing
 
-Run the Karma test runner in watch mode:
+Run the Vitest node/jsdom suite for local work:
 
 ```bash
 npm run test
 ```
 
-Run the reliable CI command with `ChromeHeadlessCI` and fail-fast behavior on unexpected `console.error` output:
+Run the supported CI command:
 
 ```bash
 npm run test:ci
@@ -77,7 +77,7 @@ If Playwright browsers are not installed yet, run:
 npx playwright install chromium
 ```
 
-Vitest is now validated for service, utility, Angular component, and Ionic standalone component tests. Karma/Jasmine still remain in the repo until the remaining legacy specs are migrated.
+Vitest is the supported test runner for the project, covering services, utilities, Angular components, and Ionic standalone components.
 
 ---
 
@@ -122,7 +122,7 @@ The project follows a feature-based structure with:
 - Environment-specific values are defined in `environment*.ts`
 - App version and stage are resolved dynamically depending on platform
 - Capacitor is used only for native-specific features
-- `npm run test:ci` is the current stable Karma command used by CI
-- `npm run test:vitest:ci` is the validated migration path for the Vitest stack
+- `npm run test:ci` is the stable CI entrypoint and runs the full Vitest stack
+- `npm run test:vitest:ci` remains available as the explicit Vitest command
 
 ---
