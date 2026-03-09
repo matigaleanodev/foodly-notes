@@ -1,5 +1,5 @@
 export const environment = {
   API_URL: 'http://localhost:3000/api',
-  appVersion: '1.0.9',
+  appVersion: '1.1.0',
   appStage: 'xDesarrollo',
 };
