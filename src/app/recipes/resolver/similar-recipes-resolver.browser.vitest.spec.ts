@@ -5,25 +5,26 @@ import {
   convertToParamMap,
 } from '@angular/router';
 import { of } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { similarRecipesResolver } from './similar-recipes-resolver';
-import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
+import { RecipeService } from '@recipes/services/recipe/recipe.service';
+import { similarRecipesResolver } from './similar-recipes-resolver';
 
-describe('similarRecipesResolver', () => {
-  let recipeService: jasmine.SpyObj<RecipeService>;
+describe('similarRecipesResolver (Vitest)', () => {
+  const recipeServiceMock = {
+    loadSimilaRecipes: vi.fn(),
+  };
 
   beforeEach(() => {
-    recipeService = jasmine.createSpyObj<RecipeService>('RecipeService', [
-      'loadSimilaRecipes',
-    ]);
+    recipeServiceMock.loadSimilaRecipes.mockReset();
 
     TestBed.configureTestingModule({
-      providers: [{ provide: RecipeService, useValue: recipeService }],
+      providers: [{ provide: RecipeService, useValue: recipeServiceMock }],
     });
   });
 
-  it('debería devolver null si no hay id', async () => {
+  it('returns null when the id param is missing', async () => {
     const route = {
       paramMap: convertToParamMap({}),
     } as ActivatedRouteSnapshot;
@@ -35,12 +36,12 @@ describe('similarRecipesResolver', () => {
     expect(result).toBeNull();
   });
 
-  it('debería devolver las recetas similares cuando hay id', async () => {
+  it('returns similar recipes when the id param exists', async () => {
     const data: SimilarRecipe[] = [
       { sourceId: 1, title: 'Receta similar', image: 'img.jpg' },
     ];
 
-    recipeService.loadSimilaRecipes.and.resolveTo(of(data));
+    recipeServiceMock.loadSimilaRecipes.mockResolvedValue(of(data));
 
     const route = {
       paramMap: convertToParamMap({ id: '1' }),
@@ -50,7 +51,7 @@ describe('similarRecipesResolver', () => {
       similarRecipesResolver(route, {} as RouterStateSnapshot),
     );
 
-    expect(recipeService.loadSimilaRecipes).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.loadSimilaRecipes).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
   });
 });
