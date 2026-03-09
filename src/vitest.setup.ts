@@ -1,12 +1,3 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
-import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
-import {
-  BrowserTestingModule,
-  platformBrowserTesting,
-} from '@angular/platform-browser/testing';
-
 const formatConsoleArg = (value: unknown): string => {
   if (value instanceof Error) {
     return value.stack ?? value.message;
@@ -37,9 +28,3 @@ console.error = (...args: unknown[]) => {
     ].join('\n'),
   );
 };
-
-// First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-  BrowserTestingModule,
-  platformBrowserTesting(),
-);

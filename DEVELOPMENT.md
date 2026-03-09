@@ -41,11 +41,43 @@ http://localhost:4200
 
 ## 🧪 Testing
 
-Run unit tests:
+Run the Vitest node/jsdom suite for local work:
 
 ```bash
 npm run test
 ```
+
+Run the supported CI command:
+
+```bash
+npm run test:ci
+```
+
+Run the Vitest suite that currently targets services and utilities in Node/jsdom:
+
+```bash
+npm run test:vitest
+```
+
+Run the browser-mode Vitest suite for Angular and Ionic components with Playwright + Chromium:
+
+```bash
+npm run test:vitest:browser
+```
+
+Run the combined Vitest CI flow:
+
+```bash
+npm run test:vitest:ci
+```
+
+If Playwright browsers are not installed yet, run:
+
+```bash
+npx playwright install chromium
+```
+
+Vitest is the supported test runner for the project, covering services, utilities, Angular components, and Ionic standalone components.
 
 ---
 
@@ -70,7 +102,7 @@ Generate a production build:
 npm run build
 ```
 
-The output will be generated in the `dist/` directory.
+The output is generated in the `www/` directory.
 
 ---
 
@@ -90,5 +122,7 @@ The project follows a feature-based structure with:
 - Environment-specific values are defined in `environment*.ts`
 - App version and stage are resolved dynamically depending on platform
 - Capacitor is used only for native-specific features
+- `npm run test:ci` is the stable CI entrypoint and runs the full Vitest stack
+- `npm run test:vitest:ci` remains available as the explicit Vitest command
 
 ---
