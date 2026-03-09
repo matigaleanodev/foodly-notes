@@ -45,6 +45,16 @@ npm run i18n:check
 
 ---
 
+## 🧭 Ownership and Boundaries
+
+- Bilingual UI and language preference are handled in this frontend through local dictionaries and persisted language selection.
+- Recipe translation, response normalization, and external provider integration belong to `foodly-notes-api`.
+- `Ionic Storage` is used only as local application state for language, favorites, and shopping-list progress.
+- Favorites and shopping-list flows remain frontend-owned and local until an explicit backend decision changes that boundary.
+- The API remains the source of truth for recipe, search, similar-recipe, and ingredient-aggregation data.
+
+---
+
 ## 📱 Main features
 
 - Daily recipes

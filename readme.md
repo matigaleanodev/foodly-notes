@@ -45,6 +45,16 @@ npm run i18n:check
 
 ---
 
+## 🧭 Ownership y límites
+
+- La UI bilingüe y la preferencia de idioma se resuelven en este frontend mediante diccionarios locales y persistencia del idioma elegido.
+- La traducción de recetas, la normalización de respuestas y la integración con proveedores externos pertenecen a `foodly-notes-api`.
+- `Ionic Storage` se usa solo como estado local de aplicación para idioma, favoritos y progreso de shopping list.
+- Favoritos y shopping list siguen siendo flujos frontend-owned y locales mientras no exista una decisión backend que cambie ese límite.
+- La API sigue siendo la fuente de verdad para datos de recetas, búsqueda, similares y agregación de ingredientes.
+
+---
+
 ## 📱 Funcionalidades principales
 
 - Recetas diarias
