@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import * as ionicons from 'ionicons';
 import { ToastController } from '@ionic/angular/standalone';
 
 import { ToastrService } from './toastr.service';

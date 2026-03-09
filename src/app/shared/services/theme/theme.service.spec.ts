@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ThemeService, ThemeMode } from './theme.service';
+import { ThemeService } from './theme.service';
 import { StorageService } from '../storage/storage.service';
 
 describe('ThemeService', () => {

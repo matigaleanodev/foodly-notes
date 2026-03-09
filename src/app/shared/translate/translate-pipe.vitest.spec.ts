@@ -1,11 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { StorageService } from '@shared/services/storage/storage.service';
+import { StorageServiceMock } from '@shared/mocks/storage.mock';
+import { Language } from './language.model';
 import { TranslatePipe } from './translate-pipe';
 import { TranslateService } from './translate.service';
-import { StorageService } from '@shared/services/storage/storage.service';
-import { Language } from './language.model';
-import { StorageServiceMock } from '@shared/mocks/storage.mock';
 
-describe('TranslatePipe', () => {
+describe('TranslatePipe (Vitest)', () => {
   let pipe: TranslatePipe;
   let service: TranslateService;
 
@@ -22,14 +24,13 @@ describe('TranslatePipe', () => {
     service = TestBed.inject(TranslateService);
   });
 
-  it('debería renderizar la traducción', () => {
-    const value = pipe.transform('xCargando');
-    expect(value).toBe('Loading');
+  it('renders the active translation', () => {
+    expect(pipe.transform('xCargando')).toBe('Loading');
   });
 
-  it('debería actualizar la traducción al cambiar el idioma', () => {
+  it('updates the translation after language changes', () => {
     service.setLanguage(Language.ES);
-    const value = pipe.transform('xCargando');
-    expect(value).toBe('Cargando');
+
+    expect(pipe.transform('xCargando')).toBe('Cargando');
   });
 });
