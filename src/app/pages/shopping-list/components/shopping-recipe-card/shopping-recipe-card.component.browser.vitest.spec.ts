@@ -10,8 +10,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { Storage } from '@ionic/storage-angular';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-describe('ShoppingRecipeCardComponent', () => {
+describe('ShoppingRecipeCardComponent (Vitest)', () => {
   let component: ShoppingRecipeCardComponent;
   let fixture: ComponentFixture<ShoppingRecipeCardComponent>;
 
@@ -44,13 +45,14 @@ describe('ShoppingRecipeCardComponent', () => {
   };
 
   const shoppingListServiceMock = {
-    isIngredientChecked: jasmine
-      .createSpy('isIngredientChecked')
-      .and.returnValue(true),
-    toggleIngredient: jasmine.createSpy('toggleIngredient').and.resolveTo(),
+    isIngredientChecked: vi.fn().mockReturnValue(true),
+    toggleIngredient: vi.fn().mockResolvedValue(undefined),
   };
 
   beforeEach(async () => {
+    shoppingListServiceMock.isIngredientChecked.mockClear();
+    shoppingListServiceMock.toggleIngredient.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [ShoppingRecipeCardComponent, TranslatePipeStub],
       providers: [
@@ -72,27 +74,27 @@ describe('ShoppingRecipeCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer los ingredientes de la receta', () => {
+  it('exposes recipe ingredients', () => {
     expect(component.ingredients()).toEqual(recipeMock.ingredients);
   });
 
-  it('debería consultar si un ingrediente está marcado', () => {
+  it('checks whether an ingredient is marked', () => {
     const result = component.isIngredientChecked(10);
 
     expect(shoppingListServiceMock.isIngredientChecked).toHaveBeenCalledWith(
       1,
       10,
     );
-    expect(result).toBeTrue();
+    expect(result).toBe(true);
   });
 
-  it('debería alternar un ingrediente y detener la propagación del evento', async () => {
+  it('toggles an ingredient and stops event propagation', async () => {
     const eventMock = {
-      stopPropagation: jasmine.createSpy('stopPropagation'),
+      stopPropagation: vi.fn(),
     } as unknown as Event;
 
     await component.toggleIngredient(eventMock, 20);
@@ -104,11 +106,11 @@ describe('ShoppingRecipeCardComponent', () => {
     );
   });
 
-  it('debería emitir el evento para ir a la receta', () => {
-    spyOn(component.toRecipe, 'emit');
+  it('emits the event to navigate to the recipe', () => {
+    const emitSpy = vi.spyOn(component.toRecipe, 'emit');
 
     component.goToRecipe();
 
-    expect(component.toRecipe.emit).toHaveBeenCalledWith(recipeMock);
+    expect(emitSpy).toHaveBeenCalledWith(recipeMock);
   });
 });

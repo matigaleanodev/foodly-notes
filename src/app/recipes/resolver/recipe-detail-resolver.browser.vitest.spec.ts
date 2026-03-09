@@ -6,29 +6,31 @@ import {
 } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { recipeDetailResolver } from './recipe-detail-resolver';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 
-describe('recipeDetailResolver', () => {
-  let recipeService: jasmine.SpyObj<RecipeService>;
-  let loadingController: jasmine.SpyObj<LoadingController>;
+describe('recipeDetailResolver (Vitest)', () => {
+  const recipeService = {
+    loadRecipeDeatil: vi.fn(),
+  };
 
   const loadingElementMock = {
-    present: jasmine.createSpy('present').and.resolveTo(),
-    dismiss: jasmine.createSpy('dismiss').and.resolveTo(),
+    present: vi.fn().mockResolvedValue(undefined),
+    dismiss: vi.fn().mockResolvedValue(undefined),
   } as unknown as HTMLIonLoadingElement;
 
+  const loadingController = {
+    create: vi.fn().mockResolvedValue(loadingElementMock),
+  };
+
   beforeEach(() => {
-    recipeService = jasmine.createSpyObj<RecipeService>('RecipeService', [
-      'loadRecipeDeatil',
-    ]);
-    loadingController = jasmine.createSpyObj<LoadingController>(
-      'LoadingController',
-      ['create'],
-    );
-    loadingController.create.and.resolveTo(loadingElementMock);
+    recipeService.loadRecipeDeatil.mockReset();
+    loadingController.create.mockClear();
+    loadingElementMock.present = vi.fn().mockResolvedValue(undefined);
+    loadingElementMock.dismiss = vi.fn().mockResolvedValue(undefined);
 
     TestBed.configureTestingModule({
       providers: [
@@ -38,7 +40,7 @@ describe('recipeDetailResolver', () => {
     });
   });
 
-  it('debería devolver null si no hay id', async () => {
+  it('returns null when there is no id', async () => {
     const route = {
       paramMap: convertToParamMap({}),
     } as ActivatedRouteSnapshot;
@@ -51,7 +53,7 @@ describe('recipeDetailResolver', () => {
     expect(loadingController.create).not.toHaveBeenCalled();
   });
 
-  it('debería devolver el detalle de la receta cuando hay id', async () => {
+  it('returns recipe detail when there is an id', async () => {
     const data: RecipeDetail = {
       sourceId: 1,
       title: 'Receta',
@@ -74,7 +76,7 @@ describe('recipeDetailResolver', () => {
       lang: 'en',
     };
 
-    recipeService.loadRecipeDeatil.and.resolveTo(of(data));
+    recipeService.loadRecipeDeatil.mockResolvedValue(of(data));
 
     const route = {
       paramMap: convertToParamMap({ id: '1' }),
@@ -95,8 +97,8 @@ describe('recipeDetailResolver', () => {
     expect(loadingElementMock.dismiss).toHaveBeenCalled();
   });
 
-  it('debería cerrar el loading aunque el detalle falle', async () => {
-    recipeService.loadRecipeDeatil.and.resolveTo(
+  it('dismisses loading even if detail request fails', async () => {
+    recipeService.loadRecipeDeatil.mockResolvedValue(
       throwError(() => new Error('detail error')),
     );
 
@@ -104,11 +106,11 @@ describe('recipeDetailResolver', () => {
       paramMap: convertToParamMap({ id: '1' }),
     } as ActivatedRouteSnapshot;
 
-    await expectAsync(
+    await expect(
       TestBed.runInInjectionContext(() =>
         recipeDetailResolver(route, {} as RouterStateSnapshot),
       ),
-    ).toBeRejected();
+    ).rejects.toThrow('detail error');
 
     expect(loadingElementMock.present).toHaveBeenCalled();
     expect(loadingElementMock.dismiss).toHaveBeenCalled();

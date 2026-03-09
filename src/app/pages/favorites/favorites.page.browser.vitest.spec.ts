@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FavoritesPage } from './favorites.page';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -9,7 +10,7 @@ import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 import { Storage } from '@ionic/storage-angular';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
-describe('FavoritesPage', () => {
+describe('FavoritesPage (Vitest)', () => {
   let component: FavoritesPage;
   let fixture: ComponentFixture<FavoritesPage>;
 
@@ -21,19 +22,28 @@ describe('FavoritesPage', () => {
 
   const favoritesServiceMock = {
     favorites: signal<DailyRecipe[]>([recipeMock]),
-    loadFavorites: jasmine.createSpy('loadFavorites').and.resolveTo(undefined),
-    isFavorite: jasmine.createSpy('isFavorite').and.returnValue(true),
-    addFavorite: jasmine.createSpy('addFavorite'),
-    removeFavorite: jasmine.createSpy('removeFavorite'),
+    loadFavorites: vi.fn().mockResolvedValue(undefined),
+    isFavorite: vi.fn().mockReturnValue(true),
+    addFavorite: vi.fn(),
+    removeFavorite: vi.fn(),
   };
 
   const recipeServiceMock = {
-    selectRecipe: jasmine.createSpy('selectRecipe'),
-    toSimilarRecipes: jasmine.createSpy('toSimilarRecipes'),
-    toRecipeDetail: jasmine.createSpy('toRecipeDetail'),
+    selectRecipe: vi.fn(),
+    toSimilarRecipes: vi.fn(),
+    toRecipeDetail: vi.fn(),
   };
 
   beforeEach(async () => {
+    favoritesServiceMock.loadFavorites.mockClear();
+    favoritesServiceMock.isFavorite.mockClear();
+    favoritesServiceMock.isFavorite.mockReturnValue(true);
+    favoritesServiceMock.addFavorite.mockClear();
+    favoritesServiceMock.removeFavorite.mockClear();
+    recipeServiceMock.selectRecipe.mockClear();
+    recipeServiceMock.toSimilarRecipes.mockClear();
+    recipeServiceMock.toRecipeDetail.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [FavoritesPage, TranslatePipeStub],
       providers: [
@@ -48,45 +58,45 @@ describe('FavoritesPage', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería cargar los favoritos al entrar a la vista', async () => {
+  it('loads favorites when entering the view', async () => {
     await component.ionViewWillEnter();
 
     expect(favoritesServiceMock.loadFavorites).toHaveBeenCalled();
-    expect(component.isLoading()).toBeFalse();
+    expect(component.isLoading()).toBe(false);
   });
 
-  it('debería exponer los favoritos del FavoritesService', () => {
+  it('exposes favorites from the service', () => {
     expect(component.favorites()).toEqual([recipeMock]);
   });
 
-  it('debería remover un favorito si ya lo es', () => {
-    favoritesServiceMock.isFavorite.and.returnValue(true);
+  it('removes a favorite when it is already stored', () => {
+    favoritesServiceMock.isFavorite.mockReturnValue(true);
 
     component.toggleFav(recipeMock);
 
     expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
-  it('debería agregar un favorito si no lo es', () => {
-    favoritesServiceMock.isFavorite.and.returnValue(false);
+  it('adds a favorite when it is not stored yet', () => {
+    favoritesServiceMock.isFavorite.mockReturnValue(false);
 
     component.toggleFav(recipeMock);
 
     expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería navegar a recetas similares', () => {
+  it('navigates to similar recipes', () => {
     component.toSimilarRecipes(recipeMock);
 
     expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith(recipeMock);
     expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
   });
 
-  it('debería navegar al detalle de receta', () => {
+  it('navigates to recipe detail', () => {
     component.detalleReceta(recipeMock);
 
     expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);

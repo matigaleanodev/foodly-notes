@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipeCardComponent } from './recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -8,7 +9,7 @@ import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 
 import { Storage } from '@ionic/storage-angular';
 
-describe('RecipeCardComponent', () => {
+describe('RecipeCardComponent (Vitest)', () => {
   let component: RecipeCardComponent;
   let fixture: ComponentFixture<RecipeCardComponent>;
 
@@ -19,11 +20,12 @@ describe('RecipeCardComponent', () => {
   };
 
   const favoritesServiceMock = {
-    isFavorite: jasmine.createSpy('isFavorite'),
+    isFavorite: vi.fn(),
   };
 
   beforeEach(async () => {
-    favoritesServiceMock.isFavorite.and.returnValue(false);
+    favoritesServiceMock.isFavorite.mockReset();
+    favoritesServiceMock.isFavorite.mockReturnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [RecipeCardComponent, TranslatePipeStub],
@@ -40,60 +42,60 @@ describe('RecipeCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería indicar si la receta es favorita', () => {
-    favoritesServiceMock.isFavorite.and.returnValue(true);
+  it('reports whether the recipe is a favorite', () => {
+    favoritesServiceMock.isFavorite.mockReturnValue(true);
 
     fixture.componentRef.setInput('recipe', { ...recipeMock });
     fixture.detectChanges();
 
     expect(favoritesServiceMock.isFavorite).toHaveBeenCalledWith(1);
-    expect(component.isFavorite()).toBeTrue();
+    expect(component.isFavorite()).toBe(true);
   });
 
-  it('debería exponer correctamente la imagen de la receta', () => {
+  it('exposes the recipe image', () => {
     expect(component.recipeImageUrl()).toBe('jpg');
   });
 
-  it('debería emitir el evento de detalle de receta', () => {
-    spyOn(component.recipeDetail, 'emit');
+  it('emits the recipe detail event', () => {
+    const emitSpy = vi.spyOn(component.recipeDetail, 'emit');
 
     const event = {
-      stopPropagation: jasmine.createSpy(),
+      stopPropagation: vi.fn(),
     } as unknown as Event;
 
     component.toRecipeDetail(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.recipeDetail.emit).toHaveBeenCalledWith(recipeMock);
+    expect(emitSpy).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería emitir el evento de recetas similares', () => {
-    spyOn(component.similarRecipes, 'emit');
+  it('emits the similar recipes event', () => {
+    const emitSpy = vi.spyOn(component.similarRecipes, 'emit');
 
     const event = {
-      stopPropagation: jasmine.createSpy(),
+      stopPropagation: vi.fn(),
     } as unknown as Event;
 
     component.toSimilarRecipes(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.similarRecipes.emit).toHaveBeenCalledWith(recipeMock);
+    expect(emitSpy).toHaveBeenCalledWith(recipeMock);
   });
 
-  it('debería emitir el evento de toggle favorito', () => {
-    spyOn(component.toggleFavorite, 'emit');
+  it('emits the favorite toggle event', () => {
+    const emitSpy = vi.spyOn(component.toggleFavorite, 'emit');
 
     const event = {
-      stopPropagation: jasmine.createSpy(),
+      stopPropagation: vi.fn(),
     } as unknown as Event;
 
     component.toggleFavoriteState(event);
 
     expect(event.stopPropagation).toHaveBeenCalled();
-    expect(component.toggleFavorite.emit).toHaveBeenCalledWith(recipeMock);
+    expect(emitSpy).toHaveBeenCalledWith(recipeMock);
   });
 });

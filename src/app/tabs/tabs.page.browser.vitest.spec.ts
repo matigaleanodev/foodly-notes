@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { TABS, TabsPage } from './tabs.page';
 import { Storage } from '@ionic/storage-angular';
 import { IonicStorageMock } from '@shared/mocks/ionic-storage.mock';
 import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 
-describe('TabsPage', () => {
+describe('TabsPage (Vitest)', () => {
   let component: TabsPage;
   let fixture: ComponentFixture<TabsPage>;
 
@@ -26,11 +27,11 @@ describe('TabsPage', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear la página de tabs', () => {
+  it('creates the tabs page', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer los tabs definidos', () => {
+  it('exposes the defined tabs', () => {
     expect(component.tabs().length).toBe(3);
     expect(component.tabs()).toEqual(TABS);
   });
