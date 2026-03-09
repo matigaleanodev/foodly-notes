@@ -53,13 +53,31 @@ Corré el comando confiable de CI con `ChromeHeadlessCI` y falla inmediata ante 
 npm run test:ci
 ```
 
-Corré el piloto incremental de Vitest para servicios y utilidades:
+Corré la suite de Vitest que hoy apunta a servicios y utilidades en Node/jsdom:
 
 ```bash
 npm run test:vitest
 ```
 
-Por ahora el alcance de Vitest está limitado a servicios y utilidades. Los componentes Ionic siguen en Karma hasta validar un setup browser-mode de Vitest para este repo.
+Corré la suite browser-mode de Vitest para componentes Angular e Ionic con Playwright + Chromium:
+
+```bash
+npm run test:vitest:browser
+```
+
+Corré el flujo combinado de Vitest para CI:
+
+```bash
+npm run test:vitest:ci
+```
+
+Si Playwright todavía no descargó los navegadores, ejecutá:
+
+```bash
+npx playwright install chromium
+```
+
+Vitest ya quedó validado para servicios, utilidades, componentes Angular y componentes Ionic standalone. Karma/Jasmine siguen presentes mientras existan specs legacy sin migrar.
 
 ---
 
@@ -99,5 +117,6 @@ La estructura principal del proyecto se organiza con:
 ## 📌 Notas
 
 - Los valores por entorno viven en `environment*.ts`
-- `npm run test:ci` es el comando que debe usar CI
+- `npm run test:ci` es el comando estable actual de Karma para CI
+- `npm run test:vitest:ci` es el camino validado de migración hacia Vitest
 - Capacitor se usa solo para capacidades nativas

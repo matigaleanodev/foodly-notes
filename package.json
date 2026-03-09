@@ -11,6 +11,8 @@
     "test": "ng test",
     "test:ci": "ng test --configuration=ci --browsers=ChromeHeadlessCI",
     "test:vitest": "ng run app:test-vitest:ci",
+    "test:vitest:browser": "ng run app:test-vitest-browser:ci",
+    "test:vitest:ci": "npm run test:vitest && npm run test:vitest:browser",
     "lint": "ng lint",
     "i18n:check": "npx tsc scripts/check-missing-keys.ts && node scripts/check-missing-keys.js"
   },
@@ -52,6 +54,7 @@
     "@types/jasmine": "~5.1.15",
     "@typescript-eslint/eslint-plugin": "^8.53.0",
     "@typescript-eslint/parser": "^8.53.0",
+    "@vitest/browser-playwright": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.1",
@@ -64,6 +67,7 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "playwright": "^1.58.2",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18"
   },

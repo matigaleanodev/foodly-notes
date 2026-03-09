@@ -106,6 +106,7 @@
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
+            "exclude": ["src/**/*.vitest.spec.ts"],
             "inlineStyleLanguage": "scss",
             "assets": [
               {
@@ -131,7 +132,25 @@
             "buildTarget": "app:build:development",
             "tsConfig": "tsconfig.spec.json",
             "include": ["src/**/*.vitest.spec.ts"],
+            "exclude": ["src/**/*.browser.vitest.spec.ts"],
             "setupFiles": ["src/vitest.setup.ts"]
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false
+            }
+          }
+        },
+        "test-vitest-browser": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "buildTarget": "app:build:development",
+            "tsConfig": "tsconfig.spec.json",
+            "include": ["src/**/*.browser.vitest.spec.ts"],
+            "setupFiles": ["src/vitest.setup.ts"],
+            "browsers": ["chromium"]
           },
           "configurations": {
             "ci": {
