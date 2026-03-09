@@ -10,7 +10,7 @@ import { AppInfoService } from './service/app-info.service';
 
 const appInfoServiceMock = {
   getAppVersion: vi.fn().mockResolvedValue('TEST_VERSION'),
-  appStage: signal('TEST_STAGE'),
+  appStage: signal('xDesarrollo'),
 };
 
 describe('InfoPage (Vitest)', () => {
@@ -39,7 +39,7 @@ describe('InfoPage (Vitest)', () => {
   });
 
   it('exposes the app stage from the service', () => {
-    expect(component.appStage()).toBe('TEST_STAGE');
+    expect(component.appStage()).toBe('xDesarrollo');
   });
 
   it('exposes configured URLs', () => {
