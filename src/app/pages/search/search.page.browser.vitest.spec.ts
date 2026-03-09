@@ -21,7 +21,7 @@ describe('SearchPage (Vitest)', () => {
   const recipeServiceMock = {
     searchRecipes: vi.fn(),
     refreshSearch: vi.fn().mockReturnValue(of(recipesMock)),
-    queryReacipeSearch: vi.fn(),
+    searchRecipesByQuery: vi.fn(),
     selectRecipe: vi.fn(),
     toSimilarRecipes: vi.fn(),
     toRecipeDetail: vi.fn(),
@@ -37,7 +37,7 @@ describe('SearchPage (Vitest)', () => {
   beforeEach(async () => {
     recipeServiceMock.searchRecipes.mockClear();
     recipeServiceMock.refreshSearch.mockClear();
-    recipeServiceMock.queryReacipeSearch.mockClear();
+    recipeServiceMock.searchRecipesByQuery.mockClear();
     recipeServiceMock.selectRecipe.mockClear();
     recipeServiceMock.toSimilarRecipes.mockClear();
     recipeServiceMock.toRecipeDetail.mockClear();
@@ -113,6 +113,6 @@ describe('SearchPage (Vitest)', () => {
     component.searchNewRecipes('pollo');
 
     expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');
-    expect(recipeServiceMock.queryReacipeSearch).not.toHaveBeenCalled();
+    expect(recipeServiceMock.searchRecipesByQuery).not.toHaveBeenCalled();
   });
 });

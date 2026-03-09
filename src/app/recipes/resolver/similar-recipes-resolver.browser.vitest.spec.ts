@@ -13,11 +13,11 @@ import { similarRecipesResolver } from './similar-recipes-resolver';
 
 describe('similarRecipesResolver (Vitest)', () => {
   const recipeServiceMock = {
-    loadSimilaRecipes: vi.fn(),
+    loadSimilarRecipes: vi.fn(),
   };
 
   beforeEach(() => {
-    recipeServiceMock.loadSimilaRecipes.mockReset();
+    recipeServiceMock.loadSimilarRecipes.mockReset();
 
     TestBed.configureTestingModule({
       providers: [{ provide: RecipeService, useValue: recipeServiceMock }],
@@ -41,7 +41,7 @@ describe('similarRecipesResolver (Vitest)', () => {
       { sourceId: 1, title: 'Receta similar', image: 'img.jpg' },
     ];
 
-    recipeServiceMock.loadSimilaRecipes.mockResolvedValue(of(data));
+    recipeServiceMock.loadSimilarRecipes.mockReturnValue(of(data));
 
     const route = {
       paramMap: convertToParamMap({ id: '1' }),
@@ -51,7 +51,7 @@ describe('similarRecipesResolver (Vitest)', () => {
       similarRecipesResolver(route, {} as RouterStateSnapshot),
     );
 
-    expect(recipeServiceMock.loadSimilaRecipes).toHaveBeenCalledWith(1);
+    expect(recipeServiceMock.loadSimilarRecipes).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
   });
 });

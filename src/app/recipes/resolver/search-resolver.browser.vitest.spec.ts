@@ -9,14 +9,14 @@ import { searchResolver } from './search-resolver';
 
 describe('searchResolver (Vitest)', () => {
   const recipeServiceMock = {
-    queryReacipeSearch: vi.fn(),
+    searchRecipesByQuery: vi.fn(),
   };
 
   const executeResolver: ResolveFn<SearchRecipe[]> = (...resolverParameters) =>
     TestBed.runInInjectionContext(() => searchResolver(...resolverParameters));
 
   beforeEach(() => {
-    recipeServiceMock.queryReacipeSearch.mockReset();
+    recipeServiceMock.searchRecipesByQuery.mockReset();
 
     TestBed.configureTestingModule({
       providers: [{ provide: RecipeService, useValue: recipeServiceMock }],
@@ -31,7 +31,7 @@ describe('searchResolver (Vitest)', () => {
     const result = await executeResolver(routeStub as any, {} as any);
 
     expect(result).toEqual([]);
-    expect(recipeServiceMock.queryReacipeSearch).not.toHaveBeenCalled();
+    expect(recipeServiceMock.searchRecipesByQuery).not.toHaveBeenCalled();
   });
 
   it('queries the service and returns results when q is present', async () => {
@@ -40,7 +40,7 @@ describe('searchResolver (Vitest)', () => {
       { sourceId: 2, title: 'Receta 2', image: 'img2' } as SearchRecipe,
     ];
 
-    recipeServiceMock.queryReacipeSearch.mockReturnValue(of(recipesMock));
+    recipeServiceMock.searchRecipesByQuery.mockReturnValue(of(recipesMock));
 
     const routeStub = {
       queryParamMap: convertToParamMap({ q: 'pollo' }),
@@ -48,7 +48,9 @@ describe('searchResolver (Vitest)', () => {
 
     const result = await executeResolver(routeStub as any, {} as any);
 
-    expect(recipeServiceMock.queryReacipeSearch).toHaveBeenCalledWith('pollo');
+    expect(recipeServiceMock.searchRecipesByQuery).toHaveBeenCalledWith(
+      'pollo',
+    );
     expect(result).toEqual(recipesMock);
   });
 });

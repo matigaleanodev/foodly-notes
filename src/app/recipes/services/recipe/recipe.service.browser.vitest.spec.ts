@@ -118,6 +118,42 @@ describe('RecipeService (Vitest)', () => {
     expect(service.recipes()).toEqual(recipesMock);
   });
 
+  it('loads recipe detail from the API without wrapping the observable in a promise', async () => {
+    const detail = { sourceId: 10 };
+    apiMock.getRecipeDetail.mockReturnValue(of(detail));
+
+    const result = await new Promise((resolve) => {
+      service.loadRecipeDetail(10).subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getRecipeDetail).toHaveBeenCalledWith(10);
+    expect(result).toEqual(detail);
+  });
+
+  it('loads similar recipes from the API without wrapping the observable in a promise', async () => {
+    const similarRecipes = [{ sourceId: 5 }];
+    apiMock.getSimilarRecipes.mockReturnValue(of(similarRecipes));
+
+    const result = await new Promise((resolve) => {
+      service.loadSimilarRecipes(5).subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getSimilarRecipes).toHaveBeenCalledWith(5);
+    expect(result).toEqual(similarRecipes);
+  });
+
+  it('loads search results from the API without wrapping the observable in a promise', async () => {
+    const searchResults = [{ sourceId: 7, title: 'Receta', image: 'img' }];
+    apiMock.getRecipesByQuery.mockReturnValue(of(searchResults));
+
+    const result = await new Promise((resolve) => {
+      service.searchRecipesByQuery('pollo').subscribe((value) => resolve(value));
+    });
+
+    expect(apiMock.getRecipesByQuery).toHaveBeenCalledWith('pollo');
+    expect(result).toEqual(searchResults);
+  });
+
   it('selects a recipe', () => {
     service.selectRecipe(recipesMock[0]);
 

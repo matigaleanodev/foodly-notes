@@ -38,15 +38,15 @@ export class RecipeService {
     }
   }
 
-  async loadRecipeDeatil(sourceId: number) {
+  loadRecipeDetail(sourceId: number) {
     return this._api.getRecipeDetail(sourceId);
   }
 
-  async loadSimilaRecipes(sourceId: number) {
+  loadSimilarRecipes(sourceId: number) {
     return this._api.getSimilarRecipes(sourceId);
   }
 
-  async queryReacipeSearch(query: string) {
+  searchRecipesByQuery(query: string) {
     return this._api.getRecipesByQuery(query);
   }
 
