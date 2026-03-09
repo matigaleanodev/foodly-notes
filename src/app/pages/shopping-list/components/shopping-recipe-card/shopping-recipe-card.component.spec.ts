@@ -54,7 +54,7 @@ describe('ShoppingRecipeCardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ShoppingRecipeCardComponent, TranslatePipeStub],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         {
           provide: ShoppingListService,
           useValue: shoppingListServiceMock,

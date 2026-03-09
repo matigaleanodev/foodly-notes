@@ -10,7 +10,7 @@ describe('AppComponent', () => {
       imports: [AppComponent],
       providers: [
         provideRouter([]),
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
       ],
     }).compileComponents();
 

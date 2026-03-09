@@ -14,7 +14,7 @@ describe('TermsPage', () => {
       imports: [TermsPage, TranslatePipeStub],
       providers: [
         provideRouter([]),
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
       ],
     }).compileComponents();
 

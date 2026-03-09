@@ -37,7 +37,7 @@ describe('FavoritesPage', () => {
     await TestBed.configureTestingModule({
       imports: [FavoritesPage, TranslatePipeStub],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
       ],

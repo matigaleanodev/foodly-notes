@@ -55,7 +55,7 @@ describe('RecipePage', () => {
     await TestBed.configureTestingModule({
       imports: [RecipePage],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: TranslateService, useValue: translateServiceMock },

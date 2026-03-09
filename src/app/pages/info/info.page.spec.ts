@@ -20,7 +20,7 @@ describe('InfoPage', () => {
       imports: [InfoPage],
       providers: [
         provideRouter([]),
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: AppInfoService, useValue: AppInfoServiceMock },
       ],
     }).compileComponents();

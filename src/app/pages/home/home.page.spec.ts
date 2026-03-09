@@ -78,7 +78,7 @@ describe('HomePage', () => {
         EmptyStatesStubComponent,
       ],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
       ],

@@ -61,7 +61,7 @@ describe('ShoppingListPage', () => {
     await TestBed.configureTestingModule({
       imports: [ShoppingListPage, TranslatePipeStub],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: ShoppingListService, useValue: shoppingListServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
         {

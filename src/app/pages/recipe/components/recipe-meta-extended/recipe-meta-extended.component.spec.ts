@@ -11,7 +11,7 @@ describe('RecipeMetaExtendedComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RecipeMetaExtendedComponent, TranslatePipeStub],
-      providers: [{ provide: Storage, useValue: IonicStorageMock }],
+      providers: [{ provide: Storage, useClass: IonicStorageMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeMetaExtendedComponent);

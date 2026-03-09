@@ -25,7 +25,7 @@ describe('RecipeInstructionsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RecipeInstructionsComponent, TranslatePipeStub],
-      providers: [{ provide: Storage, useValue: IonicStorageMock }],
+      providers: [{ provide: Storage, useClass: IonicStorageMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeInstructionsComponent);

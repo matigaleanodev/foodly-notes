@@ -36,7 +36,7 @@ describe('SearchPage', () => {
     await TestBed.configureTestingModule({
       imports: [SearchPage],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: RecipeService, useValue: recipeServiceMock },
         { provide: FavoritesService, useValue: favoritesServiceMock },
       ],

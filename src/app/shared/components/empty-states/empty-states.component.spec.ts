@@ -20,7 +20,7 @@ describe('EmptyStatesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EmptyStatesComponent, TranslatePipeStub],
       providers: [
-        { provide: Storage, useValue: IonicStorageMock },
+        { provide: Storage, useClass: IonicStorageMock },
         { provide: TranslateService, useValue: translateMock },
       ],
     }).compileComponents();
