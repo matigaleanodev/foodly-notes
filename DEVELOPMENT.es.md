@@ -184,3 +184,8 @@ La estructura principal del proyecto se organiza con:
 - `npm run test:vitest:ci` sigue disponible como comando explícito de Vitest
 - Capacitor se usa solo para capacidades nativas
 - La validación Android asume que el bundle web fue copiado después del último `npm run build`
+- La modernización Angular debe seguir siendo incremental: mantener `signals`, `computed`, `resource` y control flow moderno en UI nueva o tocada, pero evitar reescrituras amplias de pantallas existentes cuando el `subscribe()` imperativo actual está atado al lifecycle o al refresher de Ionic y ya se comporta de forma predecible
+- Priorizar esa modernización solo cuando elimine manejo de estado duplicado, flujo de datos confuso o templates frágiles; no conviene reescribir pantallas estables como legales/info solo por consistencia estilística
+- Favoritos y shopping list siguen siendo estado local intencional de este frontend; no conviene sumar sincronización backend sin contrato explícito ni decisión de roadmap en `foodly-notes-api`
+
+---

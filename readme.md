@@ -52,6 +52,7 @@ npm run i18n:check
 - `Ionic Storage` se usa solo como estado local de aplicación para idioma, favoritos y progreso de shopping list.
 - Favoritos y shopping list siguen siendo flujos frontend-owned y locales mientras no exista una decisión backend que cambie ese límite.
 - La API sigue siendo la fuente de verdad para datos de recetas, búsqueda, similares y agregación de ingredientes.
+- En el estado actual del producto no existe contrato backend para sincronizar favoritos ni shopping list entre dispositivos; para esta release se mantienen 100% locales.
 
 ---
 

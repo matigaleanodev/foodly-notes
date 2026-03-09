@@ -188,5 +188,8 @@ The project follows a feature-based structure with:
 - Android validation currently assumes the web bundle was copied after the latest `npm run build`
 - `npm run test:ci` is the stable CI entrypoint and runs the full Vitest stack
 - `npm run test:vitest:ci` remains available as the explicit Vitest command
+- Angular modernization should stay incremental: keep `signals`, `computed`, `resource`, and modern template control flow in new or touched UI work, but avoid broad rewrites of existing pages when the current imperative `subscribe()` logic is tied to Ionic lifecycle or refresher flows and already behaves predictably
+- Prioritize modernization only when it removes duplicated state handling, unclear data flow, or brittle template logic; do not rewrite stable screens such as legal/info pages just for stylistic consistency
+- Favorites and shopping-list state are intentionally local in this repo for now; do not add backend sync without an explicit contract and roadmap decision in `foodly-notes-api`
 
 ---
