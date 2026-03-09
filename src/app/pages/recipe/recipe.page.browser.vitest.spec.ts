@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipePage } from './recipe.page';
@@ -110,5 +110,23 @@ describe('RecipePage (Vitest)', () => {
       title: 'Receta test',
       image: 'image.jpg',
     });
+  });
+
+  it('surfaces a refresh error without clearing the current recipe', () => {
+    const refresherEvent = {
+      target: {
+        complete: vi.fn(),
+      },
+    } as any;
+
+    recipeServiceMock.refreshRecipeDetail.mockReturnValueOnce(
+      throwError(() => new Error('refresh failed')),
+    );
+
+    component.onRefresh(refresherEvent);
+
+    expect(component.recipe()).toEqual(recipeMock);
+    expect(component.errorStateKey()).toBe('xErrorActualizacionReceta');
+    expect(refresherEvent.target.complete).toHaveBeenCalled();
   });
 });

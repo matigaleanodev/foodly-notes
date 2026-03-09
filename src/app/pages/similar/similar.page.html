@@ -38,7 +38,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
+        <app-empty-states imagen="receta" [text]="emptyStateKey()" />
       </ion-col>
       }
       }

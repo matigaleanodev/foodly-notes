@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchPage } from './search.page';
@@ -66,6 +66,30 @@ describe('SearchPage (Vitest)', () => {
     expect(recipeServiceMock.refreshSearch).toHaveBeenCalledWith('pollo');
     expect(component.recipes()).toEqual(recipesMock);
     expect(component.isLoading()).toBe(false);
+    expect(component.errorStateKey()).toBeNull();
+  });
+
+  it('shows a prompt when the query is empty', async () => {
+    fixture.componentRef.setInput('q', '');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.emptyStateKey()).toBe('xBuscaTuProximaReceta');
+  });
+
+  it('exposes an explicit error state when search fails', async () => {
+    recipeServiceMock.refreshSearch.mockReturnValueOnce(
+      throwError(() => new Error('search failed')),
+    );
+
+    fixture.componentRef.setInput('q', 'milanesa');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.errorStateKey()).toBe('xErrorBusquedaRecetas');
+    expect(component.emptyStateKey()).toBe('xErrorBusquedaRecetas');
   });
 
   it('loads favorites when entering the view', () => {

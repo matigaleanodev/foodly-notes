@@ -63,6 +63,7 @@ export class SimilarPage {
 
   readonly recipes = signal<SimilarRecipe[]>([]);
   readonly isLoading = signal(true);
+  readonly errorStateKey = signal<string | null>(null);
   readonly skeletonCards = Array.from({ length: 12 });
 
   readonly _translator = inject(TranslateService);
@@ -83,6 +84,7 @@ export class SimilarPage {
 
       if (!sourceId) {
         this.recipes.set([]);
+        this.errorStateKey.set(null);
         this.isLoading.set(false);
         return;
       }
@@ -123,6 +125,14 @@ export class SimilarPage {
     this._recipes.toRecipeDetail(sourceId);
   }
 
+  readonly emptyStateKey = (): string => {
+    if (this.errorStateKey()) {
+      return this.errorStateKey() ?? 'xErrorRecetasSimilares';
+    }
+
+    return 'xSinRecetasSimilares';
+  };
+
   private _loadSimilarRecipes(
     sourceId: number,
     showSkeleton: boolean,
@@ -131,6 +141,8 @@ export class SimilarPage {
     if (showSkeleton) {
       this.isLoading.set(true);
     }
+
+    this.errorStateKey.set(null);
 
     this._recipes
       .refreshSimilarRecipes(sourceId)
@@ -144,7 +156,10 @@ export class SimilarPage {
       )
       .subscribe({
         next: (recipes) => this.recipes.set(recipes),
-        error: () => this.recipes.set([]),
+        error: () => {
+          this.recipes.set([]);
+          this.errorStateKey.set('xErrorRecetasSimilares');
+        },
       });
   }
 }

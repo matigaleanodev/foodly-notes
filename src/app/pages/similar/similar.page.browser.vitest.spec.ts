@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SimilarPage } from './similar.page';
@@ -71,6 +71,7 @@ describe('SimilarPage (Vitest)', () => {
     expect(recipeServiceMock.refreshSimilarRecipes).toHaveBeenCalledWith(1);
     expect(component.recipes()).toEqual(recipesMock);
     expect(component.isLoading()).toBe(false);
+    expect(component.errorStateKey()).toBeNull();
   });
 
   it('computes the subtitle without a selected recipe', () => {
@@ -114,5 +115,30 @@ describe('SimilarPage (Vitest)', () => {
     component.detalleReceta(recipesMock[0]);
 
     expect(recipeServiceMock.toRecipeDetail).toHaveBeenCalledWith(1);
+  });
+
+  it('exposes an empty-state key when there are no similar recipes', async () => {
+    recipeServiceMock.refreshSimilarRecipes.mockReturnValueOnce(of([]));
+
+    fixture.componentRef.setInput('id', '2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.emptyStateKey()).toBe('xSinRecetasSimilares');
+  });
+
+  it('exposes an error-state key when similar recipes fail to load', async () => {
+    recipeServiceMock.refreshSimilarRecipes.mockReturnValueOnce(
+      throwError(() => new Error('similar failed')),
+    );
+
+    fixture.componentRef.setInput('id', '2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.recipes()).toEqual([]);
+    expect(component.errorStateKey()).toBe('xErrorRecetasSimilares');
+    expect(component.emptyStateKey()).toBe('xErrorRecetasSimilares');
   });
 });

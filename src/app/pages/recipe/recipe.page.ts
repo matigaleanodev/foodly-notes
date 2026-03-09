@@ -36,6 +36,7 @@ import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeSummaryComponent } from './components/recipe-summary/recipe-summary.component';
 import { Language } from '@shared/translate/language.model';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-recipe',
@@ -63,12 +64,14 @@ import { Language } from '@shared/translate/language.model';
     RecipeAttrComponent,
     RecipeMetaExtendedComponent,
     RecipeSummaryComponent,
+    TranslatePipe,
   ],
 })
 export class RecipePage {
   readonly data = input.required<RecipeDetail>();
 
   readonly recipe = linkedSignal(() => this.data());
+  readonly errorStateKey = signal<string | null>(null);
 
   private readonly _favorites = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
@@ -96,7 +99,11 @@ export class RecipePage {
       if (lang !== this._initialLang()) {
         const { sourceId } = this.data();
         this._recipes.refreshRecipeDetail(sourceId).subscribe({
-          next: (recipe) => this.recipe.set(recipe),
+          next: (recipe) => {
+            this.recipe.set(recipe);
+            this.errorStateKey.set(null);
+          },
+          error: () => this.errorStateKey.set('xErrorActualizacionReceta'),
         });
 
         this._initialLang.set(lang);
@@ -113,9 +120,11 @@ export class RecipePage {
     this._recipes.refreshRecipeDetail(sourceId).subscribe({
       next: (recipe) => {
         this.recipe.set(recipe);
+        this.errorStateKey.set(null);
         event.target.complete();
       },
       error: () => {
+        this.errorStateKey.set('xErrorActualizacionReceta');
         event.target.complete();
       },
     });

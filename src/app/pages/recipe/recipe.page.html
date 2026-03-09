@@ -16,6 +16,15 @@
     <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
   </div>
   <ion-grid class="page-grid">
+    @if (errorStateKey()) {
+    <ion-row>
+      <ion-col size="12">
+        <div class="recipe-status-banner" role="status">
+          {{ errorStateKey()! | translate }}
+        </div>
+      </ion-col>
+    </ion-row>
+    }
     <ion-row>
       <ion-col size="12">
         <app-recipe-summary [summary]="recipe().summary" />
