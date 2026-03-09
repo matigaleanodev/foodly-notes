@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipeService } from './recipe.service';
 import { RecipeApiService } from '../recipe-api/recipe-api.service';
@@ -7,7 +8,7 @@ import { NavService } from '@shared/services/nav/nav.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { StorageService } from '@shared/services/storage/storage.service';
 
-describe('RecipeService', () => {
+describe('RecipeService (Vitest)', () => {
   let service: RecipeService;
 
   const recipesMock: DailyRecipe[] = [
@@ -16,46 +17,38 @@ describe('RecipeService', () => {
   ];
 
   const apiMock = {
-    getDailyRecipes: jasmine
-      .createSpy('getDailyRecipes')
-      .and.returnValue(of(recipesMock)),
-    getRecipeDetail: jasmine
-      .createSpy('getRecipeDetail')
-      .and.returnValue(of({})),
-    getSimilarRecipes: jasmine
-      .createSpy('getSimilarRecipes')
-      .and.returnValue(of([])),
-    getRecipesByQuery: jasmine
-      .createSpy('getRecipesByQuery')
-      .and.returnValue(of([])),
+    getDailyRecipes: vi.fn(),
+    getRecipeDetail: vi.fn(),
+    getSimilarRecipes: vi.fn(),
+    getRecipesByQuery: vi.fn(),
   };
 
   const navMock = {
-    search: jasmine.createSpy('search'),
-    forward: jasmine.createSpy('forward'),
+    search: vi.fn(),
+    forward: vi.fn(),
   };
 
   const storageMock = {
-    getItem: jasmine.createSpy('getItem').and.resolveTo(null),
-    setItem: jasmine.createSpy('setItem').and.resolveTo(undefined),
+    getItem: vi.fn(),
+    setItem: vi.fn(),
   };
 
   beforeEach(() => {
-    apiMock.getDailyRecipes.calls.reset();
-    apiMock.getRecipeDetail.calls.reset();
-    apiMock.getSimilarRecipes.calls.reset();
-    apiMock.getRecipesByQuery.calls.reset();
-    navMock.search.calls.reset();
-    navMock.forward.calls.reset();
-    storageMock.getItem.calls.reset();
-    storageMock.setItem.calls.reset();
+    apiMock.getDailyRecipes.mockReset();
+    apiMock.getRecipeDetail.mockReset();
+    apiMock.getSimilarRecipes.mockReset();
+    apiMock.getRecipesByQuery.mockReset();
+    navMock.search.mockReset();
+    navMock.forward.mockReset();
+    storageMock.getItem.mockReset();
+    storageMock.setItem.mockReset();
 
-    apiMock.getDailyRecipes.and.returnValue(of(recipesMock));
-    apiMock.getRecipeDetail.and.returnValue(of({}));
-    apiMock.getSimilarRecipes.and.returnValue(of([]));
-    apiMock.getRecipesByQuery.and.returnValue(of([]));
-    storageMock.getItem.and.resolveTo(null);
-    storageMock.setItem.and.resolveTo(undefined);
+    apiMock.getDailyRecipes.mockReturnValue(of(recipesMock));
+    apiMock.getRecipeDetail.mockReturnValue(of({}));
+    apiMock.getSimilarRecipes.mockReturnValue(of([]));
+    apiMock.getRecipesByQuery.mockReturnValue(of([]));
+    storageMock.getItem.mockResolvedValue(null);
+    storageMock.setItem.mockResolvedValue(undefined);
 
     TestBed.configureTestingModule({
       providers: [
@@ -69,11 +62,11 @@ describe('RecipeService', () => {
     service = TestBed.inject(RecipeService);
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería cargar recetas diarias y actualizar el signal', async () => {
+  it('loads daily recipes and updates the signal', async () => {
     await service.loadDailyRecipes();
 
     expect(storageMock.getItem).toHaveBeenCalledWith('daily_recipes');
@@ -81,8 +74,8 @@ describe('RecipeService', () => {
     expect(service.recipes()).toEqual(recipesMock);
   });
 
-  it('debería reutilizar la cache del día y evitar la API', async () => {
-    storageMock.getItem.and.resolveTo({
+  it('reuses same-day cache and skips the API', async () => {
+    storageMock.getItem.mockResolvedValue({
       recipes: recipesMock,
       date: new Date().toISOString().split('T')[0],
     });
@@ -93,7 +86,7 @@ describe('RecipeService', () => {
     expect(service.recipes()).toEqual(recipesMock);
   });
 
-  it('debería persistir las recetas diarias cuando la API responde', async () => {
+  it('persists daily recipes when the API responds', async () => {
     await service.loadDailyRecipes();
 
     expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes', {
@@ -102,12 +95,12 @@ describe('RecipeService', () => {
     });
   });
 
-  it('debería usar la cache previa si la API falla', async () => {
-    storageMock.getItem.and.resolveTo({
+  it('falls back to stale cache when the API fails', async () => {
+    storageMock.getItem.mockResolvedValue({
       recipes: recipesMock,
       date: '2000-01-01',
     });
-    apiMock.getDailyRecipes.and.returnValue(
+    apiMock.getDailyRecipes.mockReturnValue(
       throwError(() => new Error('network error')),
     );
 
@@ -116,33 +109,34 @@ describe('RecipeService', () => {
     expect(service.recipes()).toEqual(recipesMock);
   });
 
-  it('debería refrescar recetas diarias sin loading', (done) => {
-    service.refreshDailyRecipes().subscribe((result) => {
-      expect(result).toEqual(recipesMock);
-      expect(service.recipes()).toEqual(recipesMock);
-      done();
+  it('refreshes daily recipes without loading state', async () => {
+    const result = await new Promise((resolve) => {
+      service.refreshDailyRecipes().subscribe((value) => resolve(value));
     });
+
+    expect(result).toEqual(recipesMock);
+    expect(service.recipes()).toEqual(recipesMock);
   });
 
-  it('debería seleccionar una receta', () => {
+  it('selects a recipe', () => {
     service.selectRecipe(recipesMock[0]);
 
     expect(service.recipeSelected()).toEqual(recipesMock[0]);
   });
 
-  it('debería navegar a búsqueda', () => {
+  it('navigates to search', () => {
     service.searchRecipes('pollo');
 
     expect(navMock.search).toHaveBeenCalledWith('pollo');
   });
 
-  it('debería navegar al detalle de receta', () => {
+  it('navigates to recipe detail', () => {
     service.toRecipeDetail(10);
 
     expect(navMock.forward).toHaveBeenCalledWith('recipe/10');
   });
 
-  it('debería navegar a recetas similares', () => {
+  it('navigates to similar recipes', () => {
     service.toSimilarRecipes(5);
 
     expect(navMock.forward).toHaveBeenCalledWith('similar/5');

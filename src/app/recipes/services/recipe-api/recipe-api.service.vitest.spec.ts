@@ -1,26 +1,31 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipeApiService } from './recipe-api.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { Language } from '@shared/translate/language.model';
 import { environment } from '@env/environment';
 
-describe('RecipeApiService', () => {
+describe('RecipeApiService (Vitest)', () => {
   let service: RecipeApiService;
   let httpMock: HttpTestingController;
 
   const translateMock = {
-    currentLang: jasmine.createSpy('currentLang').and.returnValue(Language.EN),
+    currentLang: vi.fn(),
   };
 
   beforeEach(() => {
+    translateMock.currentLang.mockReset();
+    translateMock.currentLang.mockReturnValue(Language.EN);
+
     TestBed.configureTestingModule({
-      imports: [],
       providers: [
+        provideHttpClient(),
         provideHttpClientTesting(),
         RecipeApiService,
         { provide: TranslateService, useValue: translateMock },
@@ -35,13 +40,12 @@ describe('RecipeApiService', () => {
     httpMock.verify();
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería obtener recetas diarias con lang en', () => {
-    translateMock.currentLang.and.returnValue(Language.EN);
-
+  it('gets daily recipes with lang en', () => {
+    translateMock.currentLang.mockReturnValue(Language.EN);
     service = TestBed.inject(RecipeApiService);
 
     service.getDailyRecipes().subscribe();
@@ -54,9 +58,8 @@ describe('RecipeApiService', () => {
     req.flush([]);
   });
 
-  it('debería usar lang es cuando el idioma es español', () => {
-    translateMock.currentLang.and.returnValue(Language.ES);
-
+  it('uses lang es when current language is spanish', () => {
+    translateMock.currentLang.mockReturnValue(Language.ES);
     service = TestBed.inject(RecipeApiService);
 
     service.getDailyRecipes().subscribe();
@@ -69,8 +72,8 @@ describe('RecipeApiService', () => {
     req.flush([]);
   });
 
-  it('debería obtener el detalle de una receta con lang', () => {
-    translateMock.currentLang.and.returnValue(Language.EN);
+  it('gets recipe detail with lang', () => {
+    translateMock.currentLang.mockReturnValue(Language.EN);
     service = TestBed.inject(RecipeApiService);
 
     service.getRecipeDetail(10).subscribe();
@@ -81,7 +84,7 @@ describe('RecipeApiService', () => {
     req.flush({});
   });
 
-  it('debería obtener recetas similares sin lang', () => {
+  it('gets similar recipes without lang', () => {
     service.getSimilarRecipes(5).subscribe();
 
     const req = httpMock.expectOne(`${environment.API_URL}/recipes/5/similar`);
@@ -90,8 +93,8 @@ describe('RecipeApiService', () => {
     req.flush([]);
   });
 
-  it('debería obtener ingredientes para recetas vía POST', () => {
-    translateMock.currentLang.and.returnValue(Language.EN);
+  it('posts recipe ingredients with the current lang', () => {
+    translateMock.currentLang.mockReturnValue(Language.EN);
 
     service.getIngredientsForRecipes([1, 2]).subscribe();
 
@@ -108,31 +111,19 @@ describe('RecipeApiService', () => {
     req.flush([]);
   });
 
-  it('debería devolver array vacío si la query está vacía', (done) => {
-    service.getRecipesByQuery('   ').subscribe((result) => {
-      expect(result).toEqual([]);
-      done();
-    });
+  it('returns an empty array when the query is blank', async () => {
+    await expect(
+      new Promise((resolve) => {
+        service.getRecipesByQuery('   ').subscribe((result) => resolve(result));
+      }),
+    ).resolves.toEqual([]);
   });
 
-  it('debería buscar recetas por query válida', () => {
+  it('searches recipes by a valid query', () => {
     service.getRecipesByQuery('pollo').subscribe();
 
     const req = httpMock.expectOne(
       `${environment.API_URL}/recipes/search?q=pollo`,
-    );
-
-    expect(req.request.method).toBe('GET');
-    req.flush([]);
-  });
-
-  it('debería usar lang es cuando el idioma es español', () => {
-    translateMock.currentLang.and.returnValue(Language.ES);
-
-    service.getDailyRecipes().subscribe();
-
-    const req = httpMock.expectOne(
-      `${environment.API_URL}/recipes/daily?lang=es`,
     );
 
     expect(req.request.method).toBe('GET');

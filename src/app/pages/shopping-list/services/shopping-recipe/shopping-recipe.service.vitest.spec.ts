@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ShoppingRecipesService } from './shopping-recipe.service';
 import { RecipeApiService } from '@recipes/services/recipe-api/recipe-api.service';
@@ -8,7 +9,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 
-describe('ShoppingRecipesService', () => {
+describe('ShoppingRecipesService (Vitest)', () => {
   let service: ShoppingRecipesService;
 
   const favoritesMock: DailyRecipe[] = [
@@ -26,12 +27,15 @@ describe('ShoppingRecipesService', () => {
   };
 
   const apiServiceMock = {
-    getIngredientsForRecipes: jasmine
-      .createSpy('getIngredientsForRecipes')
-      .and.returnValue(of(shoppingRecipesMock)),
+    getIngredientsForRecipes: vi.fn(),
   };
 
   beforeEach(() => {
+    apiServiceMock.getIngredientsForRecipes.mockReset();
+    apiServiceMock.getIngredientsForRecipes.mockReturnValue(
+      of(shoppingRecipesMock),
+    );
+
     TestBed.configureTestingModule({
       providers: [
         ShoppingRecipesService,
@@ -43,11 +47,11 @@ describe('ShoppingRecipesService', () => {
     service = TestBed.inject(ShoppingRecipesService);
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('sync debería cargar recetas nuevas basadas en favoritos', async () => {
+  it('sync loads new recipes based on favorites', async () => {
     await service.sync();
 
     expect(apiServiceMock.getIngredientsForRecipes).toHaveBeenCalledWith([
@@ -56,31 +60,27 @@ describe('ShoppingRecipesService', () => {
     expect(service.recipes()).toEqual(shoppingRecipesMock);
   });
 
-  it('refreshSync(false) no debería llamar a la API si no hay nuevos', (done) => {
-    apiServiceMock.getIngredientsForRecipes.calls.reset();
-
+  it('refreshSync(false) skips the API when there are no new recipes', async () => {
     service.recipes.set(shoppingRecipesMock);
 
-    service.refreshSync(false).subscribe((result) => {
-      expect(apiServiceMock.getIngredientsForRecipes).not.toHaveBeenCalled();
-      expect(result).toEqual(shoppingRecipesMock);
-      done();
-    });
+    const result = await firstValueFrom(service.refreshSync(false));
+
+    expect(apiServiceMock.getIngredientsForRecipes).not.toHaveBeenCalled();
+    expect(result).toEqual(shoppingRecipesMock);
   });
 
-  it('refreshSync(true) debería forzar la recarga completa', (done) => {
+  it('refreshSync(true) forces a full reload', async () => {
     service.recipes.set([]);
 
-    service.refreshSync(true).subscribe((result) => {
-      expect(apiServiceMock.getIngredientsForRecipes).toHaveBeenCalledWith([
-        1, 2,
-      ]);
-      expect(result).toEqual(shoppingRecipesMock);
-      done();
-    });
+    const result = await firstValueFrom(service.refreshSync(true));
+
+    expect(apiServiceMock.getIngredientsForRecipes).toHaveBeenCalledWith([
+      1, 2,
+    ]);
+    expect(result).toEqual(shoppingRecipesMock);
   });
 
-  it('getRecipe debería devolver la receta si existe', () => {
+  it('getRecipe returns the recipe when present', () => {
     service.recipes.set(shoppingRecipesMock);
 
     const recipe = service.getRecipe(1);
@@ -88,7 +88,7 @@ describe('ShoppingRecipesService', () => {
     expect(recipe).toEqual(shoppingRecipesMock[0]);
   });
 
-  it('getRecipe debería devolver null si no existe', () => {
+  it('getRecipe returns null when missing', () => {
     service.recipes.set(shoppingRecipesMock);
 
     const recipe = service.getRecipe(999);

@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { ShoppingListService } from './shopping-list.service';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -7,7 +8,7 @@ import { StorageService } from '@shared/services/storage/storage.service';
 import { StorageServiceMock } from '@shared/mocks/storage.mock';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 
-describe('ShoppingListService', () => {
+describe('ShoppingListService (Vitest)', () => {
   let service: ShoppingListService;
   let storage: StorageServiceMock;
 
@@ -33,11 +34,11 @@ describe('ShoppingListService', () => {
     storage = TestBed.inject(StorageService) as unknown as StorageServiceMock;
   });
 
-  it('debería crearse correctamente', () => {
+  it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería inicializar el estado sincronizado con favoritos', async () => {
+  it('initializes state synced with favorites', async () => {
     favoritesSignal.set([]);
     favoritesSignal.set([recipe1, recipe2]);
 
@@ -49,7 +50,7 @@ describe('ShoppingListService', () => {
     ]);
   });
 
-  it('debería mantener solo recetas favoritas existentes al sincronizar', async () => {
+  it('keeps only still-favorite recipes when syncing stored state', async () => {
     await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [10] },
       { recipeId: 3, checkedIngredientIds: [20] },
@@ -64,7 +65,7 @@ describe('ShoppingListService', () => {
     ]);
   });
 
-  it('debería obtener el estado de una receta', async () => {
+  it('gets the state for an existing recipe', async () => {
     await service.init();
 
     const state = service.getRecipeState(1);
@@ -72,13 +73,13 @@ describe('ShoppingListService', () => {
     expect(state?.recipeId).toBe(1);
   });
 
-  it('debería devolver null si no existe el estado de la receta', () => {
+  it('returns null when a recipe state does not exist', () => {
     const state = service.getRecipeState(999);
 
     expect(state).toBeNull();
   });
 
-  it('debería indicar si un ingrediente está marcado', async () => {
+  it('reports whether an ingredient is checked', async () => {
     await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [5] },
     ]);
@@ -87,10 +88,10 @@ describe('ShoppingListService', () => {
 
     await service.init();
 
-    expect(service.isIngredientChecked(1, 5)).toBeTrue();
+    expect(service.isIngredientChecked(1, 5)).toBe(true);
   });
 
-  it('debería marcar un ingrediente y persistir', async () => {
+  it('checks an ingredient and persists state', async () => {
     await service.init();
 
     await service.toggleIngredient(1, 10);
@@ -103,7 +104,7 @@ describe('ShoppingListService', () => {
     expect(stored).toEqual(service.shoppingState());
   });
 
-  it('debería desmarcar un ingrediente', async () => {
+  it('unchecks an ingredient', async () => {
     await storage.setItem('SHOPPING_LIST', [
       { recipeId: 1, checkedIngredientIds: [10] },
     ]);
