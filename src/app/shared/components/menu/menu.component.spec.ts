@@ -1,12 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActionSheetController } from '@ionic/angular/standalone';
 import { provideRouter } from '@angular/router';
 import { MenuComponent } from './menu.component';
 import { TranslateService } from '@shared/translate/translate.service';
 import { ThemeService } from '@shared/services/theme/theme.service';
 import { Language } from '@shared/translate/language.model';
-import { TranslatePipeStub } from '@shared/mocks/translate-pipe.mock';
 import { translateMock } from '@shared/mocks/translate-service.mock';
 
 describe('MenuComponent', () => {
@@ -27,8 +26,14 @@ describe('MenuComponent', () => {
   };
 
   beforeEach(async () => {
+    TestBed.overrideComponent(MenuComponent, {
+      set: {
+        template: '',
+      },
+    });
+
     await TestBed.configureTestingModule({
-      imports: [MenuComponent, TranslatePipeStub],
+      imports: [MenuComponent],
       providers: [
         provideRouter([]),
         { provide: TranslateService, useValue: translateMock },

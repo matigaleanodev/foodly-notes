@@ -41,11 +41,25 @@ http://localhost:4200
 
 ## 🧪 Testing
 
-Run unit tests:
+Run the Karma test runner in watch mode:
 
 ```bash
 npm run test
 ```
+
+Run the reliable CI command with `ChromeHeadlessCI` and fail-fast behavior on unexpected `console.error` output:
+
+```bash
+npm run test:ci
+```
+
+Run the incremental Vitest pilot for services and utilities:
+
+```bash
+npm run test:vitest
+```
+
+Current Vitest scope is intentionally limited to service and utility tests. Ionic component tests still run on Karma until a browser-mode Vitest setup is validated for this repo.
 
 ---
 
@@ -70,7 +84,7 @@ Generate a production build:
 npm run build
 ```
 
-The output will be generated in the `dist/` directory.
+The output is generated in the `www/` directory.
 
 ---
 
@@ -90,5 +104,6 @@ The project follows a feature-based structure with:
 - Environment-specific values are defined in `environment*.ts`
 - App version and stage are resolved dynamically depending on platform
 - Capacitor is used only for native-specific features
+- `npm run test:ci` is the command that should be used by CI and automation
 
 ---

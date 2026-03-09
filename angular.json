@@ -124,6 +124,22 @@
             }
           }
         },
+        "test-vitest": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "buildTarget": "app:build:development",
+            "tsConfig": "tsconfig.spec.json",
+            "include": ["src/**/*.vitest.spec.ts"],
+            "setupFiles": ["src/vitest.setup.ts"]
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false
+            }
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {

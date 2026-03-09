@@ -5,7 +5,7 @@ import {
   convertToParamMap,
 } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { recipeDetailResolver } from './recipe-detail-resolver';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -92,6 +92,25 @@ describe('recipeDetailResolver', () => {
     expect(loadingElementMock.present).toHaveBeenCalled();
     expect(recipeService.loadRecipeDeatil).toHaveBeenCalledWith(1);
     expect(result).toEqual(data);
+    expect(loadingElementMock.dismiss).toHaveBeenCalled();
+  });
+
+  it('debería cerrar el loading aunque el detalle falle', async () => {
+    recipeService.loadRecipeDeatil.and.resolveTo(
+      throwError(() => new Error('detail error')),
+    );
+
+    const route = {
+      paramMap: convertToParamMap({ id: '1' }),
+    } as ActivatedRouteSnapshot;
+
+    await expectAsync(
+      TestBed.runInInjectionContext(() =>
+        recipeDetailResolver(route, {} as RouterStateSnapshot),
+      ),
+    ).toBeRejected();
+
+    expect(loadingElementMock.present).toHaveBeenCalled();
     expect(loadingElementMock.dismiss).toHaveBeenCalled();
   });
 });
