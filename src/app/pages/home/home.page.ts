@@ -76,17 +76,11 @@ export class HomePage {
   }
 
   toggleFavorite(recipe: DailyRecipe) {
-    const isFav = this._favorites.isFavorite(recipe.sourceId);
-    if (isFav) {
-      this._favorites.removeFavorite(recipe.sourceId);
-    } else {
-      this._favorites.addFavorite(recipe);
-    }
+    this._favorites.toggleFavorite(recipe);
   }
 
   toSimilarRecipes(recipe: DailyRecipe) {
-    this._recipes.selectRecipe(recipe);
-    this._recipes.toSimilarRecipes(recipe.sourceId);
+    this._recipes.openSimilarRecipes(recipe);
   }
 
   toRecipeDetail({ sourceId }: DailyRecipe) {

@@ -122,22 +122,12 @@ export class RecipePage {
   }
 
   toggleFavorite() {
-    const recipe = this.recipe();
-    const { sourceId, title, image } = recipe;
-
-    const isFavorite = this._favorites.isFavorite(sourceId);
-
-    if (isFavorite) {
-      this._favorites.removeFavorite(sourceId);
-    } else {
-      this._favorites.addFavorite({ sourceId, title, image });
-    }
+    const { sourceId, title, image } = this.recipe();
+    this._favorites.toggleFavorite({ sourceId, title, image });
   }
 
   toSimilaRecipes() {
     const { sourceId, title, image } = this.recipe();
-    this._recipes.selectRecipe({ sourceId, title, image });
-
-    this._recipes.toSimilarRecipes(sourceId);
+    this._recipes.openSimilarRecipes({ sourceId, title, image });
   }
 }

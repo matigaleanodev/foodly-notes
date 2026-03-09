@@ -79,6 +79,11 @@ export class RecipeService {
     this.recipeSelected.set(recipe);
   }
 
+  openSimilarRecipes(recipe: DailyRecipe) {
+    this.selectRecipe(recipe);
+    this.toSimilarRecipes(recipe.sourceId);
+  }
+
   toSimilarRecipes(sourceId: number) {
     this._nav.forward(`similar/${sourceId}`);
   }

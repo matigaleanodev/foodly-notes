@@ -38,14 +38,12 @@ describe('RecipePage (Vitest)', () => {
 
   const favoritesServiceMock = {
     isFavorite: vi.fn().mockReturnValue(false),
-    addFavorite: vi.fn(),
-    removeFavorite: vi.fn(),
+    toggleFavorite: vi.fn(),
   };
 
   const recipeServiceMock = {
     refreshRecipeDetail: vi.fn().mockReturnValue(of(recipeMock)),
-    selectRecipe: vi.fn(),
-    toSimilarRecipes: vi.fn(),
+    openSimilarRecipes: vi.fn(),
   };
 
   const translateServiceMock = {
@@ -56,11 +54,9 @@ describe('RecipePage (Vitest)', () => {
   beforeEach(async () => {
     favoritesServiceMock.isFavorite.mockClear();
     favoritesServiceMock.isFavorite.mockReturnValue(false);
-    favoritesServiceMock.addFavorite.mockClear();
-    favoritesServiceMock.removeFavorite.mockClear();
+    favoritesServiceMock.toggleFavorite.mockClear();
     recipeServiceMock.refreshRecipeDetail.mockClear();
-    recipeServiceMock.selectRecipe.mockClear();
-    recipeServiceMock.toSimilarRecipes.mockClear();
+    recipeServiceMock.openSimilarRecipes.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [RecipePage],
@@ -96,35 +92,23 @@ describe('RecipePage (Vitest)', () => {
     expect(component.isFavorite()).toBe(true);
   });
 
-  it('adds the recipe to favorites when needed', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(false);
-
+  it('delegates favorite toggling to the service', () => {
     component.toggleFavorite();
 
-    expect(favoritesServiceMock.addFavorite).toHaveBeenCalledWith({
+    expect(favoritesServiceMock.toggleFavorite).toHaveBeenCalledWith({
       sourceId: 1,
       title: 'Receta test',
       image: 'image.jpg',
     });
-  });
-
-  it('removes the recipe from favorites when already saved', () => {
-    favoritesServiceMock.isFavorite.mockReturnValue(true);
-
-    component.toggleFavorite();
-
-    expect(favoritesServiceMock.removeFavorite).toHaveBeenCalledWith(1);
   });
 
   it('navigates to similar recipes', () => {
     component.toSimilaRecipes();
 
-    expect(recipeServiceMock.selectRecipe).toHaveBeenCalledWith({
+    expect(recipeServiceMock.openSimilarRecipes).toHaveBeenCalledWith({
       sourceId: 1,
       title: 'Receta test',
       image: 'image.jpg',
     });
-
-    expect(recipeServiceMock.toSimilarRecipes).toHaveBeenCalledWith(1);
   });
 });

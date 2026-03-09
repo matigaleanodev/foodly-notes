@@ -160,6 +160,13 @@ describe('RecipeService (Vitest)', () => {
     expect(service.recipeSelected()).toEqual(recipesMock[0]);
   });
 
+  it('opens similar recipes using the selected recipe context', () => {
+    service.openSimilarRecipes(recipesMock[0]);
+
+    expect(service.recipeSelected()).toEqual(recipesMock[0]);
+    expect(navMock.forward).toHaveBeenCalledWith('similar/1');
+  });
+
   it('navigates to search', () => {
     service.searchRecipes('pollo');
 

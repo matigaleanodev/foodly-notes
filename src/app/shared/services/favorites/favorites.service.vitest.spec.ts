@@ -48,6 +48,14 @@ describe('FavoritesService (Vitest)', () => {
     expect(service.isFavorite(999)).toBe(false);
   });
 
+  it('toggles a recipe on and off', async () => {
+    await service.toggleFavorite(recipeMock);
+    expect(service.favorites()).toEqual([recipeMock]);
+
+    await service.toggleFavorite(recipeMock);
+    expect(service.favorites()).toEqual([]);
+  });
+
   it('persists favorite removals', async () => {
     await service.addFavorite(recipeMock);
     await service.removeFavorite(recipeMock.sourceId);
