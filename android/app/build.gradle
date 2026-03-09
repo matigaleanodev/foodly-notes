@@ -4,6 +4,8 @@ def releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
 def releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
 def releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
 def releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+def releaseVersionCode = System.getenv("ANDROID_VERSION_CODE")
+def releaseVersionName = System.getenv("ANDROID_VERSION_NAME")
 
 android {
     namespace = "io.matiasgaleano.foodlynotes"
@@ -12,9 +14,9 @@ android {
         applicationId "io.matiasgaleano.foodlynotes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        // Build number format: MMmmpp -> 1.1.0 = 10100
-        versionCode 10100
-        versionName "1.1.0"
+        // Build number format base: MMmmpp -> 1.1.0 = 10100
+        versionCode releaseVersionCode ? releaseVersionCode.toInteger() : 10100
+        versionName releaseVersionName ?: "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
