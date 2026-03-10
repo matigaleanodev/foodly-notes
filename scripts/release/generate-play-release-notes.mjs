@@ -1,12 +1,9 @@
-import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 
 const maxLength = 500;
 const locales = ["en-US", "es-419", "es-US"];
 const outputDirectory = process.env.RELEASE_NOTES_DIR;
 const versionName = process.env.RELEASE_VERSION_NAME;
-const releaseRef = process.env.RELEASE_REF;
-const githubSha = process.env.GITHUB_SHA ?? "";
 
 if (!outputDirectory) {
   throw new Error("Missing RELEASE_NOTES_DIR");
@@ -18,83 +15,50 @@ if (!versionName) {
 
 mkdirSync(outputDirectory, { recursive: true });
 
-const commits = getCommitLines();
-const header = tagHeader(versionName, releaseRef);
-const notes = buildNotes(header, commits);
-
 for (const locale of locales) {
-  writeFileSync(`${outputDirectory}/whatsnew-${locale}`, notes, "utf8");
+  writeFileSync(
+    `${outputDirectory}/whatsnew-${locale}`,
+    buildNotes(locale),
+    "utf8",
+  );
 }
 
-function getCommitLines() {
-  const previousTag = resolvePreviousTag();
-  const range = previousTag ? `${previousTag}..HEAD` : "HEAD~20..HEAD";
-  const output = execGit([
-    "log",
-    "--no-merges",
-    "--pretty=format:%s",
-    range,
-  ]).trim();
+function buildNotes(locale) {
+  const notesByLocale = {
+    "en-US": [
+      `What's new in ${versionName}`,
+      "",
+      "- Better release reliability and Android delivery.",
+      "- Stability improvements and minor polish across the app.",
+      "- Small fixes for a smoother everyday experience.",
+    ].join("\n"),
+    "es-419": [
+      `Novedades de ${versionName}`,
+      "",
+      "- Mejoramos la confiabilidad de las actualizaciones en Android.",
+      "- Ajustes de estabilidad y mejoras generales en la app.",
+      "- Correcciones menores para una experiencia más fluida.",
+    ].join("\n"),
+    "es-US": [
+      `Novedades de ${versionName}`,
+      "",
+      "- Mejoramos la confiabilidad de las actualizaciones en Android.",
+      "- Ajustes de estabilidad y mejoras generales en la app.",
+      "- Correcciones menores para una experiencia más fluida.",
+    ].join("\n"),
+  };
 
-  return output
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .slice(0, 10);
-}
+  const notes = notesByLocale[locale];
 
-function resolvePreviousTag() {
-  try {
-    if (releaseRef.startsWith("tag:")) {
-      return execGit(["describe", "--tags", "--abbrev=0", "HEAD^"]).trim();
-    }
-
-    return execGit(["describe", "--tags", "--abbrev=0"]).trim();
-  } catch {
-    return "";
-  }
-}
-
-function tagHeader(name, ref) {
-  if (ref.startsWith("tag:")) {
-    return `Release ${ref.slice(4)} (${name})`;
-  }
-
-  return `Release ${name}`;
-}
-
-function buildNotes(header, commits) {
-  const fallbackLine = `- Release generated from ${githubSha.slice(0, 7) || "current commit"}`;
-  const lines =
-    commits.length > 0 ? commits.map((line) => `- ${line}`) : [fallbackLine];
-  const selectedLines = [];
-  let candidate = `${header}\n\n${fallbackLine}\n`;
-
-  for (const line of lines) {
-    const nextNotes = `${header}\n\n${[...selectedLines, line].join("\n")}\n`;
-
-    if (nextNotes.length > maxLength) {
-      break;
-    }
-
-    candidate = nextNotes;
-    selectedLines.push(line);
+  if (!notes) {
+    throw new Error(`Unsupported locale for release notes: ${locale}`);
   }
 
-  return truncateNotes(candidate);
-}
-
-function truncateNotes(notes) {
-  if (notes.length <= maxLength) {
-    return notes;
+  if (notes.length > maxLength) {
+    throw new Error(
+      `Release notes exceed ${maxLength} characters for ${locale}`,
+    );
   }
 
-  return `${notes.slice(0, maxLength - 1).trimEnd()}…`;
-}
-
-function execGit(args) {
-  return execFileSync("git", args, {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  return notes;
 }
