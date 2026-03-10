@@ -41,12 +41,13 @@ if (tagVersion && tagVersion !== packageVersion) {
   );
 }
 
-const versionName = tagVersion ?? packageVersion;
+const semanticVersion = tagVersion ?? packageVersion;
+const versionName = `v${semanticVersion}`;
 const shortSha = githubSha.slice(0, 7);
 const releaseRef = tagVersion ? `tag:${githubRefName}` : `commit:${shortSha}`;
-const releaseName = `${versionName}+${shortSha}`;
+const releaseName = versionName;
 
-const semverMatch = versionName.match(/^(\d+)\.(\d+)\.(\d+)$/);
+const semverMatch = semanticVersion.match(/^(\d+)\.(\d+)\.(\d+)$/);
 
 if (!semverMatch) {
   throw new Error(`Unsupported version format: ${versionName}`);
