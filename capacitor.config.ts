@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'io.matiasgaleano.foodlynotes',
   appName: 'Foodly Notes',
   webDir: 'www',
+  android: {
+    allowMixedContent: true,
+  },
   plugins: {
     StatusBar: {
       overlaysWebView: false,
