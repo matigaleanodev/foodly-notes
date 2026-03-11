@@ -43,6 +43,7 @@ describe('RecipePage (Vitest)', () => {
   };
 
   const recipeServiceMock = {
+    loadRecipeDetail: vi.fn().mockReturnValue(of(recipeMock)),
     refreshRecipeDetail: vi.fn().mockReturnValue(of(recipeMock)),
     openSimilarRecipes: vi.fn(),
   };
@@ -56,6 +57,7 @@ describe('RecipePage (Vitest)', () => {
     favoritesServiceMock.isFavorite.mockClear();
     favoritesServiceMock.isFavorite.mockReturnValue(false);
     favoritesServiceMock.toggleFavorite.mockClear();
+    recipeServiceMock.loadRecipeDetail.mockClear();
     recipeServiceMock.refreshRecipeDetail.mockClear();
     recipeServiceMock.openSimilarRecipes.mockClear();
 
@@ -70,8 +72,10 @@ describe('RecipePage (Vitest)', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
+              paramMap: convertToParamMap({ id: '1' }),
               queryParamMap: convertToParamMap({ returnTo: '/favorites' }),
             },
+            paramMap: of(convertToParamMap({ id: '1' })),
           },
         },
       ],
@@ -79,8 +83,6 @@ describe('RecipePage (Vitest)', () => {
 
     fixture = TestBed.createComponent(RecipePage);
     component = fixture.componentInstance;
-
-    fixture.componentRef.setInput('data', recipeMock);
 
     fixture.detectChanges();
   });
@@ -91,6 +93,12 @@ describe('RecipePage (Vitest)', () => {
 
   it('exposes the recipe image', () => {
     expect(component.imageUrl()).toBe('image.jpg');
+  });
+
+  it('loads the recipe detail from the route id on init', () => {
+    expect(recipeServiceMock.loadRecipeDetail).toHaveBeenCalledWith(1);
+    expect(component.recipe()).toEqual(recipeMock);
+    expect(component.isInitialLoading()).toBe(false);
   });
 
   it('exposes the back href from the navigation context', () => {
@@ -143,5 +151,19 @@ describe('RecipePage (Vitest)', () => {
     expect(component.recipe()).toEqual(recipeMock);
     expect(component.errorStateKey()).toBe('xErrorActualizacionReceta');
     expect(refresherEvent.target.complete).toHaveBeenCalled();
+  });
+
+  it('surfaces an initial load error when the route request fails', async () => {
+    recipeServiceMock.loadRecipeDetail.mockReturnValueOnce(
+      throwError(() => new Error('initial load failed')),
+    );
+
+    fixture = TestBed.createComponent(RecipePage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.recipe()).toBeNull();
+    expect(component.errorStateKey()).toBe('xErrorActualizacionReceta');
+    expect(component.isInitialLoading()).toBe(false);
   });
 });

@@ -17,11 +17,14 @@ describe('RecipeApiService (Vitest)', () => {
 
   const translateMock = {
     currentLang: vi.fn(),
+    whenReady: vi.fn(),
   };
 
   beforeEach(() => {
     translateMock.currentLang.mockReset();
+    translateMock.whenReady.mockReset();
     translateMock.currentLang.mockReturnValue(Language.EN);
+    translateMock.whenReady.mockResolvedValue(Language.EN);
 
     TestBed.configureTestingModule({
       providers: [
@@ -88,12 +91,14 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush({});
   });
 
-  it('gets similar recipes without lang', () => {
+  it('gets similar recipes with lang', () => {
     service.getSimilarRecipes(5).subscribe((recipes) => {
       expect(recipes).toEqual([]);
     });
 
-    const req = httpMock.expectOne(`${environment.API_URL}/recipes/5/similar`);
+    const req = httpMock.expectOne(
+      `${environment.API_URL}/recipes/5/similar?lang=en`,
+    );
 
     expect(req.request.method).toBe('GET');
     req.flush([]);
@@ -131,7 +136,7 @@ describe('RecipeApiService (Vitest)', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.API_URL}/recipes/search?q=pollo`,
+      `${environment.API_URL}/recipes/search?q=pollo&lang=en`,
     );
 
     expect(req.request.method).toBe('GET');
@@ -173,7 +178,9 @@ describe('RecipeApiService (Vitest)', () => {
       result = recipes;
     });
 
-    const req = httpMock.expectOne(`${environment.API_URL}/recipes/5/similar`);
+    const req = httpMock.expectOne(
+      `${environment.API_URL}/recipes/5/similar?lang=en`,
+    );
 
     req.flush([
       {
@@ -200,7 +207,7 @@ describe('RecipeApiService (Vitest)', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.API_URL}/recipes/search?q=pollo`,
+      `${environment.API_URL}/recipes/search?q=pollo&lang=en`,
     );
 
     req.flush([

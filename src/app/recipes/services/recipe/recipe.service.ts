@@ -4,8 +4,8 @@ import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { firstValueFrom, map } from 'rxjs';
 import { StorageService } from '@shared/services/storage/storage.service';
-
-const DAILY_KEY = 'daily_recipes';
+import { TranslateService } from '@shared/translate/translate.service';
+import { Language } from '@shared/translate/language.model';
 
 interface RecipeNavigationOptions {
   returnTo?: string;
@@ -18,13 +18,15 @@ export class RecipeService {
   private readonly _api = inject(RecipeApiService);
   private readonly _nav = inject(NavService);
   private readonly _storage = inject(StorageService);
+  private readonly _translate = inject(TranslateService);
 
   readonly recipes = signal<DailyRecipe[]>([]);
 
   readonly recipeSelected = signal<DailyRecipe | null>(null);
 
   async loadDailyRecipes() {
-    const stored = await this._getStoredDaily();
+    const lang = await this._translate.whenReady();
+    const stored = await this._getStoredDaily(lang);
 
     if (stored && this._isToday(stored.date)) {
       this.recipes.set(stored.recipes);
@@ -34,7 +36,7 @@ export class RecipeService {
     try {
       const recetas = await firstValueFrom(this._api.getDailyRecipes());
       this.recipes.set(recetas);
-      await this._storeDaily(recetas);
+      await this._storeDaily(recetas, lang);
     } catch {
       if (stored) {
         this.recipes.set(stored.recipes);
@@ -58,7 +60,7 @@ export class RecipeService {
     return this._api.getDailyRecipes().pipe(
       map((recipes) => {
         this.recipes.set(recipes);
-        void this._storeDaily(recipes);
+        void this._translate.whenReady().then((lang) => this._storeDaily(recipes, lang));
         return recipes;
       }),
     );
@@ -104,17 +106,17 @@ export class RecipeService {
     });
   }
 
-  private async _getStoredDaily() {
-    return this._storage.getItem<StoredDaily>(DAILY_KEY);
+  private async _getStoredDaily(lang: Language) {
+    return this._storage.getItem<StoredDaily>(this._dailyKey(lang));
   }
 
-  private async _storeDaily(recipes: DailyRecipe[]) {
+  private async _storeDaily(recipes: DailyRecipe[], lang: Language) {
     const daily: StoredDaily = {
       recipes,
       date: this._todayString(),
     };
 
-    await this._storage.setItem(DAILY_KEY, daily);
+    await this._storage.setItem(this._dailyKey(lang), daily);
   }
 
   private _isToday(date: string) {
@@ -123,5 +125,9 @@ export class RecipeService {
 
   private _todayString() {
     return new Date().toISOString().split('T')[0];
+  }
+
+  private _dailyKey(lang: Language) {
+    return `daily_recipes_${lang}`;
   }
 }

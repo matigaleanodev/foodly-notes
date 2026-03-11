@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { recipeDetailResolver } from '@recipes/resolver/recipe-detail-resolver';
-
 export const routes: Routes = [
   {
     path: '',
@@ -10,9 +8,6 @@ export const routes: Routes = [
     path: 'recipe/:id',
     loadComponent: () =>
       import('@pages/recipe/recipe.page').then((m) => m.RecipePage),
-    resolve: {
-      data: recipeDetailResolver,
-    },
   },
   {
     path: 'similar/:id',
