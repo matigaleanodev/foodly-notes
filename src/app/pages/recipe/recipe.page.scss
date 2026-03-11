@@ -4,6 +4,13 @@ ion-footer {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.recipe-loading-state {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  color: var(--ion-color-primary);
+}
+
 .recipe-status-banner {
   margin: 1rem 0 0;
   padding: 0.85rem 1rem;
@@ -17,4 +24,8 @@ ion-footer {
 
 :host-context(.ion-color-dark) ion-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+ion-footer.is-hidden {
+  display: none;
 }
