@@ -43,11 +43,16 @@ describe('RecipeApiService (Vitest)', () => {
     httpMock.verify();
   });
 
+  const expectAsyncRequest = async (url: string) => {
+    await Promise.resolve();
+    return httpMock.expectOne(url);
+  };
+
   it('creates the service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('gets daily recipes with lang en', () => {
+  it('gets daily recipes with lang en', async () => {
     translateMock.currentLang.mockReturnValue(Language.EN);
     service = TestBed.inject(RecipeApiService);
 
@@ -55,7 +60,7 @@ describe('RecipeApiService (Vitest)', () => {
       expect(recipes).toEqual([]);
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/daily?lang=en`,
     );
 
@@ -63,7 +68,7 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('uses lang es when current language is spanish', () => {
+  it('uses lang es when current language is spanish', async () => {
     translateMock.currentLang.mockReturnValue(Language.ES);
     service = TestBed.inject(RecipeApiService);
 
@@ -71,7 +76,7 @@ describe('RecipeApiService (Vitest)', () => {
       expect(recipes).toEqual([]);
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/daily?lang=es`,
     );
 
@@ -79,24 +84,26 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('gets recipe detail with lang', () => {
+  it('gets recipe detail with lang', async () => {
     translateMock.currentLang.mockReturnValue(Language.EN);
     service = TestBed.inject(RecipeApiService);
 
     service.getRecipeDetail(10).subscribe();
 
-    const req = httpMock.expectOne(`${environment.API_URL}/recipes/10?lang=en`);
+    const req = await expectAsyncRequest(
+      `${environment.API_URL}/recipes/10?lang=en`,
+    );
 
     expect(req.request.method).toBe('GET');
     req.flush({});
   });
 
-  it('gets similar recipes with lang', () => {
+  it('gets similar recipes with lang', async () => {
     service.getSimilarRecipes(5).subscribe((recipes) => {
       expect(recipes).toEqual([]);
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/5/similar?lang=en`,
     );
 
@@ -130,12 +137,12 @@ describe('RecipeApiService (Vitest)', () => {
     ).resolves.toEqual([]);
   });
 
-  it('searches recipes by a valid query', () => {
+  it('searches recipes by a valid query', async () => {
     service.getRecipesByQuery('pollo').subscribe((recipes) => {
       expect(recipes).toEqual([]);
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/search?q=pollo&lang=en`,
     );
 
@@ -143,14 +150,14 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('normalizes nullable images from daily summaries', () => {
+  it('normalizes nullable images from daily summaries', async () => {
     let result: unknown;
 
     service.getDailyRecipes().subscribe((recipes) => {
       result = recipes;
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/daily?lang=en`,
     );
 
@@ -171,14 +178,14 @@ describe('RecipeApiService (Vitest)', () => {
     ]);
   });
 
-  it('normalizes nullable images from similar summaries', () => {
+  it('normalizes nullable images from similar summaries', async () => {
     let result: unknown;
 
     service.getSimilarRecipes(5).subscribe((recipes) => {
       result = recipes;
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/5/similar?lang=en`,
     );
 
@@ -199,14 +206,14 @@ describe('RecipeApiService (Vitest)', () => {
     ]);
   });
 
-  it('normalizes nullable images from search summaries', () => {
+  it('normalizes nullable images from search summaries', async () => {
     let result: unknown;
 
     service.getRecipesByQuery('pollo').subscribe((recipes) => {
       result = recipes;
     });
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/search?q=pollo&lang=en`,
     );
 
