@@ -7,6 +7,8 @@ import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { StorageService } from '@shared/services/storage/storage.service';
+import { TranslateService } from '@shared/translate/translate.service';
+import { Language } from '@shared/translate/language.model';
 
 describe('RecipeService (Vitest)', () => {
   let service: RecipeService;
@@ -33,6 +35,10 @@ describe('RecipeService (Vitest)', () => {
     setItem: vi.fn(),
   };
 
+  const translateMock = {
+    whenReady: vi.fn(),
+  };
+
   beforeEach(() => {
     apiMock.getDailyRecipes.mockReset();
     apiMock.getRecipeDetail.mockReset();
@@ -42,6 +48,7 @@ describe('RecipeService (Vitest)', () => {
     navMock.forward.mockReset();
     storageMock.getItem.mockReset();
     storageMock.setItem.mockReset();
+    translateMock.whenReady.mockReset();
 
     apiMock.getDailyRecipes.mockReturnValue(of(recipesMock));
     apiMock.getRecipeDetail.mockReturnValue(of({}));
@@ -49,6 +56,7 @@ describe('RecipeService (Vitest)', () => {
     apiMock.getRecipesByQuery.mockReturnValue(of([]));
     storageMock.getItem.mockResolvedValue(null);
     storageMock.setItem.mockResolvedValue(undefined);
+    translateMock.whenReady.mockResolvedValue(Language.ES);
 
     TestBed.configureTestingModule({
       providers: [
@@ -56,6 +64,7 @@ describe('RecipeService (Vitest)', () => {
         { provide: RecipeApiService, useValue: apiMock },
         { provide: NavService, useValue: navMock },
         { provide: StorageService, useValue: storageMock },
+        { provide: TranslateService, useValue: translateMock },
       ],
     });
 
@@ -69,7 +78,7 @@ describe('RecipeService (Vitest)', () => {
   it('loads daily recipes and updates the signal', async () => {
     await service.loadDailyRecipes();
 
-    expect(storageMock.getItem).toHaveBeenCalledWith('daily_recipes');
+    expect(storageMock.getItem).toHaveBeenCalledWith('daily_recipes_es-AR');
     expect(apiMock.getDailyRecipes).toHaveBeenCalled();
     expect(service.recipes()).toEqual(recipesMock);
   });
@@ -89,7 +98,7 @@ describe('RecipeService (Vitest)', () => {
   it('persists daily recipes when the API responds', async () => {
     await service.loadDailyRecipes();
 
-    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes', {
+    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes_es-AR', {
       recipes: recipesMock,
       date: new Date().toISOString().split('T')[0],
     });
@@ -116,10 +125,18 @@ describe('RecipeService (Vitest)', () => {
 
     expect(result).toEqual(recipesMock);
     expect(service.recipes()).toEqual(recipesMock);
-    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes', {
+    expect(storageMock.setItem).toHaveBeenCalledWith('daily_recipes_es-AR', {
       recipes: recipesMock,
       date: new Date().toISOString().split('T')[0],
     });
+  });
+
+  it('uses a different cache key per language', async () => {
+    translateMock.whenReady.mockResolvedValueOnce(Language.EN);
+
+    await service.loadDailyRecipes();
+
+    expect(storageMock.getItem).toHaveBeenCalledWith('daily_recipes_en-US');
   });
 
   it('loads recipe detail from the API without wrapping the observable in a promise', async () => {

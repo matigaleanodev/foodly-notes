@@ -16,9 +16,10 @@ export class TranslateService {
   };
 
   readonly currentLang = signal<Language>(Language.EN);
+  private readonly initPromise: Promise<void>;
 
   constructor() {
-    this.initLang();
+    this.initPromise = this.initLang();
   }
 
   async initLang(): Promise<void> {
@@ -43,6 +44,11 @@ export class TranslateService {
   }
 
   getCurrentLanguage(): Language {
+    return this.currentLang();
+  }
+
+  async whenReady(): Promise<Language> {
+    await this.initPromise;
     return this.currentLang();
   }
 

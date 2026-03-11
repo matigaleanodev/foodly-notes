@@ -12,59 +12,77 @@
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content />
   </ion-refresher>
-  <div>
-    <app-recipe-hero [title]="recipe().title" [imageUrl]="imageUrl()" />
+  @if (isInitialLoading()) {
+  <div class="recipe-loading-state" role="status" aria-live="polite">
+    <ion-spinner name="crescent" />
   </div>
-  <ion-grid class="page-grid">
-    @if (errorStateKey()) {
-    <ion-row>
-      <ion-col size="12">
-        <div class="recipe-status-banner" role="status">
-          {{ errorStateKey()! | translate }}
-        </div>
-      </ion-col>
-    </ion-row>
+  } @else {
+    @if (recipe(); as currentRecipe) {
+    <div>
+      <app-recipe-hero [title]="currentRecipe.title" [imageUrl]="imageUrl()" />
+    </div>
+    <ion-grid class="page-grid">
+      @if (errorStateKey()) {
+      <ion-row>
+        <ion-col size="12">
+          <div class="recipe-status-banner" role="status">
+            {{ errorStateKey()! | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+      }
+      <ion-row>
+        <ion-col size="12">
+          <app-recipe-summary [summary]="currentRecipe.summary" />
+        </ion-col>
+        <ion-col size="12" sizeMd="7" sizeLg="8">
+          <app-recipe-ingredients [ingredients]="currentRecipe.ingredients" />
+        </ion-col>
+        <ion-col size="12" sizeMd="5" sizeLg="4">
+          <app-recipe-meta-extended
+            [cookingMinutes]="currentRecipe.cookingMinutes"
+            [preparationMinutes]="currentRecipe.preparationMinutes"
+            [healthScore]="currentRecipe.healthScore"
+            [aggregateLikes]="currentRecipe.aggregateLikes"
+            [vegetarian]="currentRecipe.vegetarian"
+            [vegan]="currentRecipe.vegan"
+            [glutenFree]="currentRecipe.glutenFree"
+            [dairyFree]="currentRecipe.dairyFree"
+          />
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="12">
+          <app-recipe-instructions [instructions]="currentRecipe.instructions" />
+          <app-recipe-attr
+            [sourceName]="currentRecipe.sourceName"
+            [sourceUrl]="currentRecipe.sourceUrl"
+          />
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    } @else {
+    <ion-grid class="page-grid">
+      <ion-row>
+        <ion-col size="12">
+          <div class="recipe-status-banner" role="status">
+            {{ (errorStateKey() ?? 'xErrorActualizacionReceta') | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
     }
-    <ion-row>
-      <ion-col size="12">
-        <app-recipe-summary [summary]="recipe().summary" />
-      </ion-col>
-      <ion-col size="12" sizeMd="7" sizeLg="8">
-        <app-recipe-ingredients [ingredients]="recipe().ingredients" />
-      </ion-col>
-      <ion-col size="12" sizeMd="5" sizeLg="4">
-        <app-recipe-meta-extended
-          [cookingMinutes]="recipe().cookingMinutes"
-          [preparationMinutes]="recipe().preparationMinutes"
-          [healthScore]="recipe().healthScore"
-          [aggregateLikes]="recipe().aggregateLikes"
-          [vegetarian]="recipe().vegetarian"
-          [vegan]="recipe().vegan"
-          [glutenFree]="recipe().glutenFree"
-          [dairyFree]="recipe().dairyFree"
-        />
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="12">
-        <app-recipe-instructions [instructions]="recipe().instructions" />
-        <app-recipe-attr
-          [sourceName]="recipe().sourceName"
-          [sourceUrl]="recipe().sourceUrl"
-        />
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  }
 </ion-content>
-<ion-footer fixed slot="bottom">
+<ion-footer fixed slot="bottom" [class.is-hidden]="!recipe() || isInitialLoading()">
   <app-recipe-meta
-    [readyInMinutes]="recipe().readyInMinutes"
-    [servings]="recipe().servings"
+    [readyInMinutes]="recipe()?.readyInMinutes ?? 0"
+    [servings]="recipe()?.servings ?? 0"
     [isFavorite]="isFavorite()"
-    [vegetarian]="recipe().vegetarian"
-    [vegan]="recipe().vegan"
-    [glutenFree]="recipe().glutenFree"
-    [dairyFree]="recipe().dairyFree"
+    [vegetarian]="recipe()?.vegetarian ?? false"
+    [vegan]="recipe()?.vegan ?? false"
+    [glutenFree]="recipe()?.glutenFree ?? false"
+    [dairyFree]="recipe()?.dairyFree ?? false"
     (toggleFavorite)="toggleFavorite()"
     (viewSimilar)="toSimilaRecipes()"
   />

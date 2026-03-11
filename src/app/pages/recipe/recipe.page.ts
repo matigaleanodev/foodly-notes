@@ -3,11 +3,11 @@ import {
   computed,
   effect,
   inject,
-  input,
   linkedSignal,
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -21,6 +21,7 @@ import {
   IonBackButton,
   IonButtons,
   IonMenuButton,
+  IonSpinner,
   IonRefresher,
   IonRefresherContent,
   RefresherCustomEvent,
@@ -47,6 +48,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   imports: [
     IonRefresherContent,
     IonRefresher,
+    IonSpinner,
     IonButtons,
     IonMenuButton,
     IonBackButton,
@@ -69,15 +71,18 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   ],
 })
 export class RecipePage {
-  readonly data = input.required<RecipeDetail>();
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _routeParamMap = toSignal(this._route.paramMap, {
+    initialValue: this._route.snapshot.paramMap,
+  });
 
-  readonly recipe = linkedSignal(() => this.data());
+  readonly recipe = linkedSignal<RecipeDetail | null>(() => null);
   readonly errorStateKey = signal<string | null>(null);
+  readonly isInitialLoading = signal(true);
 
   private readonly _favorites = inject(FavoritesService);
   private readonly _recipes = inject(RecipeService);
   private readonly _translate = inject(TranslateService);
-  private readonly _route = inject(ActivatedRoute);
 
   readonly imageUrl = computed(() => {
     const recipe = this.recipe();
@@ -93,6 +98,31 @@ export class RecipePage {
 
   constructor() {
     effect(() => {
+      const sourceId = Number(this._routeParamMap().get('id'));
+      if (!sourceId) {
+        this.recipe.set(null);
+        this.errorStateKey.set('xErrorActualizacionReceta');
+        this.isInitialLoading.set(false);
+        return;
+      }
+
+      this.isInitialLoading.set(true);
+      this.errorStateKey.set(null);
+      this._recipes.loadRecipeDetail(sourceId).subscribe({
+        next: (recipe) => {
+          this.recipe.set(recipe);
+          this.errorStateKey.set(null);
+          this.isInitialLoading.set(false);
+        },
+        error: () => {
+          this.recipe.set(null);
+          this.errorStateKey.set('xErrorActualizacionReceta');
+          this.isInitialLoading.set(false);
+        },
+      });
+    });
+
+    effect(() => {
       const lang = this._translate.currentLang();
       if (!lang) return;
 
@@ -102,7 +132,13 @@ export class RecipePage {
       }
 
       if (lang !== this._initialLang()) {
-        const { sourceId } = this.data();
+        const currentRecipe = this.recipe();
+        if (!currentRecipe) {
+          this._initialLang.set(lang);
+          return;
+        }
+
+        const { sourceId } = currentRecipe;
         this._recipes.refreshRecipeDetail(sourceId).subscribe({
           next: (recipe) => {
             this.recipe.set(recipe);
@@ -117,11 +153,17 @@ export class RecipePage {
   }
 
   isFavorite = computed(() =>
-    this._favorites.isFavorite(this.recipe().sourceId),
+    this.recipe() ? this._favorites.isFavorite(this.recipe()!.sourceId) : false,
   );
 
   onRefresh(event: RefresherCustomEvent) {
-    const { sourceId } = this.data();
+    const currentRecipe = this.recipe();
+    if (!currentRecipe) {
+      event.target.complete();
+      return;
+    }
+
+    const { sourceId } = currentRecipe;
     this._recipes.refreshRecipeDetail(sourceId).subscribe({
       next: (recipe) => {
         this.recipe.set(recipe);
@@ -136,12 +178,18 @@ export class RecipePage {
   }
 
   toggleFavorite() {
-    const { sourceId, title, image } = this.recipe();
+    const currentRecipe = this.recipe();
+    if (!currentRecipe) return;
+
+    const { sourceId, title, image } = currentRecipe;
     this._favorites.toggleFavorite({ sourceId, title, image });
   }
 
   toSimilaRecipes() {
-    const { sourceId, title, image } = this.recipe();
+    const currentRecipe = this.recipe();
+    if (!currentRecipe) return;
+
+    const { sourceId, title, image } = currentRecipe;
     this._recipes.openSimilarRecipes(
       { sourceId, title, image },
       { returnTo: this._currentRoute() },
@@ -149,6 +197,11 @@ export class RecipePage {
   }
 
   private _currentRoute() {
-    return `/recipe/${this.recipe().sourceId}?returnTo=${encodeURIComponent(this.backHref())}`;
+    const currentRecipe = this.recipe();
+    if (!currentRecipe) {
+      return '/recipe';
+    }
+
+    return `/recipe/${currentRecipe.sourceId}?returnTo=${encodeURIComponent(this.backHref())}`;
   }
 }
