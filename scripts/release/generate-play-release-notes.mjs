@@ -28,17 +28,23 @@ function buildNotes(locale) {
     "en-US": [
       `What's new in ${versionName}`,
       "",
-      "- Fix for correct image loading.",
+      "- Daily recipes now load more reliably when your app language is Spanish.",
+      "- Recipe details open with a smoother loading flow while content is being prepared.",
+      "- Search and recipe content stay more consistent with your selected language.",
     ].join("\n"),
     "es-419": [
       `Novedades de ${versionName}`,
       "",
-      "- correccion para la carga correcta de imagenes",
+      "- Las recetas diarias ahora cargan mejor cuando usas la app en espanol.",
+      "- Los detalles de recetas se abren con una carga mas fluida mientras llega el contenido.",
+      "- Las busquedas y el contenido de recetas respetan mejor el idioma elegido.",
     ].join("\n"),
     "es-US": [
       `Novedades de ${versionName}`,
       "",
-      "- correccion para la carga correcta de imagenes",
+      "- Las recetas diarias ahora cargan mejor cuando usas la app en espanol.",
+      "- Los detalles de recetas se abren con una carga mas fluida mientras llega el contenido.",
+      "- Las busquedas y el contenido de recetas respetan mejor el idioma elegido.",
     ].join("\n"),
   };
 
