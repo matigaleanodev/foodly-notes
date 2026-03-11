@@ -28,23 +28,17 @@ function buildNotes(locale) {
     "en-US": [
       `What's new in ${versionName}`,
       "",
-      "- Better release reliability and Android delivery.",
-      "- Stability improvements and minor polish across the app.",
-      "- Small fixes for a smoother everyday experience.",
+      "- Fix for correct image loading.",
     ].join("\n"),
     "es-419": [
       `Novedades de ${versionName}`,
       "",
-      "- Mejoramos la confiabilidad de las actualizaciones en Android.",
-      "- Ajustes de estabilidad y mejoras generales en la app.",
-      "- Correcciones menores para una experiencia más fluida.",
+      "- correccion para la carga correcta de imagenes",
     ].join("\n"),
     "es-US": [
       `Novedades de ${versionName}`,
       "",
-      "- Mejoramos la confiabilidad de las actualizaciones en Android.",
-      "- Ajustes de estabilidad y mejoras generales en la app.",
-      "- Correcciones menores para una experiencia más fluida.",
+      "- correccion para la carga correcta de imagenes",
     ].join("\n"),
   };
 
