@@ -129,6 +129,30 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
+  it('splits and deduplicates ingredient IDs into sequential batches of 20', () => {
+    const ids = Array.from({ length: 21 }, (_, index) => index + 1);
+    let result: unknown;
+    service.getIngredientsForRecipes([...ids, 1]).subscribe(value => result = value);
+    const first = httpMock.expectOne(`${environment.API_URL}/recipes/ingredients`);
+    expect(first.request.body.sourceIds).toEqual(ids.slice(0, 20));
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
+    first.flush([{ sourceId: 1, title: 'First', ingredients: [] }]);
+    const second = httpMock.expectOne(`${environment.API_URL}/recipes/ingredients`);
+    expect(second.request.body.sourceIds).toEqual([21]);
+    second.flush([{ sourceId: 21, title: 'Last', ingredients: [] }]);
+    expect(result).toEqual([
+      { sourceId: 1, title: 'First', ingredients: [] },
+      { sourceId: 21, title: 'Last', ingredients: [] },
+    ]);
+  });
+
+  it('returns an empty ingredient list without making a request', () => {
+    let result: unknown;
+    service.getIngredientsForRecipes([]).subscribe(value => result = value);
+    expect(result).toEqual([]);
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
+  });
+
   it('returns an empty array when the query is blank', async () => {
     await expect(
       new Promise((resolve) => {

@@ -97,4 +97,17 @@ describe('errorInterceptor (Vitest)', () => {
     expect(translateMock.translate).toHaveBeenCalledWith('xErrorDesconocido');
     expect(toastrMock.danger).toHaveBeenCalledWith('xErrorDesconocido');
   });
+  it.each([[429, 'xErrorRateLimit'], [503, 'xErrorServiceBusy']])(
+    'shows the retry-later message for status %s without retrying',
+    async (status, key) => {
+      const httpError = new HttpErrorResponse({ status });
+      const next = vi.fn(() => throwError(() => httpError));
+      await expect(new Promise((_, reject) => {
+        interceptor(new HttpRequest('GET', '/test'), next).subscribe({ error: reject });
+      })).rejects.toBe(httpError);
+      expect(toastrMock.danger).toHaveBeenCalledWith(key);
+      expect(next).toHaveBeenCalledTimes(1);
+    },
+  );
+
 });

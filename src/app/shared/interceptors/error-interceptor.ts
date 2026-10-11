@@ -33,7 +33,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           return throwError(() => error);
         }
 
-        _toastr.danger(_translator.translate('xErrorDesconocido'));
+        const key = error.status === 429
+          ? 'xErrorRateLimit'
+          : error.status === 503
+            ? 'xErrorServiceBusy'
+            : 'xErrorDesconocido';
+        _toastr.danger(_translator.translate(key));
         return throwError(() => error);
       }
 

@@ -1,6 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { concatMap, from, map, Observable, of, reduce, switchMap } from 'rxjs';
 
 import { DailyRecipe, isRecipeSummary } from '@recipes/models/daily-recipe.model';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
@@ -78,12 +78,20 @@ export class RecipeApiService {
   }
 
   getIngredientsForRecipes(sourceIds: number[]): Observable<ShoppingRecipe[]> {
-    return this.http.post<ShoppingRecipe[]>(
-      `${this.baseUrl}/recipes/ingredients`,
-      {
-        sourceIds,
-        lang: this.lang(),
-      },
+    const uniqueIds = [...new Set(sourceIds)];
+    const batches: number[][] = [];
+    for (let offset = 0; offset < uniqueIds.length; offset += 20) {
+      batches.push(uniqueIds.slice(offset, offset + 20));
+    }
+    const lang = this.lang();
+    return from(batches).pipe(
+      concatMap((batch) =>
+        this.http.post<ShoppingRecipe[]>(`${this.baseUrl}/recipes/ingredients`, {
+          sourceIds: batch,
+          lang,
+        }),
+      ),
+      reduce((recipes, batch) => [...recipes, ...batch], [] as ShoppingRecipe[]),
     );
   }
 
