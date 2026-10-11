@@ -38,7 +38,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="receta" [text]="emptyStateKey()" />
+        <app-empty-states imagen="receta" [text]="emptyStateKey()" [actionKey]="errorStateKey() ? 'xReintentar' : 'xExplorarRecetas'" (action)="errorStateKey() ? retry() : exploreRecipes()" />
       </ion-col>
       }
       }

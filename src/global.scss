@@ -245,3 +245,7 @@ ion-router-outlet.app-outlet { position: relative; flex: 1; min-height: 0; }
   .desktop-nav .brand-link { font: 700 2rem var(--ion-font-family-secondary); }
   ion-header:has(.foodly-notes-gradient), ion-tabs > nav { display: none; }
 }
+
+.foodly-notes-gradient ion-back-button:focus-within,
+.foodly-notes-gradient ion-menu-button:focus-within { outline-color: var(--foodly-brand-ink); }
+.recipe-open:focus-visible { outline-offset: -4px; }

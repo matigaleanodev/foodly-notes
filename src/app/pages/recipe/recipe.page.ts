@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   computed,
   effect,
   inject,
@@ -75,6 +76,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
 })
 export class RecipePage {
   private readonly _route = inject(ActivatedRoute);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _routeParamMap = toSignal(this._route.paramMap, {
     initialValue: this._route.snapshot.paramMap,
   });
@@ -121,7 +123,7 @@ export class RecipePage {
   async ionViewWillEnter() { await this._favorites.loadFavorites(); }
 
   jumpTo(id: string) {
-    const section = document.getElementById(id);
+    const section = this.host.nativeElement.querySelector<HTMLElement>(`#${id}`);
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     section?.focus({ preventScroll: true });
   }

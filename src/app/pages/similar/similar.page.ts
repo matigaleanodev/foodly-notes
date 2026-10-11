@@ -1,3 +1,4 @@
+import { NavService } from '@shared/services/nav/nav.service';
 import {
   Component,
   computed,
@@ -86,9 +87,15 @@ export class SimilarPage {
   );
 
   private _request?: Subscription;
+  private readonly reload = signal(0);
+  private readonly nav = inject(NavService);
+
+  retry() { this.reload.update(value => value + 1); }
+  exploreRecipes() { this.nav.root('/home'); }
 
   constructor() {
     effect(onCleanup => {
+      this.reload();
       this._translator.currentLang();
       const sourceId = Number(this.id());
 
