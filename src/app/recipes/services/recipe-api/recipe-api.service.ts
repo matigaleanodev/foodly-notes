@@ -2,7 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { from, map, Observable, of, switchMap } from 'rxjs';
 
-import { DailyRecipe } from '@recipes/models/daily-recipe.model';
+import { DailyRecipe, isRecipeSummary } from '@recipes/models/daily-recipe.model';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
@@ -42,7 +42,7 @@ export class RecipeApiService {
         })
         .pipe(
           map((recipes) =>
-            recipes.map((recipe) => this.normalizeSummary(recipe)),
+            this.normalizeSummaries(recipes),
           ),
         ),
     );
@@ -71,7 +71,7 @@ export class RecipeApiService {
         )
         .pipe(
           map((recipes) =>
-            recipes.map((recipe) => this.normalizeSummary(recipe)),
+            this.normalizeSummaries(recipes),
           ),
         ),
     );
@@ -102,18 +102,19 @@ export class RecipeApiService {
         })
         .pipe(
           map((recipes) =>
-            recipes.map((recipe) => this.normalizeSummary(recipe)),
+            this.normalizeSummaries(recipes),
           ),
         );
     });
   }
 
-  private normalizeSummary(recipe: RecipeSummaryResponse): DailyRecipe {
-    return {
-      sourceId: recipe.sourceId,
-      title: recipe.title,
-      image: recipe.image ?? '',
-    };
+  private normalizeSummaries(recipes: unknown): DailyRecipe[] {
+    if (!Array.isArray(recipes)) throw new Error('Invalid recipe list');
+    return recipes.map(value => {
+      const recipe = value && typeof value === 'object' ? { ...value, image: value.image ?? '' } : value;
+      if (!isRecipeSummary(recipe)) throw new Error('Invalid recipe summary');
+      return { sourceId: recipe.sourceId, title: recipe.title, image: recipe.image };
+    });
   }
 
   private withReadyLanguage<T>(

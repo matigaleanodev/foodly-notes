@@ -1,5 +1,6 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ShoppingListPage } from './shopping-list.page';
@@ -57,7 +58,7 @@ describe('ShoppingListPage (Vitest)', () => {
   };
 
   const translateServiceMock = {
-    currentLang: vi.fn().mockReturnValue('es'),
+    currentLang: signal('es'),
     translate: vi.fn((key: string) => key),
   };
 
@@ -135,4 +136,17 @@ describe('ShoppingListPage (Vitest)', () => {
       returnTo: '/shopping-list',
     });
   });
+  it('keeps listening for language changes after a refresh error', async () => {
+    shoppingRecipesServiceMock.refreshSync.mockReturnValueOnce(throwError(() => new Error('offline')));
+    translateServiceMock.currentLang.set('en');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component.errorStateKey()).toBe('xErrorListaCompras');
+    translateServiceMock.currentLang.set('es');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(shoppingRecipesServiceMock.refreshSync).toHaveBeenCalledTimes(2);
+    expect(component.errorStateKey()).toBeNull();
+  });
+
 });

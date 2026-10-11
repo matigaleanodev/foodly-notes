@@ -233,4 +233,12 @@ describe('RecipeApiService (Vitest)', () => {
       },
     ]);
   });
+  it('rejects malformed summaries instead of exposing an undefined recipe URL', async () => {
+    let failure: unknown;
+    service.getDailyRecipes().subscribe({ error: error => failure = error });
+    const request = await expectAsyncRequest(`${environment.API_URL}/recipes/daily?lang=en`);
+    request.flush([{ title: 'Corrupt record', _doc: { sourceId: 1 } }]);
+    expect(failure).toBeInstanceOf(Error);
+  });
+
 });

@@ -1,4 +1,5 @@
 export const enUS: Record<string, string> = {
+  xErrorListaCompras: "We could not update the list. Your favorites are still saved.",
   xFavoritos: 'Favorites',
   xFavoritosSubitulo: 'Recipes you marked as favorites',
   xFoodlyNotes: 'Foodly Notes',

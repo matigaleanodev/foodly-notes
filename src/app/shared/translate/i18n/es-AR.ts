@@ -1,4 +1,5 @@
 export const esAR: Record<string, string | any> = {
+  xErrorListaCompras: "No pudimos actualizar la lista. Tus favoritos siguen guardados.",
   xFavoritos: 'Favoritos',
   xFavoritosSubitulo: 'Recetas que marcaste como favoritas',
   xFoodlyNotes: 'Foodly Notes',

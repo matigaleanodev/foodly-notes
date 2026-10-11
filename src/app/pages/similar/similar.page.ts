@@ -86,7 +86,8 @@ export class SimilarPage {
   );
 
   constructor() {
-    effect(() => {
+    effect(onCleanup => {
+      this._translator.currentLang();
       const sourceId = Number(this.id());
 
       if (!sourceId) {
@@ -96,7 +97,8 @@ export class SimilarPage {
         return;
       }
 
-      this._loadSimilarRecipes(sourceId, true);
+      const request = this._loadSimilarRecipes(sourceId, true);
+      onCleanup(() => request.unsubscribe());
     });
   }
 
@@ -144,7 +146,7 @@ export class SimilarPage {
 
     this.errorStateKey.set(null);
 
-    this._recipes
+    return this._recipes
       .refreshSimilarRecipes(sourceId)
       .pipe(
         finalize(() => {

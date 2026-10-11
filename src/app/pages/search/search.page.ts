@@ -21,6 +21,7 @@ import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
 import { finalize } from 'rxjs';
+import { TranslateService } from '@shared/translate/translate.service';
 
 @Component({
   selector: 'app-search',
@@ -57,11 +58,19 @@ export class SearchPage {
   readonly _favorites = inject(FavoritesService);
   readonly _route = inject(ActivatedRoute);
 
+  private readonly _translate = inject(TranslateService);
+  private readonly _reload = signal(0);
+
   constructor() {
-    effect(() => {
-      this._loadSearch(this.q().trim());
+    effect(onCleanup => {
+      this._translate.currentLang();
+      this._reload();
+      const request = this._loadSearch(this.q().trim());
+      onCleanup(() => request?.unsubscribe());
     });
   }
+
+  retry() { this._reload.update(value => value + 1); }
 
   ionViewWillEnter() {
     this._favorites.loadFavorites();
@@ -105,7 +114,7 @@ export class SearchPage {
 
     this.isLoading.set(true);
     this.errorStateKey.set(null);
-    this._recipes
+    return this._recipes
       .refreshSearch(query)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({

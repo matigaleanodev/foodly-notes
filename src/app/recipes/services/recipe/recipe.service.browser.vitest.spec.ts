@@ -31,6 +31,7 @@ describe('RecipeService (Vitest)', () => {
   };
 
   const storageMock = {
+    removeItem: vi.fn().mockResolvedValue(undefined),
     getItem: vi.fn(),
     setItem: vi.fn(),
   };
@@ -211,4 +212,11 @@ describe('RecipeService (Vitest)', () => {
       returnTo: undefined,
     });
   });
+  it('evicts malformed cached summaries and requests valid recipes', async () => {
+    storageMock.getItem.mockResolvedValue({ date: new Date().toISOString().split('T')[0], recipes: [{ title: 'Missing ID' }] });
+    await service.loadDailyRecipes();
+    expect(storageMock.removeItem).toHaveBeenCalledWith('daily_recipes_es-AR');
+    expect(service.recipes()).toEqual(recipesMock);
+  });
+
 });
