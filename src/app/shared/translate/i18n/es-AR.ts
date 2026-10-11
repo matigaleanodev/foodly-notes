@@ -1,4 +1,4 @@
-export const esAR: Record<string, string | any> = {
+export const esAR: Record<string, string> = {
   xBuscar: "Buscar",
   xResultadosPara: "Resultados para",
   xRecetasEncontradas: "recetas encontradas",

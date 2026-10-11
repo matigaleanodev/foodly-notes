@@ -22,7 +22,6 @@ describe('SearchPage (Vitest)', () => {
   const recipeServiceMock = {
     searchRecipes: vi.fn(),
     refreshSearch: vi.fn().mockReturnValue(of(recipesMock)),
-    searchRecipesByQuery: vi.fn(),
     openSimilarRecipes: vi.fn(),
     toRecipeDetail: vi.fn(),
   };
@@ -36,7 +35,6 @@ describe('SearchPage (Vitest)', () => {
   beforeEach(async () => {
     recipeServiceMock.searchRecipes.mockClear();
     recipeServiceMock.refreshSearch.mockClear();
-    recipeServiceMock.searchRecipesByQuery.mockClear();
     recipeServiceMock.openSimilarRecipes.mockClear();
     recipeServiceMock.toRecipeDetail.mockClear();
     favoritesServiceMock.loadFavorites.mockClear();
@@ -136,7 +134,6 @@ describe('SearchPage (Vitest)', () => {
     component.searchNewRecipes('pollo');
 
     expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');
-    expect(recipeServiceMock.searchRecipesByQuery).not.toHaveBeenCalled();
   });
   it('cancels an older search so a late response cannot replace the latest result', () => {
     const slow = new Subject<SearchRecipe[]>();

@@ -62,10 +62,6 @@ export class RecipeService {
     return this._api.getSimilarRecipes(sourceId);
   }
 
-  searchRecipesByQuery(query: string) {
-    return this._api.getRecipesByQuery(query);
-  }
-
   refreshDailyRecipes() {
     const request = ++this._dailyRequest;
     return from(this._translate.whenReady()).pipe(

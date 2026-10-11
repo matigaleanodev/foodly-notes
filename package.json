@@ -49,11 +49,12 @@
     "@angular/language-service": "^22.2.2",
     "@capacitor/cli": "^8.5.3",
     "@ionic/angular-toolkit": "^13.0.0",
+    "@types/node": "^24.19.2",
     "@typescript-eslint/eslint-plugin": "^8.71.1",
     "@typescript-eslint/parser": "^8.71.1",
     "@vitest/browser-playwright": "^5.0.3",
     "angular-eslint": "^22.6.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.12.0",
     "jsdom": "^30.1.2",
     "playwright": "^1.64.0",
     "sass": "^1.105.1",
@@ -67,5 +68,10 @@
   },
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
   }
 }

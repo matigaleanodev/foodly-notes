@@ -169,7 +169,7 @@ describe('RecipeService (Vitest)', () => {
     apiMock.getRecipesByQuery.mockReturnValue(of(searchResults));
 
     const result = await new Promise((resolve) => {
-      service.searchRecipesByQuery('pollo').subscribe((value) => resolve(value));
+      service.refreshSearch('pollo').subscribe((value) => resolve(value));
     });
 
     expect(apiMock.getRecipesByQuery).toHaveBeenCalledWith('pollo');
