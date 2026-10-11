@@ -83,8 +83,8 @@ export class RecipeApiService {
     for (let offset = 0; offset < uniqueIds.length; offset += 20) {
       batches.push(uniqueIds.slice(offset, offset + 20));
     }
-    const lang = this.lang();
-    return from(batches).pipe(
+    if (!batches.length) return of([]);
+    return this.withReadyLanguage(lang => from(batches).pipe(
       concatMap((batch) =>
         this.http.post<ShoppingRecipe[]>(`${this.baseUrl}/recipes/ingredients`, {
           sourceIds: batch,
@@ -92,7 +92,7 @@ export class RecipeApiService {
         }),
       ),
       reduce((recipes, batch) => [...recipes, ...batch], [] as ShoppingRecipe[]),
-    );
+    ));
   }
 
   getRecipesByQuery(query: string): Observable<SearchRecipe[]> {

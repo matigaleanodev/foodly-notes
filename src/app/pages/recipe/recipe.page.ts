@@ -39,7 +39,7 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeSummaryComponent } from './components/recipe-summary/recipe-summary.component';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
@@ -133,16 +133,14 @@ export class RecipePage {
     this.isInitialLoading.set(!this.recipe());
     this.errorStateKey.set(null);
     const request = refresh ? this._recipes.refreshRecipeDetail(sourceId) : this._recipes.loadRecipeDetail(sourceId);
-    this._request = request.subscribe({
+    this._request = request.pipe(finalize(() => complete?.())).subscribe({
       next: recipe => {
         this.recipe.set(recipe);
         this.isInitialLoading.set(false);
-        complete?.();
       },
       error: () => {
         this.errorStateKey.set('xErrorActualizacionReceta');
         this.isInitialLoading.set(false);
-        complete?.();
       },
     });
   }

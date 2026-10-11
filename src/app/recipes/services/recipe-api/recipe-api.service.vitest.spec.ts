@@ -111,12 +111,12 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('posts recipe ingredients with the current lang', () => {
+  it('posts recipe ingredients with the current lang', async () => {
     translateMock.currentLang.mockReturnValue(Language.EN);
 
     service.getIngredientsForRecipes([1, 2]).subscribe();
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/ingredients`,
     );
 
@@ -129,11 +129,11 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('splits and deduplicates ingredient IDs into sequential batches of 20', () => {
+  it('splits and deduplicates ingredient IDs into sequential batches of 20', async () => {
     const ids = Array.from({ length: 21 }, (_, index) => index + 1);
     let result: unknown;
     service.getIngredientsForRecipes([...ids, 1]).subscribe(value => result = value);
-    const first = httpMock.expectOne(`${environment.API_URL}/recipes/ingredients`);
+    const first = await expectAsyncRequest(`${environment.API_URL}/recipes/ingredients`);
     expect(first.request.body.sourceIds).toEqual(ids.slice(0, 20));
     httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
     first.flush([{ sourceId: 1, title: 'First', ingredients: [] }]);
@@ -263,6 +263,18 @@ describe('RecipeApiService (Vitest)', () => {
     const request = await expectAsyncRequest(`${environment.API_URL}/recipes/daily?lang=en`);
     request.flush([{ title: 'Corrupt record', _doc: { sourceId: 1 } }]);
     expect(failure).toBeInstanceOf(Error);
+  });
+
+  it('waits for the stored language before requesting shopping ingredients', async () => {
+    let ready!: () => void;
+    translateMock.whenReady.mockReturnValueOnce(new Promise<void>(resolve => ready = resolve));
+    service.getIngredientsForRecipes([1]).subscribe();
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
+    translateMock.currentLang.mockReturnValue(Language.ES);
+    ready();
+    const request = await expectAsyncRequest(`${environment.API_URL}/recipes/ingredients`);
+    expect(request.request.body.lang).toBe('es');
+    request.flush([]);
   });
 
 });

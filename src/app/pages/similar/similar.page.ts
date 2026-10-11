@@ -33,7 +33,7 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-similar',
@@ -85,6 +85,8 @@ export class SimilarPage {
     () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
   );
 
+  private _request?: Subscription;
+
   constructor() {
     effect(onCleanup => {
       this._translator.currentLang();
@@ -97,8 +99,8 @@ export class SimilarPage {
         return;
       }
 
-      const request = this._loadSimilarRecipes(sourceId, true);
-      onCleanup(() => request.unsubscribe());
+      this._loadSimilarRecipes(sourceId, true);
+      onCleanup(() => this._request?.unsubscribe());
     });
   }
 
@@ -140,13 +142,14 @@ export class SimilarPage {
     showSkeleton: boolean,
     onComplete?: () => void,
   ) {
+    this._request?.unsubscribe();
     if (showSkeleton) {
       this.isLoading.set(true);
     }
 
     this.errorStateKey.set(null);
 
-    return this._recipes
+    this._request = this._recipes
       .refreshSimilarRecipes(sourceId)
       .pipe(
         finalize(() => {
