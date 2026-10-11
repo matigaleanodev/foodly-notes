@@ -30,7 +30,7 @@ jobs:
 
     env:
       JAVA_VERSION: "21"
-      NODE_VERSION: "22"
+      NODE_VERSION: "24"
       ANDROID_KEYSTORE_PATH: app/release.keystore
       PLAY_PACKAGE_NAME: io.matiasgaleano.foodlynotes
       GOOGLE_PLAY_TRACK: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.google_play_track || vars.GOOGLE_PLAY_TRACK || 'internal' }}
@@ -43,7 +43,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node 22
+      - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}

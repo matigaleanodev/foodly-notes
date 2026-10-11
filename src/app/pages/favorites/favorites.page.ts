@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   IonContent,
@@ -10,7 +10,7 @@ import {
   IonButtons,
   IonBackButton,
   IonMenuButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -24,6 +24,7 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonBackButton,
     IonMenuButton,

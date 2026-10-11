@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { LoadingController } from '@ionic/angular/standalone';
+import { LoadingController } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';

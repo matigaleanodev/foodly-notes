@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonHeader,
@@ -13,7 +13,7 @@ import {
   IonNote,
   IonList,
   ActionSheetController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { ThemeService } from '@shared/services/theme/theme.service';
 import { Language } from '@shared/translate/language.model';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
@@ -48,6 +48,7 @@ import {
     TranslatePipe,
   ],
   templateUrl: './menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {

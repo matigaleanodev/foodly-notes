@@ -1,11 +1,12 @@
-import { Component, input, output, signal } from '@angular/core';
-import { IonSearchbar } from '@ionic/angular/standalone';
+import { Component, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { IonSearchbar } from '@ionic/angular';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-home-hero',
   imports: [IonSearchbar, TranslatePipe],
   templateUrl: './home-hero.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./home-hero.component.scss'],
 })
 export class HomeHeroComponent {

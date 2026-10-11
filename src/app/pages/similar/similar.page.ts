@@ -5,6 +5,7 @@ import {
   inject,
   input,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,7 +24,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonFooter,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
@@ -39,6 +40,7 @@ import { finalize } from 'rxjs';
   templateUrl: './similar.page.html',
   styleUrls: ['./similar.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonFooter,
     IonRefresherContent,

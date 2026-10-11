@@ -1,5 +1,5 @@
-import { Component, input, output } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { IonButton, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   heartOutline,
@@ -13,6 +13,7 @@ import {
   selector: 'app-recipe-meta',
   imports: [IonButton, IonIcon],
   templateUrl: './recipe-meta.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-meta.component.scss'],
 })
 export class RecipeMetaComponent {

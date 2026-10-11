@@ -1,10 +1,11 @@
-import { Component, input } from '@angular/core';
-import { IonImg } from '@ionic/angular/standalone';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { IonImg } from '@ionic/angular';
 
 @Component({
   selector: 'app-recipe-hero',
   imports: [IonImg],
   templateUrl: './recipe-hero.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-hero.component.scss'],
 })
 export class RecipeHeroComponent {

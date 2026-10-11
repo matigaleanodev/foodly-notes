@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -13,7 +13,7 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -27,6 +27,7 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonMenuButton,
     IonButtons,

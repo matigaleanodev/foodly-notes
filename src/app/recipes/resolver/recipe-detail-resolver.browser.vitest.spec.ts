@@ -4,7 +4,7 @@ import {
   RouterStateSnapshot,
   convertToParamMap,
 } from '@angular/router';
-import { LoadingController } from '@ionic/angular/standalone';
+import { LoadingController } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

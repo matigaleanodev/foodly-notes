@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
@@ -11,7 +11,7 @@ import {
   IonBackButton,
   IonToolbar,
   IonMenuButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { HomeHeroComponent } from '@pages/home/components/home-hero/home-hero.component';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
@@ -27,6 +27,7 @@ import { finalize } from 'rxjs';
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonMenuButton,
     IonToolbar,

@@ -5,6 +5,7 @@ import {
   inject,
   linkedSignal,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,7 +26,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   RefresherCustomEvent,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
 import { RecipeIngredientsComponent } from './components/recipe-ingredients/recipe-ingredients.component';
@@ -45,6 +46,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   templateUrl: './recipe.page.html',
   styleUrls: ['./recipe.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonRefresherContent,
     IonRefresher,

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonCard,
   IonImg,
@@ -8,7 +8,7 @@ import {
   IonButton,
   IonButtons,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { addIcons } from 'ionicons';
@@ -27,6 +27,7 @@ import { heart, repeat } from 'ionicons/icons';
     IonCard,
   ],
   templateUrl: './recipe-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-card.component.scss'],
 })
 export class RecipeCardComponent {

@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonContent,
   IonButtons,
@@ -11,7 +11,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonRow,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -30,6 +30,7 @@ import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recip
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonRow,
     IonRefresherContent,

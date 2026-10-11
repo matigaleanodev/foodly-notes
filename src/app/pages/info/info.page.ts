@@ -1,4 +1,4 @@
-import { Component, computed, inject, resource } from '@angular/core';
+import { Component, computed, inject, resource, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -13,7 +13,7 @@ import {
   IonBackButton,
   IonMenuButton,
   IonRouterLink,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
@@ -32,6 +32,7 @@ import { AppInfoService } from './service/app-info.service';
   templateUrl: './info.page.html',
   styleUrls: ['./info.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonMenuButton,
     IonBackButton,

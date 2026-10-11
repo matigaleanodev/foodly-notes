@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet } from '@ionic/angular';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app.component';
@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 @Component({
   selector: 'app-menu',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class MenuStubComponent {}
