@@ -1,6 +1,6 @@
-.recipe-card { margin: 8px; border-radius: 14px; overflow: hidden; height: calc(100% - 16px); background: var(--ion-card-background, var(--ion-background-color)); }
-.recipe-open { width: 100%; padding: 0; border: 0; background: transparent; color: var(--ion-text-color); cursor: pointer; text-align: left; }
+.recipe-card { display: flex; flex-direction: column; margin: 8px; border-radius: 14px; overflow: hidden; height: calc(100% - 16px); background: var(--ion-card-background, var(--ion-background-color)); }
+.recipe-open { flex-shrink: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--ion-text-color); cursor: pointer; text-align: left; }
 .recipe-card-image { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .recipe-card-title { padding: 1rem 1rem .5rem; margin: 0; font: 700 1.05rem/1.5 var(--ion-font-family); overflow-wrap: anywhere; }
-.recipe-card-actions { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 0 .5rem .5rem; }
+.recipe-card-actions { margin-top: auto; flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: space-between; padding: 0 .5rem .5rem; }
 .recipe-card-actions ion-button { margin: 0; min-height: 44px; font-size: .85rem; text-transform: none; }

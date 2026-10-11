@@ -28,23 +28,17 @@ function buildNotes(locale) {
     "en-US": [
       `What's new in ${versionName}`,
       "",
-      "- Improved navigation, readable recipes and layouts on mobile and desktop.",
-      "- Better keyboard access, contrast and labels for assistive technology.",
-      "- More reliable favorites, shopping lists, language changes and error recovery.",
+      "- Recipe card buttons now stay aligned at the bottom, regardless of title length.",
     ].join("\n"),
     "es-419": [
       `Novedades de ${versionName}`,
       "",
-      "- Mejor navegación, recetas más legibles y diseño adaptable a cada pantalla.",
-      "- Mejor acceso con teclado, contraste y etiquetas accesibles.",
-      "- Favoritos, compras, cambios de idioma y recuperación de errores más confiables.",
+      "- Los botones de las recetas quedan alineados al pie de cada tarjeta, independientemente del largo del título.",
     ].join("\n"),
     "es-US": [
       `Novedades de ${versionName}`,
       "",
-      "- Mejor navegación, recetas más legibles y diseño adaptable a cada pantalla.",
-      "- Mejor acceso con teclado, contraste y etiquetas accesibles.",
-      "- Favoritos, compras, cambios de idioma y recuperación de errores más confiables.",
+      "- Los botones de las recetas quedan alineados al pie de cada tarjeta, independientemente del largo del título.",
     ].join("\n"),
   };
 
