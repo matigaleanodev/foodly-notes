@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="light" />
+      <ion-back-button defaultHref="/home" />
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button color="light" />
+      <ion-menu-button />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -35,7 +35,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="favorito" text="xAunNoSeleccionaFavoritos" />
+        <app-empty-states imagen="favorito" text="xAunNoSeleccionaFavoritos" actionKey="xExplorarRecetas" (action)="exploreRecipes()" />
       </ion-col>
       }
       }

@@ -1,6 +1,9 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
 :root {
+  --foodly-brand-start: #4caf50;
+  --foodly-brand-end: #8bc34a;
+  --foodly-brand-ink: #173419;
   --ion-font-family:
     "Quicksand", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -12,19 +15,19 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
 
-  --ion-color-primary: #4caf50;
-  --ion-color-primary-rgb: 76, 175, 80;
+  --ion-color-primary: #2e7d32;
+  --ion-color-primary-rgb: 46, 125, 50;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #439a46;
-  --ion-color-primary-tint: #5ec163;
+  --ion-color-primary-shade: #286e2c;
+  --ion-color-primary-tint: #438a47;
 
-  --ion-color-secondary: #8bc34a;
-  --ion-color-secondary-rgb: 139, 195, 74;
+  --ion-color-secondary: #486b21;
+  --ion-color-secondary-rgb: 72, 107, 33;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #7ab03f;
-  --ion-color-secondary-tint: #97cb5c;
+  --ion-color-secondary-shade: #3f5e1d;
+  --ion-color-secondary-tint: #5a7a37;
 
   --ion-color-tertiary: #cddc39;
   --ion-color-tertiary-rgb: 205, 220, 57;
@@ -33,12 +36,12 @@
   --ion-color-tertiary-shade: #b4c231;
   --ion-color-tertiary-tint: #d2e04f;
 
-  --ion-color-success: #4caf50;
-  --ion-color-success-rgb: 76, 175, 80;
+  --ion-color-success: #2e7d32;
+  --ion-color-success-rgb: 46, 125, 50;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
-  --ion-color-success-shade: #439a46;
-  --ion-color-success-tint: #5ec163;
+  --ion-color-success-shade: #286e2c;
+  --ion-color-success-tint: #438a47;
 
   --ion-color-warning: #ffb300;
   --ion-color-warning-rgb: 255, 179, 0;
@@ -47,12 +50,12 @@
   --ion-color-warning-shade: #e0a000;
   --ion-color-warning-tint: #ffbf1a;
 
-  --ion-color-danger: #e53935;
-  --ion-color-danger-rgb: 229, 57, 53;
+  --ion-color-danger: #c62828;
+  --ion-color-danger-rgb: 198, 40, 40;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #ca322f;
-  --ion-color-danger-tint: #e84c4a;
+  --ion-color-danger-shade: #ae2323;
+  --ion-color-danger-tint: #cc3e3e;
 
   --ion-color-dark: #2e2e2e;
   --ion-color-dark-rgb: 46, 46, 46;
@@ -61,12 +64,12 @@
   --ion-color-dark-shade: #282828;
   --ion-color-dark-tint: #434343;
 
-  --ion-color-medium: #7d7d7d;
-  --ion-color-medium-rgb: 125, 125, 125;
+  --ion-color-medium: #616161;
+  --ion-color-medium-rgb: 97, 97, 97;
   --ion-color-medium-contrast: #ffffff;
   --ion-color-medium-contrast-rgb: 255, 255, 255;
-  --ion-color-medium-shade: #6e6e6e;
-  --ion-color-medium-tint: #8a8a8a;
+  --ion-color-medium-shade: #555555;
+  --ion-color-medium-tint: #717171;
 
   --ion-color-light: #f4f6f4;
   --ion-color-light-rgb: 244, 246, 244;
@@ -78,4 +81,28 @@
 
 :root.ion-palette-dark {
   scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+:root.ion-palette-dark {
+  --ion-color-primary: #81c784;
+  --ion-color-primary-rgb: 129, 199, 132;
+  --ion-color-primary-contrast: #102214;
+  --ion-color-primary-contrast-rgb: 16, 34, 20;
+  --ion-color-primary-shade: #72af74;
+  --ion-color-primary-tint: #8ecd90;
+  --ion-color-secondary: #b2d885;
+  --ion-color-secondary-rgb: 178, 216, 133;
+  --ion-color-secondary-contrast: #17230c;
+  --ion-color-secondary-contrast-rgb: 23, 35, 12;
+  --ion-color-danger: #ff8a80;
+  --ion-color-danger-rgb: 255, 138, 128;
+  --ion-color-danger-contrast: #2e1110;
+  --ion-color-danger-contrast-rgb: 46, 17, 16;
+  --ion-color-medium: #aaaaaa;
+  --ion-color-medium-rgb: 170, 170, 170;
+  --ion-color-medium-contrast: #111111;
+  --ion-color-medium-contrast-rgb: 17, 17, 17;
+  --ion-color-success: #81c784;
+  --ion-color-success-rgb: 129, 199, 132;
+  --ion-color-success-contrast: #102214;
 }

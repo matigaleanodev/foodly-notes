@@ -1,3 +1,4 @@
+import { NavService } from '@shared/services/nav/nav.service';
 import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
@@ -42,6 +43,9 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   ],
 })
 export class FavoritesPage {
+  private readonly _nav = inject(NavService);
+  exploreRecipes() { this._nav.root('/home'); }
+
   private static readonly returnTo = '/favorites';
 
   private readonly _service = inject(FavoritesService);

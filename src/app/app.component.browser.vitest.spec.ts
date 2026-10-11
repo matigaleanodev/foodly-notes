@@ -1,7 +1,9 @@
+import { TranslatePipe } from '@shared/translate/translate-pipe';
+import { TranslateService } from '@shared/translate/translate.service';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { IonApp, IonRouterOutlet } from '@ionic/angular';
+import { RouterLink, RouterLinkActive, provideRouter } from '@angular/router';
+import { IonApp, IonRouterOutlet, IonMenuButton } from '@ionic/angular';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app.component';
@@ -21,13 +23,13 @@ describe('AppComponent (Vitest)', () => {
   beforeEach(async () => {
     TestBed.overrideComponent(AppComponent, {
       set: {
-        imports: [IonApp, IonRouterOutlet, MenuStubComponent],
+        imports: [IonApp, IonRouterOutlet, IonMenuButton, MenuStubComponent, RouterLink, RouterLinkActive, TranslatePipe],
       },
     });
 
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), { provide: TranslateService, useValue: { translate: (key: string) => key } }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -25,4 +25,10 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
     TranslatePipe,
   ],
 })
-export class PrivacyPage {}
+export class PrivacyPage {
+  private readonly content = viewChild.required(IonContent);
+
+  async ionViewDidEnter() {
+    (await this.content().getScrollElement()).tabIndex = 0;
+  }
+}

@@ -20,6 +20,7 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@shared/translate/translate.service';
 
@@ -41,6 +42,7 @@ import { TranslateService } from '@shared/translate/translate.service';
     IonGrid,
     IonContent,
     HomeHeroComponent,
+    TranslatePipe,
     RecipeCardComponent,
     RecipeCardSkeletonComponent,
     EmptyStatesComponent,
@@ -69,6 +71,8 @@ export class SearchPage {
       onCleanup(() => request?.unsubscribe());
     });
   }
+
+  focusSearch() { document.querySelector<HTMLInputElement>('app-search:not(.ion-page-hidden) input[type=search]')?.focus(); }
 
   retry() { this._reload.update(value => value + 1); }
 

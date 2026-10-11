@@ -4,6 +4,7 @@ import {
   effect,
   inject,
   linkedSignal,
+  untracked,
   signal,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -112,12 +113,18 @@ export class RecipePage {
       const refresh = this._lastId === sourceId;
       this._lastId = sourceId;
       if (!refresh) this.recipe.set(null);
-      this.loadRecipe(sourceId, refresh);
+      untracked(() => this.loadRecipe(sourceId, refresh));
       onCleanup(() => this._request?.unsubscribe());
     });
   }
 
   async ionViewWillEnter() { await this._favorites.loadFavorites(); }
+
+  jumpTo(id: string) {
+    const section = document.getElementById(id);
+    section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    section?.focus({ preventScroll: true });
+  }
 
   retry() { this.loadRecipe(Number(this._routeParamMap().get('id')), !!this.recipe()); }
 

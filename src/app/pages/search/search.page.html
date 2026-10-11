@@ -1,16 +1,20 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="light" />
+      <ion-back-button defaultHref="/home" />
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button color="light" />
+      <ion-menu-button />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <app-home-hero (searchSubmit)="searchNewRecipes($event)" />
+  <app-home-hero [initialQuery]="q()" (searchSubmit)="searchNewRecipes($event)" />
 
+  <div class="page-grid results-heading" role="status" aria-live="polite">
+    <h2>{{ 'xResultadosPara' | translate }} “{{ q() }}”</h2>
+    <p>{{ isLoading() ? ('xCargando' | translate) : recipes().length + ' ' + ('xRecetasEncontradas' | translate) }}</p>
+  </div>
   <ion-grid class="page-grid">
     <ion-row>
       @if (isLoading()) { @for (_item of skeletonCards; track $index) {
@@ -28,7 +32,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="receta" [text]="emptyStateKey()" />
+        <app-empty-states imagen="receta" [text]="emptyStateKey()" [actionKey]="errorStateKey() ? 'xReintentar' : 'xEditarBusqueda'" (action)="errorStateKey() ? retry() : focusSearch()" />
       </ion-col>
       } }
     </ion-row>

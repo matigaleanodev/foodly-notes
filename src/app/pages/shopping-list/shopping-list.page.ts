@@ -1,3 +1,4 @@
+import { NavService } from '@shared/services/nav/nav.service';
 import { Component, computed, DestroyRef, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonContent,
@@ -49,6 +50,9 @@ import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recip
   ],
 })
 export class ShoppingListPage implements OnInit {
+  private readonly _nav = inject(NavService);
+  exploreRecipes() { this._nav.root('/home'); }
+
   private static readonly returnTo = '/shopping-list';
 
   private readonly _state = inject(ShoppingListService);

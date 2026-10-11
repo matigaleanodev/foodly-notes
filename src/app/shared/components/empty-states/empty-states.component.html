@@ -1,4 +1,4 @@
-<div class="empty-state-container">
+<div class="empty-state-container" role="status">
   <img
     [src]="'assets/empty-states/' + imagen() + '.png'"
     alt=""
@@ -8,4 +8,7 @@
   <p class="empty-state-text">
     {{ text() | translate }}
   </p>
+  @if (actionKey(); as key) {
+    <button type="button" class="foodly-button" (click)="action.emit()">{{ key | translate }}</button>
+  }
 </div>

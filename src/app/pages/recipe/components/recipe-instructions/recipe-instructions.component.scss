@@ -44,3 +44,7 @@
 
   color: var(--ion-text-color);
 }
+
+ol { list-style: none; padding: 0; }
+.instruction-step { align-items: flex-start; }
+.step-number { flex-shrink: 0; }

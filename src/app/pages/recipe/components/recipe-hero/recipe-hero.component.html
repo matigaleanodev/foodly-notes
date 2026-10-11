@@ -1,13 +1,4 @@
-<div class="recipe-hero gradient-header">
-  <div class="hero-overlay">
-    <ion-img
-      class="hero-image"
-      [src]="imageUrl()"
-      [alt]="title()"
-      (ionError)="onImageError($event)"
-    />
-    <div class="hero-title">
-      <h1>{{ title() }}</h1>
-    </div>
-  </div>
+<div class="recipe-hero">
+  <img class="hero-image" [src]="imageUrl()" alt="" (error)="onImageError($event)" />
+  <div class="hero-title"><h1>{{ title() }}</h1></div>
 </div>

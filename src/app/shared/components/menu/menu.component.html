@@ -1,7 +1,7 @@
 <ion-menu contentId="main-content" side="end">
   <ion-header class="menu-header">
     <div class="menu-header-inner">
-      <ion-icon name="foodly-notes" class="menu-logo" />
+      <ion-icon aria-hidden="true" name="foodly-notes" class="menu-logo" />
 
       <div class="menu-header-text">
         <h1>
@@ -18,7 +18,7 @@
     <ion-list>
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="home">
-          <ion-icon name="home-outline" slot="start" />
+          <ion-icon aria-hidden="true" name="home-outline" slot="start" />
           <ion-label>
             {{ "xInicio" | translate }}
           </ion-label>
@@ -27,7 +27,7 @@
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="favorites">
-          <ion-icon name="heart-outline" slot="start" />
+          <ion-icon aria-hidden="true" name="heart-outline" slot="start" />
           <ion-label>
             {{ "xFavoritos" | translate }}
           </ion-label>
@@ -36,7 +36,7 @@
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="shopping-list">
-          <ion-icon name="cart-outline" slot="start" />
+          <ion-icon aria-hidden="true" name="cart-outline" slot="start" />
           <ion-label>
             {{ "xListaCompras" | translate }}
           </ion-label>
@@ -45,7 +45,7 @@
 
       <ion-menu-toggle auto-hide="true">
         <ion-item button detail routerLink="info">
-          <ion-icon name="information-circle-outline" slot="start" />
+          <ion-icon aria-hidden="true" name="information-circle-outline" slot="start" />
           <ion-label>
             {{ "xInformacion" | translate }}
           </ion-label>
@@ -61,7 +61,7 @@
       </ion-list-header>
 
       <ion-item button (click)="openThemeSelector()">
-        <ion-icon name="phone-portrait-outline" slot="start" />
+        <ion-icon aria-hidden="true" name="phone-portrait-outline" slot="start" />
         <ion-label>
           {{ "xTema" | translate }}
         </ion-label>
@@ -71,7 +71,7 @@
       </ion-item>
 
       <ion-item button (click)="openLanguageSelector()">
-        <ion-icon name="language-outline" slot="start" />
+        <ion-icon aria-hidden="true" name="language-outline" slot="start" />
         <ion-label>
           {{ "xIdioma" | translate }}
         </ion-label>

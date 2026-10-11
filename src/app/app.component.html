@@ -1,4 +1,13 @@
 <ion-app>
-  <ion-router-outlet id="main-content" />
+  <nav class="desktop-nav" [attr.aria-label]="'xNavegacionPrincipal' | translate">
+    <a class="brand-link" routerLink="/home">Foodly Notes</a>
+    <div class="desktop-nav-links">
+      <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">{{ 'xInicio' | translate }}</a>
+      <a routerLink="/favorites" routerLinkActive="active" ariaCurrentWhenActive="page">{{ 'xFavoritos' | translate }}</a>
+      <a routerLink="/shopping-list" routerLinkActive="active" ariaCurrentWhenActive="page">{{ 'xListaCompras' | translate }}</a>
+      <ion-menu-button />
+    </div>
+  </nav>
+  <ion-router-outlet id="main-content" class="app-outlet" />
   <app-menu />
 </ion-app>

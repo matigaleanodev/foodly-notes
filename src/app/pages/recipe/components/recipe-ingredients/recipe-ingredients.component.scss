@@ -1,52 +1,7 @@
-.ingredients-paper {
-  position: relative;
-  margin: 1.5rem 0;
-  border-radius: 10px;
-  overflow: hidden;
-
-  background: #f6e6c8;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.paper-margin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  background: radial-gradient(circle, rgba(37, 27, 0, 0.5) 5px, transparent 6px)
-    repeat-y;
-  background-size: 30px 30px;
-  border-right: 3px solid #d44147;
-}
-
-.paper-content {
-  position: relative;
-  padding-left: 60px;
-  background: linear-gradient(transparent, transparent 28px, #91d1d3 28px);
-  background-size: 30px 30px;
-}
-
-.paper-spacer {
-  height: 30px;
-}
-
-.paper-title {
-  height: 30px;
-  line-height: 30px;
-  padding: 0 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1f3a5f;
-}
-
-.paper-line {
-  height: 30px;
-  line-height: 30px;
-  padding: 0 12px;
-  font-size: 0.95rem;
-  color: #1f3a5f;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.ingredients-paper { position: relative; margin: 1.5rem 0; border-radius: 10px; overflow: hidden; background: #f6e6c8; color: #1f3a5f; }
+.paper-margin { position: absolute; inset: 0 auto 0 0; width: 32px; border-right: 2px solid #d44147; background: radial-gradient(circle, #938665 3px, transparent 4px) repeat-y; background-size: 26px 30px; }
+.paper-content { position: relative; padding: 1rem 1rem 1rem 48px; }
+.paper-title { margin: 0 0 .75rem; font-size: 1.4rem; font-family: var(--ion-font-family-secondary); }
+ul { margin: 0; padding-left: 1rem; }
+.paper-line { min-height: 30px; line-height: 1.7; padding: .25rem 0; border-bottom: 1px solid #b3c4bb; font-size: 1rem; overflow-wrap: anywhere; }
+@media (min-width: 768px) { .paper-margin { width: 48px; } .paper-content { padding-left: 64px; } }
