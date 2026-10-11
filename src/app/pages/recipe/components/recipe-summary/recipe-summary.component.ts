@@ -4,6 +4,7 @@ import {
   inject,
   input,
   SecurityContext,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavService } from '@shared/services/nav/nav.service';
@@ -12,6 +13,7 @@ import { NavService } from '@shared/services/nav/nav.service';
   selector: 'app-recipe-summary',
   imports: [],
   templateUrl: './recipe-summary.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-summary.component.scss'],
 })
 export class RecipeSummaryComponent {

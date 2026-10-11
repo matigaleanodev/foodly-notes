@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
@@ -28,7 +28,7 @@ describe('RecipeApiService (Vitest)', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RecipeApiService,
         { provide: TranslateService, useValue: translateMock },
@@ -111,12 +111,12 @@ describe('RecipeApiService (Vitest)', () => {
     req.flush([]);
   });
 
-  it('posts recipe ingredients with the current lang', () => {
+  it('posts recipe ingredients with the current lang', async () => {
     translateMock.currentLang.mockReturnValue(Language.EN);
 
     service.getIngredientsForRecipes([1, 2]).subscribe();
 
-    const req = httpMock.expectOne(
+    const req = await expectAsyncRequest(
       `${environment.API_URL}/recipes/ingredients`,
     );
 
@@ -127,6 +127,30 @@ describe('RecipeApiService (Vitest)', () => {
     });
 
     req.flush([]);
+  });
+
+  it('splits and deduplicates ingredient IDs into sequential batches of 20', async () => {
+    const ids = Array.from({ length: 21 }, (_, index) => index + 1);
+    let result: unknown;
+    service.getIngredientsForRecipes([...ids, 1]).subscribe(value => result = value);
+    const first = await expectAsyncRequest(`${environment.API_URL}/recipes/ingredients`);
+    expect(first.request.body.sourceIds).toEqual(ids.slice(0, 20));
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
+    first.flush([{ sourceId: 1, title: 'First', ingredients: [] }]);
+    const second = httpMock.expectOne(`${environment.API_URL}/recipes/ingredients`);
+    expect(second.request.body.sourceIds).toEqual([21]);
+    second.flush([{ sourceId: 21, title: 'Last', ingredients: [] }]);
+    expect(result).toEqual([
+      { sourceId: 1, title: 'First', ingredients: [] },
+      { sourceId: 21, title: 'Last', ingredients: [] },
+    ]);
+  });
+
+  it('returns an empty ingredient list without making a request', () => {
+    let result: unknown;
+    service.getIngredientsForRecipes([]).subscribe(value => result = value);
+    expect(result).toEqual([]);
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
   });
 
   it('returns an empty array when the query is blank', async () => {
@@ -233,4 +257,24 @@ describe('RecipeApiService (Vitest)', () => {
       },
     ]);
   });
+  it('rejects malformed summaries instead of exposing an undefined recipe URL', async () => {
+    let failure: unknown;
+    service.getDailyRecipes().subscribe({ error: error => failure = error });
+    const request = await expectAsyncRequest(`${environment.API_URL}/recipes/daily?lang=en`);
+    request.flush([{ title: 'Corrupt record', _doc: { sourceId: 1 } }]);
+    expect(failure).toBeInstanceOf(Error);
+  });
+
+  it('waits for the stored language before requesting shopping ingredients', async () => {
+    let ready!: () => void;
+    translateMock.whenReady.mockReturnValueOnce(new Promise<void>(resolve => ready = resolve));
+    service.getIngredientsForRecipes([1]).subscribe();
+    httpMock.expectNone(`${environment.API_URL}/recipes/ingredients`);
+    translateMock.currentLang.mockReturnValue(Language.ES);
+    ready();
+    const request = await expectAsyncRequest(`${environment.API_URL}/recipes/ingredients`);
+    expect(request.request.body.lang).toBe('es');
+    request.flush([]);
+  });
+
 });

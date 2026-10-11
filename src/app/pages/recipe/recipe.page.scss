@@ -17,7 +17,7 @@ ion-footer {
   border: 1px solid color-mix(in srgb, var(--ion-color-warning) 45%, transparent);
   border-radius: 16px;
   background: color-mix(in srgb, var(--ion-color-warning) 14%, var(--ion-background-color));
-  color: var(--ion-color-warning-shade);
+  color: var(--ion-text-color);
   font-size: 0.95rem;
   line-height: 1.4;
 }
@@ -29,3 +29,10 @@ ion-footer {
 ion-footer.is-hidden {
   display: none;
 }
+
+.recipe-quick-info { padding: 0 1.25rem; }
+.recipe-quick-info p { line-height: 1.6; margin: 0 0 .5rem; }
+.recipe-jumps { display: flex; flex-wrap: wrap; gap: .5rem; }
+.recipe-jumps button { padding: .5rem 1rem; min-height: 44px; background: transparent; border: 1px solid var(--ion-color-primary); border-radius: 8px; color: var(--ion-color-primary); cursor: pointer; }
+.recipe-about { padding-block: .75rem; }
+summary { min-height: 44px; padding-block: .5rem; font-weight: 700; cursor: pointer; }

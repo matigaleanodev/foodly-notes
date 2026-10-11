@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { IonIcon } from '@ionic/angular';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
@@ -14,6 +14,7 @@ import {
   selector: 'app-recipe-meta-extended',
   imports: [IonIcon, TranslatePipe],
   templateUrl: './recipe-meta-extended.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-meta-extended.component.scss'],
 })
 export class RecipeMetaExtendedComponent {

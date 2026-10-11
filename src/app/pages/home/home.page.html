@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="end">
-      <ion-menu-button color="light" />
+      <ion-menu-button />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -32,7 +32,7 @@
       </ion-col>
       } @empty {
       <ion-col>
-        <app-empty-states imagen="receta" text="xSinRecetasDisponibles" />
+        <app-empty-states imagen="receta" [text]="errorStateKey() ?? 'xSinRecetasDisponibles'" actionKey="xReintentar" (action)="loadRecipes()" />
       </ion-col>
       }
       }

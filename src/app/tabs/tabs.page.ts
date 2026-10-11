@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonTabs,
@@ -7,7 +7,7 @@ import {
   IonIcon,
   IonLabel,
   IonRouterLink,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import { homeOutline, heartOutline, cartOutline } from 'ionicons/icons';
@@ -16,6 +16,7 @@ import { homeOutline, heartOutline, cartOutline } from 'ionicons/icons';
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonTabs,
     IonTabBar,

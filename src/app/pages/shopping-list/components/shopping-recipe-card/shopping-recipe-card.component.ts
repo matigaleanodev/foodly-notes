@@ -1,15 +1,13 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import {
   ShoppingListService,
   ShoppingRecipeState,
 } from '@pages/shopping-list/services/shopping-list/shopping-list.service';
 import {
-  IonItem,
   IonCheckbox,
-  IonLabel,
   IonIcon,
   IonButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { addIcons } from 'ionicons';
 import { arrowForward, cartOutline } from 'ionicons/icons';
@@ -17,8 +15,9 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
   selector: 'app-shopping-recipe-card',
-  imports: [IonButton, IonIcon, IonItem, IonCheckbox, IonLabel, TranslatePipe],
+  imports: [IonButton, IonIcon, IonCheckbox, TranslatePipe],
   templateUrl: './shopping-recipe-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./shopping-recipe-card.component.scss'],
 })
 export class ShoppingRecipeCardComponent {

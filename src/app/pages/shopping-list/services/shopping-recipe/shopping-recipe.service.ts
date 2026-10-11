@@ -13,29 +13,14 @@ export class ShoppingRecipesService {
 
   readonly recipes = signal<ShoppingRecipe[]>([]);
 
+  private requestVersion = 0;
+
   async sync() {
-    const favoritos = this.favorites.favorites();
-    const ids = favoritos.map((f) => f.sourceId);
-
-    const current = this.recipes();
-    const currentIds = current.map((r) => r.sourceId);
-
-    const filtrados = current.filter((r) => ids.includes(r.sourceId));
-
-    const nuevosIds = ids.filter((id) => !currentIds.includes(id));
-
-    if (nuevosIds.length) {
-      const nuevas = await firstValueFrom(
-        this.api.getIngredientsForRecipes(nuevosIds),
-      );
-
-      this.recipes.set([...filtrados, ...nuevas]);
-    } else {
-      this.recipes.set(filtrados);
-    }
+    await firstValueFrom(this.refreshSync());
   }
 
   refreshSync(force = false) {
+    const version = ++this.requestVersion;
     const favoritos = this.favorites.favorites();
     const ids = favoritos.map((f) => f.sourceId);
 
@@ -56,7 +41,7 @@ export class ShoppingRecipesService {
     return this.api.getIngredientsForRecipes(nuevosIds).pipe(
       map((nuevas) => {
         const result = force ? nuevas : [...filtrados, ...nuevas];
-        this.recipes.set(result);
+        if (version === this.requestVersion) this.recipes.set(result);
         return result;
       }),
     );

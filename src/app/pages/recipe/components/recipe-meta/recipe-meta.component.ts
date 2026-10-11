@@ -1,5 +1,6 @@
-import { Component, input, output } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { IonButton, IonIcon } from '@ionic/angular';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { addIcons } from 'ionicons';
 import {
   heartOutline,
@@ -11,8 +12,9 @@ import {
 
 @Component({
   selector: 'app-recipe-meta',
-  imports: [IonButton, IonIcon],
+  imports: [IonButton, IonIcon, TranslatePipe],
   templateUrl: './recipe-meta.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-meta.component.scss'],
 })
 export class RecipeMetaComponent {

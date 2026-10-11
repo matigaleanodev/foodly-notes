@@ -1,26 +1,16 @@
 <div class="hero-content">
   <div class="hero-inner">
     <div class="hero-text">
-      <h1>
-        {{ "xFoodlyNotes" | translate }}
-      </h1>
-      <p>
-        {{ "xHomeHeroSubtitulo" | translate }}
-      </p>
-
-      <ion-searchbar
-        [value]="query()"
-        [placeholder]="'xBuscarRecetas' | translate"
-        [attr.aria-label]="'xBuscarRecetas' | translate"
-        animated="true"
-        inputmode="search"
-        enterkeyhint="search"
-        (ionInput)="handleInput($event)"
-        (keyup.enter)="onEnter()"
-      ></ion-searchbar>
+      <h1>{{ "xFoodlyNotes" | translate }}</h1>
+      <p>{{ "xHomeHeroSubtitulo" | translate }}</p>
+      <form role="search" [attr.aria-label]="'xBuscarRecetas' | translate" (submit)="$event.preventDefault(); onEnter()">
+        <label>
+          <span class="sr-only">{{ 'xBuscarRecetas' | translate }}</span>
+          <input type="search" maxlength="200" required [value]="query()" [placeholder]="'xBuscarRecetas' | translate" enterkeyhint="search" (input)="handleInput($event)" />
+        </label>
+        <button class="foodly-button" type="submit">{{ 'xBuscar' | translate }}</button>
+      </form>
     </div>
-    <div class="hero-illustration">
-      <img src="assets/icons/foodly_notes_icon.svg" alt="Foodly Notes" />
-    </div>
+    <img class="hero-illustration" src="assets/icons/foodly_notes_icon.svg" alt="" aria-hidden="true" />
   </div>
 </div>

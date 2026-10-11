@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ShoppingRecipesService } from './shopping-recipe.service';
@@ -95,4 +95,17 @@ describe('ShoppingRecipesService (Vitest)', () => {
 
     expect(recipe).toBeNull();
   });
+  it('ignores a late response after a newer language refresh', async () => {
+    const oldResponse = new Subject<ShoppingRecipe[]>();
+    apiServiceMock.getIngredientsForRecipes.mockReturnValueOnce(oldResponse);
+    const initial = service.sync();
+    const latest = [{ sourceId: 1, title: 'Latest language', ingredients: [] }];
+    apiServiceMock.getIngredientsForRecipes.mockReturnValueOnce(of(latest));
+    await firstValueFrom(service.refreshSync(true));
+    oldResponse.next(shoppingRecipesMock);
+    oldResponse.complete();
+    await initial;
+    expect(service.recipes()).toEqual(latest);
+  });
+
 });

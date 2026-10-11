@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -6,7 +6,7 @@ import {
   IonToolbar,
   IonBackButton,
   IonButtons,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
@@ -14,6 +14,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   templateUrl: './terms.page.html',
   styleUrls: ['./terms.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonButtons,
     IonBackButton,

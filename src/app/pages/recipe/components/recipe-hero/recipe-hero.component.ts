@@ -1,10 +1,9 @@
-import { Component, input } from '@angular/core';
-import { IonImg } from '@ionic/angular/standalone';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-recipe-hero',
-  imports: [IonImg],
   templateUrl: './recipe-hero.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-hero.component.scss'],
 })
 export class RecipeHeroComponent {
@@ -15,7 +14,7 @@ export class RecipeHeroComponent {
     'assets/images/foodly_notes_banner_green.png';
 
   onImageError(event: Event): void {
-    const img = event.target as HTMLIonImgElement;
+    const img = event.target as HTMLImageElement;
     img.src = this.fallbackImage;
   }
 }

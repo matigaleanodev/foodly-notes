@@ -1,51 +1,14 @@
-<ion-card
-  class="recipe-card"
-  [button]="true"
-  [attr.aria-label]="'Ver receta: ' + recipe().title"
-  (click)="toRecipeDetail($event)"
->
-  <ion-card-header class="recipe-card-header">
-    <ion-toolbar color="transparent">
-      <ion-buttons slot="end">
-        <ion-button
-          fill="solid"
-          shape="round"
-          [color]="isFavorite() ? 'danger' : 'medium'"
-          class="recipe-card-action"
-          [attr.aria-label]="'Alternar favorito para ' + recipe().title"
-          [attr.aria-pressed]="isFavorite()"
-          (click)="toggleFavoriteState($event)"
-          appTooltip
-          tooltipKey="xToggleFavorito"
-        >
-          <ion-icon slot="icon-only" name="heart" aria-hidden="true" />
-        </ion-button>
-        <ion-button
-          fill="solid"
-          shape="round"
-          color="secondary"
-          class="recipe-card-action"
-          [attr.aria-label]="'Ver recetas similares de ' + recipe().title"
-          (click)="toSimilarRecipes($event)"
-          appTooltip
-          tooltipKey="xVerSimilares"
-        >
-          <ion-icon slot="icon-only" name="repeat" aria-hidden="true" />
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-card-header>
-
-  <ion-img
-    class="recipe-card-image"
-    [src]="recipeImageUrl()"
-    [alt]="recipe().title"
-    (ionError)="onImageError($event)"
-  ></ion-img>
-
-  <div class="recipe-card-title-container">
-    <ion-card-title class="recipe-card-title">
-      {{ recipe().title }}
-    </ion-card-title>
+<ion-card class="recipe-card">
+  <button type="button" class="recipe-open" [attr.aria-label]="('xVerReceta' | translate) + ': ' + recipe().title" (click)="toRecipeDetail($event)">
+    <img class="recipe-card-image" [src]="recipeImageUrl()" alt="" loading="lazy" (error)="onImageError($event)" />
+    <h2 class="recipe-card-title">{{ recipe().title }}</h2>
+  </button>
+  <div class="recipe-card-actions">
+    <ion-button fill="clear" [color]="isFavorite() ? 'danger' : 'primary'" [attr.aria-label]="((isFavorite() ? 'xQuitarFavorito' : 'xAgregarFavorito') | translate) + ': ' + recipe().title" [attr.aria-pressed]="isFavorite()" (click)="toggleFavoriteState($event)">
+      <ion-icon slot="start" name="heart" aria-hidden="true" />{{ (isFavorite() ? 'xGuardada' : 'xGuardar') | translate }}
+    </ion-button>
+    <ion-button fill="clear" [attr.aria-label]="('xVerSimilares' | translate) + ': ' + recipe().title" (click)="toSimilarRecipes($event)">
+      <ion-icon slot="start" name="repeat" aria-hidden="true" />{{ 'xSimilares' | translate }}
+    </ion-button>
   </div>
 </ion-card>

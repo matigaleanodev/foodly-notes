@@ -1,112 +1,12 @@
-:host {
-  height: fit-content;
-}
-
-.ingredients-paper {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-
-  background: #f6e6c8;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-.paper-margin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-
-  border-right: 3px solid #d44147;
-}
-
-.paper-content {
-  position: relative;
-
-  background: linear-gradient(transparent, transparent 39px, #91d1d3 39px);
-  background-size: 40px 40px;
-}
-
-.paper-spacer {
-  height: 40px;
-}
-
-.paper-title-container {
-  height: 40px;
-  line-height: 40px;
-  padding: 0 12px;
-  margin-inline-start: 60px;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  max-width: calc(100% - 60px);
-
-  ion-icon {
-    color: #1f3a5f;
-    min-width: 2rem;
-  }
-}
-
-.paper-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #1f3a5f;
-
-  font-family: var(--ion-font-family-secondary);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.paper-subtitle {
-  height: 40px;
-  line-height: 40px;
-  padding: 0 12px;
-  margin-inline-start: 60px;
-  font-size: 1rem;
-  font-style: italic;
-  color: #1f3a5f;
-  gap: 0.5rem;
-}
-
-.paper-line {
-  --min-height: 40px;
-  --padding-start: 12px;
-  --padding-end: 12px;
-
-  height: 40px;
-  line-height: 40px;
-
-  font-size: 0.9rem;
-  color: #1f3a5f;
-
-  --background: transparent;
-}
-
-.paper-line ion-label {
-  margin: 0;
-  margin-inline-start: 30px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.paper-line ion-checkbox {
-  --size: 14px;
-  margin-inline: 8px;
-}
-
-.paper-footer {
-  height: 50px;
-  padding-inline-end: 1rem;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  color: #1f3a5f;
-}
-
-ion-item:hover ion-label {
-  color: var(--ion-color-primary);
-}
+:host { display: block; }
+.ingredients-paper { position: relative; border-radius: 10px; overflow: hidden; background: #f6e6c8; color: #1f3a5f; }
+.paper-margin { position: absolute; inset: 0 auto 0 0; width: 24px; border-right: 2px solid #d44147; }
+.paper-content { padding: 1rem 1rem .5rem 40px; }
+.paper-title { font: 600 1.8rem/1.2 var(--ion-font-family-secondary); margin: 0; overflow-wrap: anywhere; }
+.paper-subtitle { font-size: 1rem; line-height: 1.5; }
+ul { list-style: none; padding: 0; margin: 0; }
+.paper-line { border-bottom: 1px solid #b3c4bb; }
+ion-checkbox { width: 100%; min-height: 48px; padding-block: .5rem; --size: 24px; --checkbox-background: #fff; --checkbox-background-checked: #2e7d32; --border-color: #526450; --border-color-checked: #2e7d32; --checkmark-color: #fff; --color: #1f3a5f; }
+ion-checkbox::part(label) { white-space: normal; overflow: visible; overflow-wrap: anywhere; line-height: 1.6; }
+.paper-footer { padding: .5rem; display: flex; justify-content: flex-end; }
+.paper-footer ion-button { --color: #245e28; min-height: 44px; }

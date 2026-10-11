@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
+import { TranslateService } from '@shared/translate/translate.service';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -13,7 +14,7 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
@@ -27,6 +28,7 @@ import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skel
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonMenuButton,
     IonButtons,
@@ -55,14 +57,38 @@ export class HomePage {
   readonly isLoading = signal(true);
   readonly skeletonCards = Array.from({ length: 12 });
 
+  readonly errorStateKey = signal<string | null>(null);
+  private readonly _translate = inject(TranslateService);
+  private _lastLang = this._translate.currentLang();
+
+  constructor() {
+    effect(() => {
+      const lang = this._translate.currentLang();
+      if (lang !== this._lastLang) {
+        this._lastLang = lang;
+        void this.loadRecipes();
+      }
+    });
+  }
+
   async ionViewWillEnter() {
-    this._favorites.loadFavorites();
+    await this._favorites.loadFavorites();
+    await this.loadRecipes();
+  }
+
+  private _request = 0;
+
+  async loadRecipes() {
+    const request = ++this._request;
     this.isLoading.set(true);
+    this.errorStateKey.set(null);
 
     try {
       await this._recipes.loadDailyRecipes();
+    } catch {
+      if (request === this._request) this.errorStateKey.set('xErrorBusquedaRecetas');
     } finally {
-      this.isLoading.set(false);
+      if (request === this._request) this.isLoading.set(false);
     }
   }
 

@@ -2,12 +2,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
-      "@pages/*": ["src/app/pages/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@recipes/*": ["src/app/recipes/*"],
-      "@env/*": ["src/environments/*"]
+      "@pages/*": ["./src/app/pages/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@recipes/*": ["./src/app/recipes/*"],
+      "@env/*": ["./src/environments/*"]
     },
     "types": ["node"],
     "outDir": "./dist/out-tsc",

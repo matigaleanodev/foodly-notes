@@ -1,5 +1,7 @@
+import { TranslateService } from '@shared/translate/translate.service';
+import { Language } from '@shared/translate/language.model';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal, Component, input, output } from '@angular/core';
+import { signal, Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HomePage } from './home.page';
@@ -12,6 +14,7 @@ import { Storage } from '@ionic/storage-angular';
 @Component({
   selector: 'app-recipe-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class RecipeCardStubComponent {
@@ -24,6 +27,7 @@ class RecipeCardStubComponent {
 @Component({
   selector: 'app-home-hero',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class HomeHeroStubComponent {
@@ -34,6 +38,7 @@ class HomeHeroStubComponent {
 @Component({
   selector: 'app-empty-states',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class EmptyStatesStubComponent {
@@ -138,4 +143,14 @@ describe('HomePage (Vitest)', () => {
 
     expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');
   });
+  it('reloads daily recipes when the language changes in the same view', async () => {
+    await fixture.whenStable();
+    await component.ionViewWillEnter();
+    recipeServiceMock.loadDailyRecipes.mockClear();
+    TestBed.inject(TranslateService).currentLang.set(Language.ES);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(recipeServiceMock.loadDailyRecipes).toHaveBeenCalledTimes(1);
+  });
+
 });

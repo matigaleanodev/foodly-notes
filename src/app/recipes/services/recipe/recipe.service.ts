@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { DailyRecipe, StoredDaily } from '@recipes/models/daily-recipe.model';
+import { DailyRecipe, StoredDaily, isRecipeSummary } from '@recipes/models/daily-recipe.model';
 import { RecipeApiService } from '../recipe-api/recipe-api.service';
 import { NavService } from '@shared/services/nav/nav.service';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, from, map, switchMap } from 'rxjs';
 import { StorageService } from '@shared/services/storage/storage.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { Language } from '@shared/translate/language.model';
@@ -24,9 +24,14 @@ export class RecipeService {
 
   readonly recipeSelected = signal<DailyRecipe | null>(null);
 
+  private _dailyRequest = 0;
+
   async loadDailyRecipes() {
+    const request = ++this._dailyRequest;
     const lang = await this._translate.whenReady();
     const stored = await this._getStoredDaily(lang);
+
+    if (request !== this._dailyRequest) return;
 
     if (stored && this._isToday(stored.date)) {
       this.recipes.set(stored.recipes);
@@ -35,11 +40,16 @@ export class RecipeService {
 
     try {
       const recetas = await firstValueFrom(this._api.getDailyRecipes());
+      if (request !== this._dailyRequest) return;
       this.recipes.set(recetas);
       await this._storeDaily(recetas, lang);
-    } catch {
+    } catch (error) {
+      if (request !== this._dailyRequest) return;
       if (stored) {
         this.recipes.set(stored.recipes);
+      } else {
+        this.recipes.set([]);
+        throw error;
       }
     }
   }
@@ -52,17 +62,18 @@ export class RecipeService {
     return this._api.getSimilarRecipes(sourceId);
   }
 
-  searchRecipesByQuery(query: string) {
-    return this._api.getRecipesByQuery(query);
-  }
-
   refreshDailyRecipes() {
-    return this._api.getDailyRecipes().pipe(
-      map((recipes) => {
-        this.recipes.set(recipes);
-        void this._translate.whenReady().then((lang) => this._storeDaily(recipes, lang));
-        return recipes;
-      }),
+    const request = ++this._dailyRequest;
+    return from(this._translate.whenReady()).pipe(
+      switchMap(lang => this._api.getDailyRecipes().pipe(
+        map(recipes => {
+          if (request === this._dailyRequest) {
+            this.recipes.set(recipes);
+            void this._storeDaily(recipes, lang);
+          }
+          return recipes;
+        }),
+      )),
     );
   }
 
@@ -107,7 +118,12 @@ export class RecipeService {
   }
 
   private async _getStoredDaily(lang: Language) {
-    return this._storage.getItem<StoredDaily>(this._dailyKey(lang));
+    const stored = await this._storage.getItem<StoredDaily>(this._dailyKey(lang));
+    if (stored && (typeof stored.date !== 'string' || !Array.isArray(stored.recipes) || !stored.recipes.every(isRecipeSummary))) {
+      await this._storage.removeItem(this._dailyKey(lang));
+      return null;
+    }
+    return stored;
   }
 
   private async _storeDaily(recipes: DailyRecipe[], lang: Language) {

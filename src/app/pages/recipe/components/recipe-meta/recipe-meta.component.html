@@ -1,81 +1,12 @@
 <div class="recipe-meta">
   <div class="meta-info">
-    <div class="meta-item" appTooltip tooltipKey="xListoEn">
-      <ion-icon name="time-outline"></ion-icon>
-      <span>{{ readyInMinutes() }}m</span>
-    </div>
-
-    <div class="meta-item" appTooltip tooltipKey="xPreparacion">
-      <ion-icon name="restaurant-outline"></ion-icon>
-      <span>{{ servings() }}</span>
-    </div>
+    <span>{{ 'xListoEn' | translate }}: {{ readyInMinutes() }} min</span>
+    <span>{{ 'xPorciones' | translate }}: {{ servings() }}</span>
   </div>
-
-  <div class="meta-flags">
-    <ion-icon
-      appTooltip
-      tooltipKey="xVegano"
-      name="leaf-outline"
-      [class.active]="vegan()"
-      [attr.aria-label]="'Vegano: ' + (vegan() ? 'sí' : 'no')"
-      role="img"
-    />
-
-    <ion-icon
-      name="salad"
-      [class.active]="vegetarian()"
-      appTooltip
-      tooltipKey="xVegetarian"
-      [attr.aria-label]="'Vegetariano: ' + (vegetarian() ? 'sí' : 'no')"
-      role="img"
-    />
-
-    <ion-icon
-      name="glutten"
-      [class.active]="glutenFree()"
-      appTooltip
-      tooltipKey="xSinGluten"
-      [attr.aria-label]="'Sin gluten: ' + (glutenFree() ? 'sí' : 'no')"
-      role="img"
-    />
-
-    <ion-icon
-      name="dairy"
-      [class.active]="dairyFree()"
-      appTooltip
-      tooltipKey="xSinLacteos"
-      [attr.aria-label]="'Sin lácteos: ' + (dairyFree() ? 'sí' : 'no')"
-      role="img"
-    />
-  </div>
-
   <div class="meta-actions">
-    <ion-button
-      appTooltip
-      tooltipKey="xToggleFavorito"
-      fill="clear"
-      [attr.aria-label]="
-        isFavorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'
-      "
-      [attr.aria-pressed]="isFavorite()"
-      (click)="toggleFavorite.emit()"
-    >
-      <ion-icon
-        slot="icon-only"
-        [color]="isFavorite() ? 'danger' : 'medium'"
-        name="heart-outline"
-        aria-hidden="true"
-      />
+    <ion-button fill="clear" [color]="isFavorite() ? 'danger' : 'primary'" [attr.aria-label]="(isFavorite() ? 'xQuitarFavorito' : 'xAgregarFavorito') | translate" [attr.aria-pressed]="isFavorite()" (click)="toggleFavorite.emit()">
+      <ion-icon slot="start" name="heart-outline" aria-hidden="true" />{{ (isFavorite() ? 'xGuardada' : 'xGuardar') | translate }}
     </ion-button>
-
-    <ion-button
-      appTooltip
-      tooltipKey="xVerSimilares"
-      fill="clear"
-      aria-label="Ver recetas similares"
-      (click)="viewSimilar.emit()"
-    >
-      <ion-icon slot="icon-only" name="repeat-outline" aria-hidden="true" />
-    </ion-button>
+    <ion-button fill="clear" (click)="viewSimilar.emit()"><ion-icon slot="start" name="repeat-outline" aria-hidden="true" />{{ 'xSimilares' | translate }}</ion-button>
   </div>
 </div>

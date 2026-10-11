@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
@@ -11,7 +11,7 @@ import {
   IonBackButton,
   IonToolbar,
   IonMenuButton,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { HomeHeroComponent } from '@pages/home/components/home-hero/home-hero.component';
 import { DailyRecipe } from '@recipes/models/daily-recipe.model';
 import { SearchRecipe } from '@recipes/models/search-recipe.model';
@@ -20,13 +20,16 @@ import { EmptyStatesComponent } from '@shared/components/empty-states/empty-stat
 import { RecipeCardComponent } from '@shared/components/recipe-card/recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
+import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { finalize } from 'rxjs';
+import { TranslateService } from '@shared/translate/translate.service';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonMenuButton,
     IonToolbar,
@@ -39,6 +42,7 @@ import { finalize } from 'rxjs';
     IonGrid,
     IonContent,
     HomeHeroComponent,
+    TranslatePipe,
     RecipeCardComponent,
     RecipeCardSkeletonComponent,
     EmptyStatesComponent,
@@ -56,11 +60,21 @@ export class SearchPage {
   readonly _favorites = inject(FavoritesService);
   readonly _route = inject(ActivatedRoute);
 
+  private readonly _translate = inject(TranslateService);
+  private readonly _reload = signal(0);
+
   constructor() {
-    effect(() => {
-      this._loadSearch(this.q().trim());
+    effect(onCleanup => {
+      this._translate.currentLang();
+      this._reload();
+      const request = this._loadSearch(this.q().trim());
+      onCleanup(() => request?.unsubscribe());
     });
   }
+
+  focusSearch() { document.querySelector<HTMLInputElement>('app-search:not(.ion-page-hidden) input[type=search]')?.focus(); }
+
+  retry() { this._reload.update(value => value + 1); }
 
   ionViewWillEnter() {
     this._favorites.loadFavorites();
@@ -104,7 +118,7 @@ export class SearchPage {
 
     this.isLoading.set(true);
     this.errorStateKey.set(null);
-    this._recipes
+    return this._recipes
       .refreshSearch(query)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({

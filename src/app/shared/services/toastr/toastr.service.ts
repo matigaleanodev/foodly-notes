@@ -6,7 +6,7 @@ import {
   warningOutline,
   informationCircleOutline,
 } from 'ionicons/icons';
-import { ToastController } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',

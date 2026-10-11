@@ -1,10 +1,13 @@
 import {
   Component,
+  ElementRef,
   computed,
   effect,
   inject,
   linkedSignal,
+  untracked,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,7 +28,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   RefresherCustomEvent,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RecipeMetaComponent } from './components/recipe-meta/recipe-meta.component';
 import { RecipeHeroComponent } from './components/recipe-hero/recipe-hero.component';
 import { RecipeIngredientsComponent } from './components/recipe-ingredients/recipe-ingredients.component';
@@ -37,7 +40,7 @@ import { RecipeDetail } from '@recipes/models/recipe-detail.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeSummaryComponent } from './components/recipe-summary/recipe-summary.component';
-import { Language } from '@shared/translate/language.model';
+import { finalize, Subscription } from 'rxjs';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 
 @Component({
@@ -45,6 +48,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   templateUrl: './recipe.page.html',
   styleUrls: ['./recipe.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonRefresherContent,
     IonRefresher,
@@ -72,6 +76,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
 })
 export class RecipePage {
   private readonly _route = inject(ActivatedRoute);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _routeParamMap = toSignal(this._route.paramMap, {
     initialValue: this._route.snapshot.paramMap,
   });
@@ -91,64 +96,54 @@ export class RecipePage {
     return recipe.image;
   });
 
-  private readonly _initialLang = signal<Language | null>(null);
+  private _request?: Subscription;
+  private _lastId?: number;
   readonly backHref = computed(
     () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
   );
 
   constructor() {
-    effect(() => {
+    effect(onCleanup => {
+      this._translate.currentLang();
       const sourceId = Number(this._routeParamMap().get('id'));
-      if (!sourceId) {
+      if (!Number.isSafeInteger(sourceId) || sourceId <= 0) {
         this.recipe.set(null);
         this.errorStateKey.set('xErrorActualizacionReceta');
         this.isInitialLoading.set(false);
         return;
       }
-
-      this.isInitialLoading.set(true);
-      this.errorStateKey.set(null);
-      this._recipes.loadRecipeDetail(sourceId).subscribe({
-        next: (recipe) => {
-          this.recipe.set(recipe);
-          this.errorStateKey.set(null);
-          this.isInitialLoading.set(false);
-        },
-        error: () => {
-          this.recipe.set(null);
-          this.errorStateKey.set('xErrorActualizacionReceta');
-          this.isInitialLoading.set(false);
-        },
-      });
+      const refresh = this._lastId === sourceId;
+      this._lastId = sourceId;
+      if (!refresh) this.recipe.set(null);
+      untracked(() => this.loadRecipe(sourceId, refresh));
+      onCleanup(() => this._request?.unsubscribe());
     });
+  }
 
-    effect(() => {
-      const lang = this._translate.currentLang();
-      if (!lang) return;
+  async ionViewWillEnter() { await this._favorites.loadFavorites(); }
 
-      if (this._initialLang() === null) {
-        this._initialLang.set(lang);
-        return;
-      }
+  jumpTo(id: string) {
+    const section = this.host.nativeElement.querySelector<HTMLElement>(`#${id}`);
+    section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    section?.focus({ preventScroll: true });
+  }
 
-      if (lang !== this._initialLang()) {
-        const currentRecipe = this.recipe();
-        if (!currentRecipe) {
-          this._initialLang.set(lang);
-          return;
-        }
+  retry() { this.loadRecipe(Number(this._routeParamMap().get('id')), !!this.recipe()); }
 
-        const { sourceId } = currentRecipe;
-        this._recipes.refreshRecipeDetail(sourceId).subscribe({
-          next: (recipe) => {
-            this.recipe.set(recipe);
-            this.errorStateKey.set(null);
-          },
-          error: () => this.errorStateKey.set('xErrorActualizacionReceta'),
-        });
-
-        this._initialLang.set(lang);
-      }
+  private loadRecipe(sourceId: number, refresh: boolean, complete?: () => void) {
+    this._request?.unsubscribe();
+    this.isInitialLoading.set(!this.recipe());
+    this.errorStateKey.set(null);
+    const request = refresh ? this._recipes.refreshRecipeDetail(sourceId) : this._recipes.loadRecipeDetail(sourceId);
+    this._request = request.pipe(finalize(() => complete?.())).subscribe({
+      next: recipe => {
+        this.recipe.set(recipe);
+        this.isInitialLoading.set(false);
+      },
+      error: () => {
+        this.errorStateKey.set('xErrorActualizacionReceta');
+        this.isInitialLoading.set(false);
+      },
     });
   }
 
@@ -163,18 +158,7 @@ export class RecipePage {
       return;
     }
 
-    const { sourceId } = currentRecipe;
-    this._recipes.refreshRecipeDetail(sourceId).subscribe({
-      next: (recipe) => {
-        this.recipe.set(recipe);
-        this.errorStateKey.set(null);
-        event.target.complete();
-      },
-      error: () => {
-        this.errorStateKey.set('xErrorActualizacionReceta');
-        event.target.complete();
-      },
-    });
+    this.loadRecipe(currentRecipe.sourceId, true, () => event.target.complete());
   }
 
   toggleFavorite() {

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchPage } from './search.page';
@@ -22,7 +22,6 @@ describe('SearchPage (Vitest)', () => {
   const recipeServiceMock = {
     searchRecipes: vi.fn(),
     refreshSearch: vi.fn().mockReturnValue(of(recipesMock)),
-    searchRecipesByQuery: vi.fn(),
     openSimilarRecipes: vi.fn(),
     toRecipeDetail: vi.fn(),
   };
@@ -36,7 +35,6 @@ describe('SearchPage (Vitest)', () => {
   beforeEach(async () => {
     recipeServiceMock.searchRecipes.mockClear();
     recipeServiceMock.refreshSearch.mockClear();
-    recipeServiceMock.searchRecipesByQuery.mockClear();
     recipeServiceMock.openSimilarRecipes.mockClear();
     recipeServiceMock.toRecipeDetail.mockClear();
     favoritesServiceMock.loadFavorites.mockClear();
@@ -136,6 +134,22 @@ describe('SearchPage (Vitest)', () => {
     component.searchNewRecipes('pollo');
 
     expect(recipeServiceMock.searchRecipes).toHaveBeenCalledWith('pollo');
-    expect(recipeServiceMock.searchRecipesByQuery).not.toHaveBeenCalled();
   });
+  it('cancels an older search so a late response cannot replace the latest result', () => {
+    const slow = new Subject<SearchRecipe[]>();
+    const fast = new Subject<SearchRecipe[]>();
+    recipeServiceMock.refreshSearch.mockReturnValueOnce(slow).mockReturnValueOnce(fast);
+    fixture.componentRef.setInput('q', 'slow');
+    fixture.detectChanges();
+    fixture.componentRef.setInput('q', 'fast');
+    fixture.detectChanges();
+    const latest = [{ sourceId: 2, title: 'Latest result', image: '' }];
+    fast.next(latest);
+    fast.complete();
+    slow.next(recipesMock);
+    expect(component.recipes()).toEqual(latest);
+    expect(slow.observed).toBe(false);
+    expect(component.isLoading()).toBe(false);
+  });
+
 });

@@ -1,4 +1,5 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { NavService } from '@shared/services/nav/nav.service';
+import { Component, computed, DestroyRef, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonContent,
   IonButtons,
@@ -11,7 +12,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonRow,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { ShoppingListService } from './services/shopping-list/shopping-list.service';
 import { ShoppingRecipeCardComponent } from './components/shopping-recipe-card/shopping-recipe-card.component';
 import { FavoritesService } from '@shared/services/favorites/favorites.service';
@@ -20,7 +21,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
 import { TranslateService } from '@shared/translate/translate.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { skip, switchMap } from 'rxjs';
+import { EMPTY, catchError, skip, switchMap, tap } from 'rxjs';
 import { ShoppingRecipe } from '@recipes/models/shopping-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recipe-card-skeleton/shopping-recipe-card-skeleton.component';
@@ -30,6 +31,7 @@ import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recip
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonRow,
     IonRefresherContent,
@@ -48,6 +50,9 @@ import { ShoppingRecipeCardSkeletonComponent } from './components/shopping-recip
   ],
 })
 export class ShoppingListPage implements OnInit {
+  private readonly _nav = inject(NavService);
+  exploreRecipes() { this._nav.root('/home'); }
+
   private static readonly returnTo = '/shopping-list';
 
   private readonly _state = inject(ShoppingListService);
@@ -73,6 +78,7 @@ export class ShoppingListPage implements OnInit {
     })),
   );
   readonly isLoading = signal(true);
+  readonly errorStateKey = signal<string | null>(null);
   readonly skeletonCards = Array.from({ length: 3 });
 
   ngOnInit() {
@@ -80,7 +86,10 @@ export class ShoppingListPage implements OnInit {
       .pipe(
         skip(1),
         takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this._shopping.refreshSync(true)),
+        switchMap(() => this._shopping.refreshSync(true).pipe(
+          tap(() => this.errorStateKey.set(null)),
+          catchError(() => { this.errorStateKey.set('xErrorListaCompras'); return EMPTY; }),
+        )),
       )
       .subscribe();
   }
@@ -92,6 +101,9 @@ export class ShoppingListPage implements OnInit {
       await this._favorites.loadFavorites();
       await this._state.init();
       await this._shopping.sync();
+      this.errorStateKey.set(null);
+    } catch {
+      this.errorStateKey.set('xErrorListaCompras');
     } finally {
       this.isLoading.set(false);
     }
@@ -104,9 +116,11 @@ export class ShoppingListPage implements OnInit {
       .then(() => {
         this._shopping.refreshSync().subscribe({
           next: () => {
+            this.errorStateKey.set(null);
             event.target.complete();
           },
           error: () => {
+            this.errorStateKey.set('xErrorListaCompras');
             event.target.complete();
           },
         });

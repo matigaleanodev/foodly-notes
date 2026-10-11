@@ -10,9 +10,15 @@
           "styleext": "scss",
           "standalone": true
         },
-        "@schematics/angular:service": { "type": "service" },
-        "@schematics/angular:component": { "type": "component" },
-        "@schematics/angular:directive": { "type": "directive" }
+        "@schematics/angular:service": {
+          "type": "service"
+        },
+        "@schematics/angular:component": {
+          "type": "component"
+        },
+        "@schematics/angular:directive": {
+          "type": "directive"
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -26,7 +32,10 @@
               "browser": ""
             },
             "index": "src/index.html",
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": [
+              "src/zone-flags.ts",
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -36,9 +45,14 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
             "scripts": [],
-            "allowedCommonJsDependencies": ["localforage"],
+            "allowedCommonJsDependencies": [
+              "localforage"
+            ],
             "browser": "src/main.ts"
           },
           "configurations": {
@@ -99,41 +113,21 @@
             "buildTarget": "app:build"
           }
         },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": ["src/polyfills.ts"],
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "exclude": ["src/**/*.vitest.spec.ts"],
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              }
-            ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "ci": {
-              "progress": false,
-              "watch": false
-            }
-          }
-        },
         "test-vitest": {
           "builder": "@angular/build:unit-test",
           "options": {
             "runner": "vitest",
             "buildTarget": "app:build:development",
             "tsConfig": "tsconfig.spec.json",
-            "include": ["src/**/*.vitest.spec.ts"],
-            "exclude": ["src/**/*.browser.vitest.spec.ts"],
-            "setupFiles": ["src/vitest.setup.ts"]
+            "include": [
+              "src/**/*.vitest.spec.ts"
+            ],
+            "exclude": [
+              "src/**/*.browser.vitest.spec.ts"
+            ],
+            "setupFiles": [
+              "src/vitest.setup.ts"
+            ]
           },
           "configurations": {
             "ci": {
@@ -148,9 +142,15 @@
             "runner": "vitest",
             "buildTarget": "app:build:development",
             "tsConfig": "tsconfig.spec.json",
-            "include": ["src/**/*.browser.vitest.spec.ts"],
-            "setupFiles": ["src/vitest.setup.ts"],
-            "browsers": ["chromium"]
+            "include": [
+              "src/**/*.browser.vitest.spec.ts"
+            ],
+            "setupFiles": [
+              "src/vitest.setup.ts"
+            ],
+            "browsers": [
+              "chromium"
+            ]
           },
           "configurations": {
             "ci": {
@@ -162,14 +162,19 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     }
   },
   "cli": {
-    "schematicCollections": ["@ionic/angular-toolkit"],
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ],
     "analytics": false
   },
   "schematics": {

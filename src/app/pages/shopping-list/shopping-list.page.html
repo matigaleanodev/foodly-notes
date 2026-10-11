@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="light" />
+      <ion-back-button defaultHref="/home" />
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button color="light" />
+      <ion-menu-button />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -19,6 +19,12 @@
       <p class="page-header-subtitle">{{'xListaComprasSubtitulo' | translate}}</p>
     </div>
   </div>
+  @if (errorStateKey()) {
+    <div class="page-grid status-banner" role="status">
+      <p>{{ errorStateKey()! | translate }}</p>
+      <button type="button" class="foodly-button" (click)="ionViewWillEnter()">{{ 'xReintentar' | translate }}</button>
+    </div>
+  }
   <div class="masonry">
     @if (isLoading()) {
     @for (_item of skeletonCards; track $index) {
@@ -36,14 +42,16 @@
       />
     </div>
     } @empty {
+    @if (!errorStateKey()) {
     <ion-row>
       <ion-col size="12">
         <app-empty-states
           imagen="shoplist"
-          text="xGuardeFavoritosParaListaCompras"
+          text="xGuardeFavoritosParaListaCompras" actionKey="xExplorarRecetas" (action)="exploreRecipes()"
         />
       </ion-col>
     </ion-row>
+    }
     }
     }
   </div>

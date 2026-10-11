@@ -34,25 +34,35 @@ describe('HomeHeroComponent (Vitest browser)', () => {
 
     component.handleInput(event);
 
-    expect(component.query()).toBe('pizza');
+    expect(component.query()).toBe('Pizza');
   });
 
-  it('does not emit a search when the query is shorter than three characters', () => {
+  it('does not emit an empty search', () => {
     const emitSpy = vi.spyOn(component.searchSubmit, 'emit');
 
-    component.query.set('pi');
+    component.query.set('   ');
     component.onEnter();
 
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
-  it('emits a search and resets the query when the input is valid', () => {
+  it('emits a search and preserves the query when the input is valid', () => {
     const emitSpy = vi.spyOn(component.searchSubmit, 'emit');
 
     component.query.set('pizza');
     component.onEnter();
 
     expect(emitSpy).toHaveBeenCalledWith('pizza');
-    expect(component.query()).toBe('');
+    expect(component.query()).toBe('pizza');
   });
+  it('accepts short searches and restores the query from the route', () => {
+    const emit = vi.spyOn(component.searchSubmit, 'emit');
+    fixture.componentRef.setInput('initialQuery', 'té');
+    fixture.detectChanges();
+    component.onEnter();
+    expect(emit).toHaveBeenCalledWith('té');
+    expect(component.query()).toBe('té');
+    expect(fixture.nativeElement.querySelector('input').labels.length).toBe(1);
+  });
+
 });

@@ -10,12 +10,12 @@ import {
 import {
   IonicRouteStrategy,
   provideIonicAngular,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { errorInterceptor } from '@shared/interceptors/error-interceptor';
 
 bootstrapApplication(AppComponent, {
@@ -24,7 +24,7 @@ bootstrapApplication(AppComponent, {
     provideZoneChangeDetection(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideHttpClient(withInterceptors([errorInterceptor])),
+    provideHttpClient(withXhr(), withInterceptors([errorInterceptor])),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),

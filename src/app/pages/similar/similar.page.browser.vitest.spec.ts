@@ -32,6 +32,7 @@ describe('SimilarPage (Vitest)', () => {
   };
 
   const translateMock = {
+    currentLang: signal("en-US"),
     translate: vi.fn((key: string) => key),
   };
 

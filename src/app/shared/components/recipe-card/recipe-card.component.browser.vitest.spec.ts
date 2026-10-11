@@ -98,4 +98,11 @@ describe('RecipeCardComponent (Vitest)', () => {
     expect(event.stopPropagation).toHaveBeenCalled();
     expect(emitSpy).toHaveBeenCalledWith(recipeMock);
   });
+  it('keeps card navigation and favorite actions as separate keyboard controls', () => {
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('button.recipe-open')?.getAttribute('aria-label')).toContain(recipeMock.title);
+    expect(element.querySelector('button.recipe-open ion-button')).toBeNull();
+    expect(element.querySelectorAll('.recipe-card-actions ion-button')).toHaveLength(2);
+  });
+
 });

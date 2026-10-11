@@ -3,17 +3,19 @@
     {{ "xPreparacion" | translate }}
   </h2>
 
+  <ol role="list">
   @for (block of instructions(); track $index) {
     @for (step of block.steps; track step.number) {
-      <div class="instruction-step">
-        <div class="step-number">
+      <li class="instruction-step">
+        <span class="step-number" aria-hidden="true">
           {{ step.number }}
-        </div>
+        </span>
 
         <p class="step-text">
           {{ step.text }}
         </p>
-      </div>
+      </li>
     }
   }
+  </ol>
 </section>

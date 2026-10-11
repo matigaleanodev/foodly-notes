@@ -1,21 +1,11 @@
-<section class="ingredients-paper">
-  <div class="paper-spacer"></div>
-  <div class="paper-margin"></div>
-
+<section class="ingredients-paper" aria-labelledby="ingredients-heading">
+  <div class="paper-margin" aria-hidden="true"></div>
   <div class="paper-content">
-    <div class="paper-title">
-      {{ "xIngredientes" | translate }}
-    </div>
-
-    <div class="paper-spacer"></div>
-
-    @for (ingredient of ingredients(); track $index) {
-      <div class="paper-line">
-        {{ ingredient.original }}
-      </div>
-    }
-
-    <div class="paper-spacer"></div>
+    <h2 class="paper-title" id="ingredients-heading">{{ "xIngredientes" | translate }}</h2>
+    <ul>
+      @for (ingredient of ingredients(); track $index) {
+        <li class="paper-line">{{ ingredient.original }}</li>
+      }
+    </ul>
   </div>
-  <div class="paper-spacer"></div>
 </section>

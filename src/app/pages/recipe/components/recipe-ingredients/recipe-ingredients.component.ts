@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RecipeIngredient } from '@recipes/models/recipe-ingredient.model';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 
@@ -6,6 +6,7 @@ import { TranslatePipe } from '@shared/translate/translate-pipe';
   selector: 'app-recipe-ingredients',
   imports: [TranslatePipe],
   templateUrl: './recipe-ingredients.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./recipe-ingredients.component.scss'],
 })
 export class RecipeIngredientsComponent {

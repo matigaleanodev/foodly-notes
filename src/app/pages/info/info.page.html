@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar class="foodly-notes-gradient">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" color="light" />
+      <ion-back-button defaultHref="/home" />
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button color="light" />
+      <ion-menu-button />
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -26,17 +26,17 @@
       </ion-list-header>
 
       <ion-item button detail routerLink="/terms">
-        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="document-text-outline" slot="start"></ion-icon>
         <ion-label> {{'xTerminosCondiciones' | translate}} </ion-label>
       </ion-item>
 
       <ion-item button detail routerLink="/privacy">
-        <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="shield-checkmark-outline" slot="start"></ion-icon>
         <ion-label> {{'xPoliticaPrivacidad' | translate}} </ion-label>
       </ion-item>
 
       <ion-item button detail [href]="helpUrl" target="_blank" rel="noopener noreferrer">
-        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="help-circle-outline" slot="start"></ion-icon>
         <ion-label> {{'xAyuda' | translate}} </ion-label>
       </ion-item>
     </ion-list>
@@ -54,9 +54,9 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <ion-icon name="nutrition-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="nutrition-outline" slot="start"></ion-icon>
         <ion-label>
-          <h3>Spoonacular API</h3>
+          <h2>Spoonacular API</h2>
           <p>{{'xAtribucionSpoonacular' | translate}}</p>
         </ion-label>
       </ion-item>
@@ -68,15 +68,15 @@
       </ion-list-header>
 
       <ion-item button detail [href]="'mailto:' + contactEmail">
-        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="mail-outline" slot="start"></ion-icon>
         <ion-label>
           <p>Email</p>
-          <h3>{{contactEmail}}</h3>
+          <h2>{{contactEmail}}</h2>
         </ion-label>
       </ion-item>
 
       <ion-item button detail [href]="githubUrl" target="_blank" rel="noopener noreferrer">
-        <ion-icon name="logo-github" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="logo-github" slot="start"></ion-icon>
         <ion-label>GitHub</ion-label>
       </ion-item>
     </ion-list>
@@ -87,18 +87,18 @@
       </ion-list-header>
 
       <ion-item>
-        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="information-circle-outline" slot="start"></ion-icon>
         <ion-label>
           <p>{{'xVersion' | translate}}</p>
-          <h3>{{ appVersion.value() }}</h3>
+          <h2>{{ appVersion.value() }}</h2>
         </ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-icon name="construct-outline" slot="start"></ion-icon>
+        <ion-icon aria-hidden="true" name="construct-outline" slot="start"></ion-icon>
         <ion-label>
           <p>{{'xEntorno' | translate}}</p>
-          <h3>{{appStage() | translate}}</h3>
+          <h2>{{appStage() | translate}}</h2>
         </ion-label>
       </ion-item>
     </ion-list>

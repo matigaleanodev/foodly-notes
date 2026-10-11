@@ -1,3 +1,4 @@
+import { NavService } from '@shared/services/nav/nav.service';
 import {
   Component,
   computed,
@@ -5,6 +6,7 @@ import {
   inject,
   input,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,7 +25,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonFooter,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { SimilarRecipe } from '@recipes/models/similar-recipe.model';
 import { RecipeService } from '@recipes/services/recipe/recipe.service';
 import { EmptyStatesComponent } from '@shared/components/empty-states/empty-states.component';
@@ -32,13 +34,14 @@ import { FavoritesService } from '@shared/services/favorites/favorites.service';
 import { TranslatePipe } from '@shared/translate/translate-pipe';
 import { TranslateService } from '@shared/translate/translate.service';
 import { RecipeCardSkeletonComponent } from '@shared/components/recipe-card-skeleton/recipe-card-skeleton.component';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-similar',
   templateUrl: './similar.page.html',
   styleUrls: ['./similar.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonFooter,
     IonRefresherContent,
@@ -83,8 +86,17 @@ export class SimilarPage {
     () => this._route.snapshot.queryParamMap.get('returnTo') ?? '/home',
   );
 
+  private _request?: Subscription;
+  private readonly reload = signal(0);
+  private readonly nav = inject(NavService);
+
+  retry() { this.reload.update(value => value + 1); }
+  exploreRecipes() { this.nav.root('/home'); }
+
   constructor() {
-    effect(() => {
+    effect(onCleanup => {
+      this.reload();
+      this._translator.currentLang();
       const sourceId = Number(this.id());
 
       if (!sourceId) {
@@ -95,6 +107,7 @@ export class SimilarPage {
       }
 
       this._loadSimilarRecipes(sourceId, true);
+      onCleanup(() => this._request?.unsubscribe());
     });
   }
 
@@ -136,13 +149,14 @@ export class SimilarPage {
     showSkeleton: boolean,
     onComplete?: () => void,
   ) {
+    this._request?.unsubscribe();
     if (showSkeleton) {
       this.isLoading.set(true);
     }
 
     this.errorStateKey.set(null);
 
-    this._recipes
+    this._request = this._recipes
       .refreshSimilarRecipes(sourceId)
       .pipe(
         finalize(() => {

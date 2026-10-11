@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NavController } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavService } from './nav.service';

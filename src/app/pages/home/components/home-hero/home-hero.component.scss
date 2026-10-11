@@ -1,92 +1,12 @@
-:host {
-  display: block;
-}
-
-.hero-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  box-shadow: none;
-
-  ion-toolbar {
-    --background: transparent;
-    --border-width: 0;
-  }
-}
-
-.hero-content {
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-
-  background: linear-gradient(
-    90deg,
-    var(--ion-color-primary),
-    var(--ion-color-secondary)
-  );
-
-  color: var(--ion-color-light);
-}
-
-.hero-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.hero-text {
-  max-width: 520px;
-}
-
-.hero-text p {
-  margin-top: 0.25rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  opacity: 0.9;
-}
-
-.hero-text ion-searchbar {
-  width: 100%;
-
-  --background: rgba(255, 255, 255, 0.95);
-  --color: var(--ion-color-dark);
-  --placeholder-color: var(--ion-color-medium);
-  --border-radius: 14px;
-  --icon-color: var(--ion-color-medium);
-}
-
-.hero-illustration {
-  display: none;
-}
-
-.hero-illustration img {
-  width: 240px;
-  opacity: 0.18;
-  filter: brightness(1.1);
-}
-
-@media (min-width: 768px) {
-  .hero-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding-inline: 2rem;
-  }
-
-  .hero-text {
-    max-width: 320px;
-    h1,
-    p {
-      text-align: center;
-    }
-  }
-
-  .hero-illustration {
-    display: block;
-    flex-shrink: 0;
-  }
-
-  .hero-illustration img {
-    width: 220px;
-  }
-}
+:host { display: block; }
+.hero-content { padding: 1.5rem 1.25rem; margin-bottom: 1rem; background: linear-gradient(90deg, var(--foodly-brand-start), var(--foodly-brand-end)); color: var(--foodly-brand-ink); }
+.hero-inner { max-width: 1160px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.hero-text { width: 100%; max-width: 680px; }
+p { margin: .5rem 0 1.25rem; line-height: 1.6; }
+form { display: flex; flex-wrap: wrap; gap: .5rem; }
+label { flex: 1; min-width: min(100%, 200px); }
+input { width: 100%; min-height: 48px; padding: .75rem 1rem; border: 2px solid #356c32; border-radius: 8px; color: #173419; background: #fff; }
+input::placeholder { color: #616161; opacity: 1; }
+input:focus-visible { outline-color: #173419; }
+.hero-illustration { width: 120px; height: 120px; display: none; }
+@media (min-width: 768px) { .hero-illustration { display: block; } }

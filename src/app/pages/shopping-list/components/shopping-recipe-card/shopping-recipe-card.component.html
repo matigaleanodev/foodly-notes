@@ -1,46 +1,19 @@
 <section class="ingredients-paper">
-  <div class="paper-margin"></div>
-  <div class="paper-spacer"></div>
-
+  <div class="paper-margin" aria-hidden="true"></div>
   <div class="paper-content">
-    <div class="paper-title-container">
-      <ion-icon name="cart-outline" size="large" />
-      <span class="paper-title">
-        {{ recipe().title }}
-      </span>
-    </div>
-    <div class="paper-subtitle">
-      {{ "xMarcaIngredientes" | translate }}
-    </div>
-    <div class="paper-spacer"></div>
-
-    @for (ingredient of ingredients(); track $index) {
-      <ion-item
-        class="paper-line"
-        lines="none"
-        (click)="toggleIngredient($event, ingredient.id)"
-      >
-        <ion-checkbox
-          slot="start"
-          [checked]="isIngredientChecked(ingredient.id)"
-          (ionChange)="toggleIngredient($event, ingredient.id)"
-        ></ion-checkbox>
-
-        <ion-label>
-          {{ ingredient.name }} ({{ ingredient.amount }} {{ ingredient.unit }})
-        </ion-label>
-      </ion-item>
-    }
-
-    <div class="paper-spacer"></div>
+    <h2 class="paper-title">{{ recipe().title }}</h2>
+    <p class="paper-subtitle">{{ "xMarcaIngredientes" | translate }}</p>
+    <ul>
+      @for (ingredient of ingredients(); track ingredient.id) {
+        <li class="paper-line">
+          <ion-checkbox [checked]="isIngredientChecked(ingredient.id)" (ionChange)="toggleIngredient($event, ingredient.id)">
+            {{ ingredient.name }} ({{ ingredient.amount }}{{ ingredient.unit ? ' ' + ingredient.unit : '' }})
+          </ion-checkbox>
+        </li>
+      }
+    </ul>
   </div>
-
   <div class="paper-footer">
-    <ion-button shape="round" fill="clear" (click)="goToRecipe()">
-      <ion-label>
-        {{ "xVerReceta" | translate }}
-      </ion-label>
-      <ion-icon slot="end" name="arrow-forward" />
-    </ion-button>
+    <ion-button fill="clear" (click)="goToRecipe()">{{ "xVerReceta" | translate }}<ion-icon aria-hidden="true" slot="end" name="arrow-forward" /></ion-button>
   </div>
 </section>

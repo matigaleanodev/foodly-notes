@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RecipePage } from './recipe.page';
@@ -166,4 +166,19 @@ describe('RecipePage (Vitest)', () => {
     expect(component.errorStateKey()).toBe('xErrorActualizacionReceta');
     expect(component.isInitialLoading()).toBe(false);
   });
+  it('does not request the detail again when an asynchronous response updates the recipe', () => {
+    fixture.destroy();
+    const response = new Subject<RecipeDetail>();
+    recipeServiceMock.loadRecipeDetail.mockClear();
+    recipeServiceMock.refreshRecipeDetail.mockClear();
+    recipeServiceMock.loadRecipeDetail.mockReturnValueOnce(response);
+    fixture = TestBed.createComponent(RecipePage);
+    fixture.detectChanges();
+    response.next(recipeMock);
+    response.complete();
+    fixture.detectChanges();
+    expect(recipeServiceMock.loadRecipeDetail).toHaveBeenCalledTimes(1);
+    expect(recipeServiceMock.refreshRecipeDetail).not.toHaveBeenCalled();
+  });
+
 });
